@@ -1,0 +1,200 @@
+import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class StatisticsService extends ChangeNotifier {
+  int _totalSessions = 0;
+  int _completedSessions = 0;
+  int _cancelledSessions = 0;
+  int _totalMinutes = 0;
+  int _currentStreak = 0;
+  DateTime? _lastFocusDate;
+  List<String> _badges = [];
+  List<Map<String, dynamic>> _sessionHistory = [];
+
+  int get totalSessions => _totalSessions;
+  int get completedSessions => _completedSessions;
+  int get cancelledSessions => _cancelledSessions;
+  int get totalMinutes => _totalMinutes;
+  int get currentStreak => _currentStreak;
+  List<String> get badges => _badges;
+  List<Map<String, dynamic>> get sessionHistory => _sessionHistory;
+
+  String get totalTimeFormatted {
+    final hours = _totalMinutes ~/ 60;
+    final minutes = _totalMinutes % 60;
+    if (hours > 0) {
+      return '$hours saat $minutes dakika';
+    }
+    return '$minutes dakika';
+  }
+
+  StatisticsService() {
+    _loadStatistics();
+  }
+
+  // Load statistics from SharedPreferences
+  Future<void> _loadStatistics() async {
+    final prefs = await SharedPreferences.getInstance();
+    _totalSessions = prefs.getInt('stats_total_sessions') ?? 0;
+    _completedSessions = prefs.getInt('stats_completed_sessions') ?? 0;
+    _cancelledSessions = prefs.getInt('stats_cancelled_sessions') ?? 0;
+    _totalMinutes = prefs.getInt('stats_total_minutes') ?? 0;
+    _currentStreak = prefs.getInt('stats_current_streak') ?? 0;
+    _badges = prefs.getStringList('stats_badges') ?? [];
+    
+    final lastDateStr = prefs.getString('stats_last_focus_date');
+    if (lastDateStr != null) {
+      _lastFocusDate = DateTime.parse(lastDateStr);
+      _checkStreakReset();
+    }
+    
+    // Load session history (last 20 sessions)
+    final historyJson = prefs.getStringList('stats_session_history') ?? [];
+    _sessionHistory = historyJson.map((json) {
+      final parts = json.split('|');
+      return {
+        'duration': int.parse(parts[0]),
+        'completed': parts[1] == 'true',
+        'date': DateTime.parse(parts[2]),
+      };
+    }).toList();
+    
+    notifyListeners();
+  }
+
+  void _checkStreakReset() {
+    if (_lastFocusDate == null) return;
+    final now = DateTime.now();
+    final difference = now.difference(_lastFocusDate!).inDays;
+    if (difference > 1) {
+      _currentStreak = 0;
+    }
+  }
+
+  // Start a new session
+  Future<void> startSession() async {
+    _totalSessions++;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('stats_total_sessions', _totalSessions);
+    notifyListeners();
+  }
+
+  // Complete a session
+  Future<void> completeSession(int durationMinutes) async {
+    _completedSessions++;
+    _totalMinutes += durationMinutes;
+    
+    final now = DateTime.now();
+    
+    // Update Streak
+    if (_lastFocusDate == null) {
+      _currentStreak = 1;
+    } else {
+      final diff = now.difference(_lastFocusDate!).inDays;
+      if (diff == 1) {
+        _currentStreak++;
+      } else if (diff > 1) {
+        _currentStreak = 1;
+      }
+    }
+    _lastFocusDate = now;
+
+    // Check for Badges
+    _checkBadges(durationMinutes, now);
+    
+    // Add to history
+    _sessionHistory.insert(0, {
+      'duration': durationMinutes,
+      'completed': true,
+      'date': now,
+    });
+    
+    if (_sessionHistory.length > 20) {
+      _sessionHistory = _sessionHistory.sublist(0, 20);
+    }
+    
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('stats_completed_sessions', _completedSessions);
+    await prefs.setInt('stats_total_minutes', _totalMinutes);
+    await prefs.setInt('stats_current_streak', _currentStreak);
+    await prefs.setString('stats_last_focus_date', _lastFocusDate!.toIso8601String());
+    await prefs.setStringList('stats_badges', _badges);
+    await _saveHistory(prefs);
+    
+    notifyListeners();
+  }
+
+  void _checkBadges(int durationMinutes, DateTime now) {
+    // Early Bird: Focus before 9 AM
+    if (now.hour < 9 && !_badges.contains('Erkenci Kuş')) {
+      _badges.add('Erkenci Kuş');
+    }
+    
+    // Marathoner: Total time > 180 minutes
+    if (_totalMinutes >= 180 && !_badges.contains('Maratoncu')) {
+      _badges.add('Maratoncu');
+    }
+
+    // Veteran: 10 completed sessions
+    if (_completedSessions >= 10 && !_badges.contains('Usta Odaklanıcı')) {
+      _badges.add('Usta Odaklanıcı');
+    }
+  }
+
+  // Cancel a session
+  Future<void> cancelSession(int durationMinutes) async {
+    _cancelledSessions++;
+    _totalMinutes += durationMinutes;
+    
+    // Add to history
+    _sessionHistory.insert(0, {
+      'duration': durationMinutes,
+      'completed': false,
+      'date': DateTime.now(),
+    });
+    
+    // Keep only last 20 sessions
+    if (_sessionHistory.length > 20) {
+      _sessionHistory = _sessionHistory.sublist(0, 20);
+    }
+    
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('stats_cancelled_sessions', _cancelledSessions);
+    await prefs.setInt('stats_total_minutes', _totalMinutes);
+    await _saveHistory(prefs);
+    
+    notifyListeners();
+  }
+
+  // Save session history
+  Future<void> _saveHistory(SharedPreferences prefs) async {
+    final historyJson = _sessionHistory.map((session) {
+      return '${session['duration']}|${session['completed']}|${session['date'].toIso8601String()}';
+    }).toList();
+    await prefs.setStringList('stats_session_history', historyJson);
+  }
+
+  // Reset all statistics
+  Future<void> resetStatistics() async {
+    _totalSessions = 0;
+    _completedSessions = 0;
+    _cancelledSessions = 0;
+    _totalMinutes = 0;
+    _sessionHistory.clear();
+    
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('stats_total_sessions');
+    await prefs.remove('stats_completed_sessions');
+    await prefs.remove('stats_cancelled_sessions');
+    await prefs.remove('stats_total_minutes');
+    await prefs.remove('stats_session_history');
+    
+    notifyListeners();
+  }
+
+  // Get success rate percentage
+  double get successRate {
+    if (_totalSessions == 0) return 0.0;
+    return (_completedSessions / _totalSessions) * 100;
+  }
+}
