@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:sensors_plus/sensors_plus.dart';
-import 'package:flutter/foundation.dart';
 
 class SensorService {
   StreamSubscription<AccelerometerEvent>? _subscription;
@@ -10,7 +9,8 @@ class SensorService {
 
   void startListening() {
     _subscription = accelerometerEventStream().listen((AccelerometerEvent event) {
-      // Z-axis is approx -9.8 when screen is facing down.
+      // Z-axis is approx -9.8 when screen is facing down (negative value)
+      // Z-axis is approx +9.8 when screen is facing up (positive value)
       bool isFaceDown = event.z < -8.0;
       _faceDownController.add(isFaceDown);
     });

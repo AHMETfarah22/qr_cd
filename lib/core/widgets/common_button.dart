@@ -25,7 +25,7 @@ class CommonButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
           elevation: 5,
-          shadowColor: AppColors.accent.withOpacity(0.4),
+          shadowColor: AppColors.accent.withValues(alpha: 0.4),
         ),
         child: Text(
           text,

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'sensor_service.dart';
@@ -35,14 +34,12 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
 
   Future<void> _enableDND() async {
     bool isAllowed = await _doNotDisturb.isNotificationPolicyAccessGranted();
-    // Android'de bazen null dönebilir, false kabul edelim
+    // Sadece izin varsa DND'yi aktif et
     if (isAllowed) {
-      // InterruptionFilter enum'ı doğru
       await _doNotDisturb.setInterruptionFilter(InterruptionFilter.none);
       debugPrint("TimerService: DND Enabled");
-    } else {
-      await _doNotDisturb.openDndSettings();
     }
+    // İzin yoksa ayarlara GİTME - timer başarısız olmasın
   }
 
   Future<void> _disableDND() async {

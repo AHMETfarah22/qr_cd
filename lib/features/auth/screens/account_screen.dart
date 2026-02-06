@@ -55,14 +55,14 @@ class AccountScreen extends StatelessWidget {
                 gradient: LinearGradient(
                   colors: [
                     AppColors.accent,
-                    AppColors.accent.withOpacity(0.7),
+                    AppColors.accent.withValues(alpha: 0.7),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.accent.withOpacity(0.3),
+                    color: AppColors.accent.withValues(alpha: 0.3),
                     blurRadius: 20,
                     spreadRadius: 5,
                   ),
@@ -207,13 +207,13 @@ class AccountScreen extends StatelessWidget {
                 gradient: LinearGradient(
                   colors: [
                     AppColors.accent,
-                    AppColors.accent.withOpacity(0.8),
+                    AppColors.accent.withValues(alpha: 0.8),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.accent.withOpacity(0.3),
+                    color: AppColors.accent.withValues(alpha: 0.3),
                     blurRadius: 15,
                     offset: const Offset(0, 5),
                   ),
@@ -305,7 +305,7 @@ class AccountScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.red.withOpacity(0.3),
+                    color: Colors.red.withValues(alpha: 0.3),
                     blurRadius: 15,
                     offset: const Offset(0, 5),
                   ),
@@ -398,20 +398,20 @@ class AccountScreen extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: isWarning 
-            ? Colors.orange.withOpacity(0.1)
-            : AppColors.process.withOpacity(0.3),
+            ? Colors.orange.withValues(alpha: 0.1)
+            : AppColors.process.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isWarning 
-              ? Colors.orange.withOpacity(0.5)
-              : AppColors.accent.withOpacity(0.2),
+              ? Colors.orange.withValues(alpha: 0.5)
+              : AppColors.accent.withValues(alpha: 0.2),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
             color: isWarning 
-                ? Colors.orange.withOpacity(0.2)
-                : Colors.black.withOpacity(0.1),
+                ? Colors.orange.withValues(alpha: 0.2)
+                : Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -423,8 +423,8 @@ class AccountScreen extends StatelessWidget {
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: isWarning 
-                  ? Colors.orange.withOpacity(0.2)
-                  : AppColors.accent.withOpacity(0.2),
+                  ? Colors.orange.withValues(alpha: 0.2)
+                  : AppColors.accent.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -473,10 +473,10 @@ class AccountScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: color.withOpacity(0.3),
+          color: color.withValues(alpha: 0.3),
           width: 1.5,
         ),
       ),
@@ -515,13 +515,13 @@ class AccountScreen extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            color.withOpacity(0.2),
-            color.withOpacity(0.1),
+            color.withValues(alpha: 0.2),
+            color.withValues(alpha: 0.1),
           ],
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: color.withOpacity(0.4),
+          color: color.withValues(alpha: 0.4),
           width: 2,
         ),
       ),
@@ -559,7 +559,7 @@ class AccountScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             child: LinearProgressIndicator(
               value: successRate / 100,
-              backgroundColor: Colors.white.withOpacity(0.2),
+              backgroundColor: Colors.white.withValues(alpha: 0.2),
               valueColor: AlwaysStoppedAnimation<Color>(color),
               minHeight: 8,
             ),
@@ -579,7 +579,7 @@ class AccountScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.orange.withOpacity(0.4),
+            color: Colors.orange.withValues(alpha: 0.4),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -641,9 +641,9 @@ class AccountScreen extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withOpacity(0.3), width: 1.5),
+        border: Border.all(color: color.withValues(alpha: 0.3), width: 1.5),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -686,3 +686,4 @@ class _SectionHeader extends StatelessWidget {
     );
   }
 }
+

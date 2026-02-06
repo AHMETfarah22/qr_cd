@@ -69,7 +69,7 @@ class SettingsScreen extends StatelessWidget {
               trailing: Switch(
                 value: settingsService.vibrationEnabled,
                 onChanged: (value) => settingsService.setVibrationEnabled(value),
-                activeColor: AppColors.accent,
+                activeThumbColor: AppColors.accent,
               ),
             ),
             const SizedBox(height: 32),
@@ -162,10 +162,10 @@ class SettingsScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       decoration: BoxDecoration(
-        color: AppColors.process.withOpacity(0.3),
+        color: AppColors.process.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.accent.withOpacity(0.1),
+          color: AppColors.accent.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -174,7 +174,7 @@ class SettingsScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: AppColors.accent.withOpacity(0.1),
+              color: AppColors.accent.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: AppColors.accent, size: 22),
@@ -208,3 +208,4 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 }
+

@@ -1,3 +1,9 @@
 {
-    "cmake.sourceDirectory": "C:/develpment/Focus Flow/windows"
+    "cmake.sourceDirectory": "C:/develpment/Focus Flow/windows",
+    "C_Cpp.errorSquiggles": "disabled",
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "files.associations": {
+        "*.h": "cpp",
+        "*.cc": "cpp"
+    }
 }

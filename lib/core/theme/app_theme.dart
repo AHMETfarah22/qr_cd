@@ -11,7 +11,6 @@ class AppTheme {
         primary: AppColors.accent,
         secondary: AppColors.accent,
         surface: AppColors.process,
-        background: AppColors.background,
         error: AppColors.error,
         onSurface: AppColors.textPrimary,
       ),

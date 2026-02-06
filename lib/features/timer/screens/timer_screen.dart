@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
-import '../../auth/screens/login_screen.dart';
 import '../../auth/screens/account_screen.dart';
 import '../../auth/services/statistics_service.dart';
 import '../services/timer_service.dart';
@@ -61,7 +60,7 @@ class _TimerScreenState extends State<TimerScreen> {
     
     return Scaffold(
       backgroundColor: timerService.state == TimerState.failure 
-          ? AppColors.error.withOpacity(0.1)
+          ? AppColors.error.withValues(alpha: 0.1)
           : AppColors.background,
       appBar: AppBar(
         title: Column(
@@ -257,13 +256,13 @@ class _TimerScreenState extends State<TimerScreen> {
                         borderRadius: BorderRadius.circular(35),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.red.withOpacity(0.4),
+                            color: Colors.red.withValues(alpha: 0.4),
                             blurRadius: 20,
                             spreadRadius: 2,
                             offset: const Offset(0, 8),
                           ),
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
+                            color: Colors.black.withValues(alpha: 0.3),
                             blurRadius: 15,
                             offset: const Offset(0, 4),
                           ),
@@ -300,7 +299,7 @@ class _TimerScreenState extends State<TimerScreen> {
                               ),
                               borderRadius: BorderRadius.circular(35),
                               border: Border.all(
-                                color: Colors.white.withOpacity(0.2),
+                                color: Colors.white.withValues(alpha: 0.2),
                                 width: 2,
                               ),
                             ),
@@ -332,7 +331,7 @@ class _TimerScreenState extends State<TimerScreen> {
                     Text(
                       "Ses durur ve zamanlayıcı sıfırlanır",
                       style: TextStyle(
-                        color: AppColors.textSecondary.withOpacity(0.7),
+                        color: AppColors.textSecondary.withValues(alpha: 0.7),
                         fontSize: 11,
                         fontStyle: FontStyle.italic,
                       ),
@@ -357,25 +356,25 @@ class _TimerScreenState extends State<TimerScreen> {
                   gradient: LinearGradient(
                     colors: [
                       AppColors.accent,
-                      AppColors.accent.withOpacity(0.85),
+                      AppColors.accent.withValues(alpha: 0.85),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: Colors.black.withOpacity(0.25),
+                    color: Colors.black.withValues(alpha: 0.25),
                     width: 2.5,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.accent.withOpacity(0.5),
+                      color: AppColors.accent.withValues(alpha: 0.5),
                       blurRadius: 20,
                       spreadRadius: 3,
                       offset: const Offset(0, 5),
                     ),
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.5),
+                      color: Colors.black.withValues(alpha: 0.5),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
@@ -429,12 +428,12 @@ class _TimerScreenState extends State<TimerScreen> {
                   gradient: LinearGradient(
                     colors: audioService.isMuted
                         ? [
-                            Colors.red.withOpacity(0.9),
-                            Colors.red.withOpacity(0.7),
+                            Colors.red.withValues(alpha: 0.9),
+                            Colors.red.withValues(alpha: 0.7),
                           ]
                         : [
-                            AppColors.process.withOpacity(0.95),
-                            AppColors.process.withOpacity(0.75),
+                            AppColors.process.withValues(alpha: 0.95),
+                            AppColors.process.withValues(alpha: 0.75),
                           ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -442,21 +441,21 @@ class _TimerScreenState extends State<TimerScreen> {
                   shape: BoxShape.circle,
                   border: Border.all(
                     color: audioService.isMuted 
-                        ? Colors.red.withOpacity(0.7) 
-                        : AppColors.accent.withOpacity(0.4),
+                        ? Colors.red.withValues(alpha: 0.7) 
+                        : AppColors.accent.withValues(alpha: 0.4),
                     width: 2.5,
                   ),
                   boxShadow: [
                     BoxShadow(
                       color: audioService.isMuted 
-                          ? Colors.red.withOpacity(0.5)
-                          : AppColors.accent.withOpacity(0.3),
+                          ? Colors.red.withValues(alpha: 0.5)
+                          : AppColors.accent.withValues(alpha: 0.3),
                       blurRadius: audioService.isMuted ? 20 : 15,
                       spreadRadius: audioService.isMuted ? 4 : 2,
                       offset: const Offset(0, 4),
                     ),
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.4),
+                      color: Colors.black.withValues(alpha: 0.4),
                       blurRadius: 10,
                       offset: const Offset(0, 3),
                     ),
@@ -520,3 +519,4 @@ class _TimerScreenState extends State<TimerScreen> {
     }
   }
 }
+
