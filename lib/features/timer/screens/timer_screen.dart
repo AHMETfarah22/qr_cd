@@ -1,7 +1,9 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/models/session_category.dart';
 import '../../auth/screens/account_screen.dart';
 import '../../auth/services/statistics_service.dart';
 import '../services/timer_service.dart';
@@ -28,7 +30,7 @@ class _TimerScreenState extends State<TimerScreen> {
       // Timer just completed successfully
       final durationMinutes = ((timerService.currentTimeSeconds / 60).ceil());
       final totalMinutes = timerService.level == 1 ? 1 : 60; // Level 1 is 30 seconds (round to 1 min), Level 2+ is 60 minutes
-      statsService.completeSession(totalMinutes);
+      statsService.completeSession(totalMinutes, category: timerService.currentCategory);
     }
     _previousState = timerService.state;
   }
@@ -38,7 +40,6 @@ class _TimerScreenState extends State<TimerScreen> {
     TimerService timerService;
     try {
       timerService = Provider.of<TimerService>(context);
-      debugPrint("TimerScreen: Rendering state: ${timerService.state}, time: ${timerService.currentTimeSeconds}");
     } catch (e) {
       return const Scaffold(body: Center(child: Text("Error: TimerService not found")));
     }
@@ -68,180 +69,356 @@ class _TimerScreenState extends State<TimerScreen> {
             const Text(
               "ODAKLANMA SAYACI",
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 2.0,
               ),
             ),
-            Text(
-              "SEVİYE ${timerService.level}",
-              style: const TextStyle(
-                fontSize: 10,
-                color: AppColors.accent,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 1.5,
+            if (timerService.level > 1)
+              Text(
+                "SEVİYE ${timerService.level}",
+                style: const TextStyle(
+                  fontSize: 10,
+                  color: AppColors.accent,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.5,
+                ),
               ),
-            ),
           ],
         ),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
-        automaticallyImplyLeading: false, 
+        automaticallyImplyLeading: false,
+        
+        // Profile Button (Left)
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: AppColors.process.withValues(alpha: 0.2),
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: AppColors.accent.withValues(alpha: 0.3),
+                width: 1.5,
+              ),
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.person_rounded, size: 20, color: AppColors.accent),
+              tooltip: 'Hesap Bilgileri',
+              onPressed: () {
+                if (timerService.state == TimerState.running) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Timer çalışırken hesaba gidemezsiniz!"),
+                      duration: Duration(seconds: 2),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                } else {
+                  audioService.stopAlarm();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const AccountScreen()),
+                  );
+                }
+              },
+              padding: EdgeInsets.zero,
+            ),
+          ),
+        ),
       ),
-      body: Stack(
-        children: [
-          Center(
+      body: Center(
         child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const SizedBox(height: 16),
+              
+              // Main Timer Circle
               Stack(
                 alignment: Alignment.center,
                 children: [
                   CircularPercentIndicator(
-                    radius: 140.0,
+                    radius: 130.0,
                     lineWidth: 8.0,
                     percent: timerService.progress.clamp(0.0, 1.0),
                     circularStrokeCap: CircularStrokeCap.round,
-                    backgroundColor: AppColors.process,
+                    backgroundColor: AppColors.process.withValues(alpha: 0.1),
                     progressColor: timerService.state == TimerState.failure 
                         ? AppColors.error 
                         : AppColors.accent,
                     animation: false,
+                    widgetIndicator: RotatedBox(
+                      quarterTurns: 1,
+                      child: Icon(
+                        Icons.circle, 
+                        size: 14, 
+                        color: timerService.state == TimerState.failure 
+                            ? AppColors.error 
+                            : AppColors.accent,
+                      ),
+                    ),
                   ),
+                  
+                  // Inner Glow Effect
+                  Container(
+                    width: 220,
+                    height: 220,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: (timerService.state == TimerState.failure 
+                              ? AppColors.error 
+                              : AppColors.accent).withValues(alpha: 0.15),
+                          blurRadius: 40,
+                          spreadRadius: 5,
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Timer Text & Status
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
                         timerString,
                         style: TextStyle(
-                          fontSize: hours > 0 ? 60 : 80,
+                          fontSize: hours > 0 ? 56 : 72,
                           fontWeight: FontWeight.w200,
                           color: Colors.white,
+                          letterSpacing: 2.0,
                           fontFeatures: const [FontFeature.tabularFigures()],
+                          shadows: [
+                            Shadow(
+                              color: (timerService.state == TimerState.failure 
+                                  ? AppColors.error 
+                                  : AppColors.accent).withValues(alpha: 0.5),
+                              blurRadius: 20,
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      Text(
-                        timerService.state == TimerState.idle 
-                            ? "HAZIR" 
-                            : (timerService.state == TimerState.running ? "KALAN SÜRE" : "HATALI ODAK"),
-                        style: TextStyle(
-                          color: timerService.state == TimerState.failure 
+                      const SizedBox(height: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: (timerService.state == TimerState.failure 
                               ? AppColors.error 
-                              : AppColors.accent,
-                          fontSize: 12,
-                          letterSpacing: 2.0,
-                          fontWeight: FontWeight.bold,
+                              : AppColors.accent).withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: (timerService.state == TimerState.failure 
+                                ? AppColors.error 
+                                : AppColors.accent).withValues(alpha: 0.3),
+                            width: 1,
+                          ),
+                        ),
+                        child: Text(
+                          timerService.state == TimerState.idle 
+                              ? "HAZIR" 
+                              : (timerService.state == TimerState.running ? "ODAKLAN" : "HATALI"),
+                          style: TextStyle(
+                            color: timerService.state == TimerState.failure 
+                                ? AppColors.error 
+                                : AppColors.accent,
+                            fontSize: 12,
+                            letterSpacing: 1.5,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ],
               ),
-              const SizedBox(height: 48),
               
-              if (timerService.state == TimerState.idle)
-                Column(
-                  children: [
-                    if (timerService.level == 1)
+              const SizedBox(height: 32),
+              
+              // Conditional UI based on state
+              if (timerService.state == TimerState.idle) ...[
+                if (timerService.level == 1)
+                  Column(
+                    children: [
                       const Text(
                         "30 Saniye Odaklanma Testi",
                         style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        "Başlangıç Seviyesi",
+                        style: TextStyle(
+                          color: AppColors.accent.withValues(alpha: 0.7),
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  )
+                else
+                  Column(
+                    children: [
+                      Text(
+                        "${(timerService.currentTimeSeconds ~/ 3600)} Saat Odaklanma",
+                        style: const TextStyle(
                           color: AppColors.accent,
-                          fontSize: 18,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
-                      )
-                    else
-                      Column(
-                        children: [
-                          Text(
-                            "${(timerService.currentTimeSeconds ~/ 3600)} Saat Odaklanma",
-                            style: const TextStyle(
-                              color: AppColors.accent,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                      ),
+                      Slider(
+                        value: (timerService.currentTimeSeconds ~/ 60).toDouble().clamp(60.0, 600.0),
+                        min: 60,
+                        max: 600,
+                        divisions: 9,
+                        activeColor: AppColors.accent,
+                        inactiveColor: AppColors.process,
+                        onChanged: (value) {
+                          timerService.setDuration(value.toInt());
+                        },
+                      ),
+                    ],
+                  ),
+                
+                const SizedBox(height: 24),
+                
+                // Category Selector
+                const Text(
+                  'KATEGORİ SEÇ',
+                  style: TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.5,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  alignment: WrapAlignment.center,
+                  children: SessionCategory.values.map((category) {
+                    final isSelected = timerService.currentCategory == category;
+                    return GestureDetector(
+                      onTap: () => timerService.setCategory(category),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: isSelected 
+                              ? category.color.withValues(alpha: 0.2)
+                              : AppColors.process.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: isSelected 
+                                ? category.color
+                                : AppColors.process.withValues(alpha: 0.3),
+                            width: isSelected ? 1.5 : 1,
+                          ),
+                          boxShadow: isSelected ? [
+                            BoxShadow(
+                              color: category.color.withValues(alpha: 0.2),
+                              blurRadius: 8,
+                              spreadRadius: 1,
+                            )
+                          ] : [],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              category.icon,
+                              size: 14,
+                              color: isSelected ? category.color : AppColors.textSecondary,
                             ),
-                          ),
-                          Slider(
-                            value: (timerService.currentTimeSeconds ~/ 60).toDouble().clamp(60.0, 600.0),
-                            min: 60,
-                            max: 600,
-                            divisions: 9, // 1h intervals: 60, 120, 180, 240, 300, 360, 420, 480, 540, 600
-                            activeColor: AppColors.accent,
-                            inactiveColor: AppColors.process,
-                            onChanged: (value) {
-                              timerService.setDuration(value.toInt());
-                            },
-                          ),
-                        ],
+                            const SizedBox(width: 8),
+                            Text(
+                              category.displayName,
+                              style: TextStyle(
+                                color: isSelected ? category.color : AppColors.textSecondary,
+                                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    const SizedBox(height: 16),
-                  ],
+                    );
+                  }).toList(),
                 ),
-
-              Text(
-                _getStatusMessage(timerService),
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: AppColors.textSecondary,
-                      fontStyle: FontStyle.italic,
-                    ),
-              ),
-              const SizedBox(height: 32),
+                const SizedBox(height: 12),
+              ],
               
+              // Action Buttons - Moved HIGHER up
               if (timerService.state == TimerState.idle)
-                Column(
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        debugPrint("TimerScreen: Start Button Pressed");
-                        // Track session start
-                        statsService.startSession();
-                        timerService.startTimer();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.accent,
-                        foregroundColor: Colors.black,
-                        padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.accent.withValues(alpha: 0.4),
+                        blurRadius: 20,
+                        spreadRadius: 2,
+                        offset: const Offset(0, 5),
                       ),
-                      child: const Text(
-                        "BAŞLAT",
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    ],
+                  ),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      timerService.startTimer();
+                      audioService.playStartSound(); 
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.accent,
+                      foregroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: const Text(
+                      "BAŞLAT",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 2.0,
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    TextButton(
-                      onPressed: () {
-                        Provider.of<AudioService>(context, listen: false).playAlarm();
-                        Future.delayed(const Duration(seconds: 10), () {
-                          if (mounted) {
-                             Provider.of<AudioService>(context, listen: false).stopAlarm();
-                          }
-                        });
-                      },
-                      child: const Text("SESI TEST ET", style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
-                    ),
-                  ],
+                  ),
                 ),
 
-               if (timerService.state == TimerState.success)
+              if (timerService.state == TimerState.success)
                 Column(
                   children: [
+                    const Icon(
+                      Icons.check_circle_outline_rounded,
+                      color: AppColors.accent,
+                      size: 60,
+                    ),
+                    const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: () {
                         timerService.resetTimer();
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.accent,
-                        foregroundColor: Colors.black,
-                        padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+                        backgroundColor: AppColors.process,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
                       ),
                       child: const Text(
                         "DEVAM ET",
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, letterSpacing: 1.0),
                       ),
                     ),
                   ],
@@ -250,57 +427,42 @@ class _TimerScreenState extends State<TimerScreen> {
                if (timerService.state != TimerState.idle && timerService.state != TimerState.success)
                 Column(
                   children: [
-                    const SizedBox(height: 32),
                     Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(35),
+                        borderRadius: BorderRadius.circular(30),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.red.withValues(alpha: 0.4),
+                            color: Colors.red.withValues(alpha: 0.3),
                             blurRadius: 20,
-                            spreadRadius: 2,
-                            offset: const Offset(0, 8),
-                          ),
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.3),
-                            blurRadius: 15,
-                            offset: const Offset(0, 4),
+                            spreadRadius: 1,
+                            offset: const Offset(0, 5),
                           ),
                         ],
                       ),
                       child: Material(
                         color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(35),
                         child: InkWell(
                           onTap: () {
-                            // Calculate completed duration before cancelling
-                            final totalDuration = (timerService.currentTimeSeconds / 60).ceil();
-                            final startTime = ((timerService.progress * timerService.currentTimeSeconds) / 60).ceil();
                             final durationCompleted = ((1 - timerService.progress) * (timerService.currentTimeSeconds / (timerService.progress > 0 ? timerService.progress : 1)) / 60).ceil();
                             
-                            // Stop alarm sound
                             audioService.stopAlarm();
-                            // Track cancelled session
-                            statsService.cancelSession(durationCompleted > 0 ? durationCompleted : 1);
-                            // Reset timer to idle state
+                            statsService.cancelSession(durationCompleted > 0 ? durationCompleted : 1, category: timerService.currentCategory);
                             timerService.resetTimer();
                           },
-                          borderRadius: BorderRadius.circular(35),
+                          borderRadius: BorderRadius.circular(30),
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 18),
+                            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
                                   const Color(0xFFFF5252),
                                   const Color(0xFFE53935),
                                 ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
                               ),
-                              borderRadius: BorderRadius.circular(35),
+                              borderRadius: BorderRadius.circular(30),
                               border: Border.all(
                                 color: Colors.white.withValues(alpha: 0.2),
-                                width: 2,
+                                width: 1,
                               ),
                             ),
                             child: Row(
@@ -309,16 +471,16 @@ class _TimerScreenState extends State<TimerScreen> {
                                 Icon(
                                   Icons.close_rounded,
                                   color: Colors.white,
-                                  size: 24,
+                                  size: 20,
                                 ),
-                                const SizedBox(width: 12),
+                                const SizedBox(width: 8),
                                 const Text(
                                   "VAZGEÇ", 
                                   style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 18,
+                                    fontSize: 16,
                                     fontWeight: FontWeight.bold,
-                                    letterSpacing: 2.0,
+                                    letterSpacing: 1.5,
                                   ),
                                 ),
                               ],
@@ -327,175 +489,30 @@ class _TimerScreenState extends State<TimerScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    Text(
-                      "Ses durur ve zamanlayıcı sıfırlanır",
-                      style: TextStyle(
-                        color: AppColors.textSecondary.withValues(alpha: 0.7),
-                        fontSize: 11,
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
                   ],
                 ),
+
+              const SizedBox(height: 24),
               
-               const SizedBox(height: 48),
+              // Status Message (Moved to Bottom)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                  _getStatusMessage(timerService),
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: AppColors.textSecondary.withValues(alpha: 0.6),
+                        fontSize: 12,
+                        fontStyle: FontStyle.italic,
+                        height: 1.5,
+                      ),
+                ),
+              ),
+
+              const SizedBox(height: 32),
             ],
           ),
         ),
-          ),
-          
-          // Back button - Top Left (Account)
-          Positioned(
-            top: 16,
-            left: 16,
-            child: Tooltip(
-              message: 'Hesap Bilgileri',
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      AppColors.accent,
-                      AppColors.accent.withValues(alpha: 0.85),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: Colors.black.withValues(alpha: 0.25),
-                    width: 2.5,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.accent.withValues(alpha: 0.5),
-                      blurRadius: 20,
-                      spreadRadius: 3,
-                      offset: const Offset(0, 5),
-                    ),
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.5),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {
-                      if (timerService.state == TimerState.running) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Timer çalışırken hesaba gidemezsiniz!"),
-                            duration: Duration(seconds: 2),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                      } else {
-                        // Stop any playing alarm sound before navigating back
-                        audioService.stopAlarm();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const AccountScreen()),
-                        );
-                      }
-                    },
-                    borderRadius: BorderRadius.circular(50),
-                    child: const Padding(
-                      padding: EdgeInsets.all(14.0),
-                      child: Icon(
-                        Icons.person_rounded,
-                        color: Colors.black,
-                        size: 30,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          
-          // Volume control button - Top Right
-          Positioned(
-            top: 16,
-            right: 16,
-            child: Tooltip(
-              message: audioService.isMuted ? 'Sesi Aç' : 'Sesi Kapat',
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: audioService.isMuted
-                        ? [
-                            Colors.red.withValues(alpha: 0.9),
-                            Colors.red.withValues(alpha: 0.7),
-                          ]
-                        : [
-                            AppColors.process.withValues(alpha: 0.95),
-                            AppColors.process.withValues(alpha: 0.75),
-                          ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: audioService.isMuted 
-                        ? Colors.red.withValues(alpha: 0.7) 
-                        : AppColors.accent.withValues(alpha: 0.4),
-                    width: 2.5,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: audioService.isMuted 
-                          ? Colors.red.withValues(alpha: 0.5)
-                          : AppColors.accent.withValues(alpha: 0.3),
-                      blurRadius: audioService.isMuted ? 20 : 15,
-                      spreadRadius: audioService.isMuted ? 4 : 2,
-                      offset: const Offset(0, 4),
-                    ),
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.4),
-                      blurRadius: 10,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {
-                      audioService.toggleMute();
-                    },
-                    borderRadius: BorderRadius.circular(50),
-                    child: Padding(
-                      padding: const EdgeInsets.all(14.0),
-                      child: AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 300),
-                        transitionBuilder: (child, animation) {
-                          return ScaleTransition(
-                            scale: animation,
-                            child: child,
-                          );
-                        },
-                        child: Icon(
-                          audioService.isMuted 
-                              ? Icons.volume_off_rounded 
-                              : Icons.volume_up_rounded,
-                          key: ValueKey(audioService.isMuted),
-                          color: audioService.isMuted 
-                              ? Colors.white 
-                              : AppColors.accent,
-                          size: 30,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -505,18 +522,17 @@ class _TimerScreenState extends State<TimerScreen> {
       case TimerState.idle:
         return timerService.level == 1 
             ? "30 saniyelik testi tamamla ve\ngerçek odaklanmaya başla!" 
-            : "Süreyi ayarla, Başlat'a bas ve\ntelefonu ters çevir.";
+            : "Süreyi ayarla, kategori seç ve odaklan!";
       case TimerState.running:
         return "Derin odaklanma başlıyor...\nTelefonu ters çevir!";
       case TimerState.paused:
         return "Duraklatıldı";
       case TimerState.failure:
-        return "ODAK BOZULDU! Telefonu kaldırdın.\nTekrar dene!";
+        return "ODAK BOZULDU!\nTelefonu kaldırdın.";
       case TimerState.success:
         return timerService.completedSessions == 1 
-            ? "TEBRİKLER! İlk aşamayı geçtin.\nŞimdi 1-10 saat arası odaklanabilirsin."
-            : "Tebrikler! Odaklanma tamamlandı.";
+            ? "TEBRİKLER! İlk aşama tamam.\n1 saatlik odaklanma açıldı!"
+            : "Tebrikler! Oturum tamamlandı.";
     }
   }
 }
-

@@ -67,6 +67,18 @@ class AudioService extends ChangeNotifier {
     }
   }
 
+  Future<void> playStartSound() async {
+    // Basic haptic feedback for start
+    if (await Vibration.hasVibrator() ?? false) {
+      if (await Vibration.hasAmplitudeControl() ?? false) {
+        Vibration.vibrate(duration: 100, amplitude: 128);
+      } else {
+        Vibration.vibrate(duration: 100);
+      }
+    }
+    debugPrint("AudioService: Play Start Sound (Vibration only for now)");
+  }
+
   Future<void> stopAlarm() async {
     try {
       await _player.stop();

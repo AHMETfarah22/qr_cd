@@ -2,9 +2,109 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/services/settings_service.dart';
+import '../../../core/widgets/common_text_field.dart';
+import '../../auth/services/auth_service.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  void _showChangePasswordDialog(BuildContext context) {
+    final currentPasswordController = TextEditingController();
+    final newPasswordController = TextEditingController();
+    final confirmPasswordController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: AppColors.process,
+        title: const Text(
+          'Şifre Değiştir',
+          style: TextStyle(color: Colors.white),
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CommonTextField(
+                controller: currentPasswordController,
+                hintText: 'Mevcut Şifre',
+                obscureText: true,
+                showPasswordToggle: true,
+              ),
+              const SizedBox(height: 16),
+              CommonTextField(
+                controller: newPasswordController,
+                hintText: 'Yeni Şifre',
+                obscureText: true,
+                showPasswordToggle: true,
+              ),
+              const SizedBox(height: 16),
+              CommonTextField(
+                controller: confirmPasswordController,
+                hintText: 'Yeni Şifre (Tekrar)',
+                obscureText: true,
+                showPasswordToggle: true,
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text(
+              'İptal',
+              style: TextStyle(color: AppColors.textSecondary),
+            ),
+          ),
+          TextButton(
+            onPressed: () async {
+              final currentPassword = currentPasswordController.text;
+              final newPassword = newPasswordController.text;
+              final confirmPassword = confirmPasswordController.text;
+
+              if (newPassword != confirmPassword) {
+                Navigator.pop(dialogContext);
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Yeni şifreler eşleşmiyor'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+                return;
+              }
+
+              final authService = Provider.of<AuthService>(context, listen: false);
+              final result = await authService.changePassword(
+                currentPassword: currentPassword,
+                newPassword: newPassword,
+              );
+
+              Navigator.pop(dialogContext);
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(result['message']),
+                    backgroundColor: result['success'] ? Colors.green : Colors.red,
+                  ),
+                );
+              }
+            },
+            child: const Text(
+              'Değiştir',
+              style: TextStyle(color: AppColors.accent),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,11 +203,23 @@ class SettingsScreen extends StatelessWidget {
                 ],
               ),
             ),
+            const SizedBox(height: 32),
+            _buildSectionTitle('HESAP AYARLARI'),
+            const SizedBox(height: 16),
+            _buildSettingCard(
+              title: 'Şifre Değiştir',
+              subtitle: 'Hesap şifrenizi güncelleyin',
+              icon: Icons.lock_outline,
+              trailing: IconButton(
+                icon: const Icon(Icons.arrow_forward_ios, color: AppColors.accent, size: 18),
+                onPressed: () => _showChangePasswordDialog(context),
+              ),
+            ),
             const SizedBox(height: 12),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 12.0),
               child: Text(
-                'Not: Belirlediğiniz süre, sonraki oturumlarınızda varsayılan olarak kullanılacaktır.',
+                'Not: Şifreniz güvenli bir şekilde saklanır.',
                 style: TextStyle(
                   color: AppColors.textSecondary,
                   fontSize: 12,
@@ -208,4 +320,3 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 }
-

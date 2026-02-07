@@ -140,7 +140,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               controller: _passwordController,
               hintText: '********',
               obscureText: true,
-              suffixIcon: const Icon(Icons.visibility, color: AppColors.textSecondary),
+              showPasswordToggle: true,
             ),
             const SizedBox(height: 16),
             Text(

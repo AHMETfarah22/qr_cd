@@ -146,7 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
               controller: _passwordController,
               hintText: 'Şifrenizi giriniz',
               obscureText: true,
-              suffixIcon: const Icon(Icons.visibility, color: AppColors.textSecondary),
+              showPasswordToggle: true,
             ),
             const SizedBox(height: 24),
             _isLoading

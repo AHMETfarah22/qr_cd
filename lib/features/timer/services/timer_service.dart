@@ -4,6 +4,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import 'sensor_service.dart';
 import 'audio_service.dart';
 import '../../../core/services/settings_service.dart';
+import '../../../core/models/session_category.dart';
 import 'package:phone_state/phone_state.dart';
 import 'package:do_not_disturb/do_not_disturb.dart';
 
@@ -87,6 +88,16 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
   Timer? _timer;
   StreamSubscription<bool>? _sensorSubscription;
   bool _hasBeenFaceDown = false;
+  SessionCategory _currentCategory = SessionCategory.other;
+
+  SessionCategory get currentCategory => _currentCategory;
+
+  void setCategory(SessionCategory category) {
+    if (_state == TimerState.idle) {
+      _currentCategory = category;
+      notifyListeners();
+    }
+  }
 
   void setDuration(int minutes) {
     if (_state == TimerState.idle && _level > 1) {

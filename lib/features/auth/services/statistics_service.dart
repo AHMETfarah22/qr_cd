@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../core/models/session_category.dart';
 
 class StatisticsService extends ChangeNotifier {
   String? _currentUserEmail;
@@ -83,6 +84,7 @@ class StatisticsService extends ChangeNotifier {
         'duration': int.parse(parts[0]),
         'completed': parts[1] == 'true',
         'date': DateTime.parse(parts[2]),
+        'category': parts.length > 3 ? SessionCategoryExtension.fromString(parts[3]) : SessionCategory.other,
       };
     }).toList();
     
@@ -120,7 +122,7 @@ class StatisticsService extends ChangeNotifier {
   }
 
   // Complete a session
-  Future<void> completeSession(int durationMinutes) async {
+  Future<void> completeSession(int durationMinutes, {SessionCategory category = SessionCategory.other}) async {
     if (_currentUserEmail == null) return;
     
     _completedSessions++;
@@ -144,11 +146,12 @@ class StatisticsService extends ChangeNotifier {
     // Check for Badges
     _checkBadges(durationMinutes, now);
     
-    // Add to history
+    // Add to history with category
     _sessionHistory.insert(0, {
       'duration': durationMinutes,
       'completed': true,
       'date': now,
+      'category': category,
     });
     
     if (_sessionHistory.length > 20) {
@@ -184,17 +187,18 @@ class StatisticsService extends ChangeNotifier {
   }
 
   // Cancel a session
-  Future<void> cancelSession(int durationMinutes) async {
+  Future<void> cancelSession(int durationMinutes, {SessionCategory category = SessionCategory.other}) async {
     if (_currentUserEmail == null) return;
     
     _cancelledSessions++;
     _totalMinutes += durationMinutes;
     
-    // Add to history
+    // Add to history with category
     _sessionHistory.insert(0, {
       'duration': durationMinutes,
       'completed': false,
       'date': DateTime.now(),
+      'category': category,
     });
     
     // Keep only last 20 sessions
@@ -213,7 +217,8 @@ class StatisticsService extends ChangeNotifier {
   // Save session history
   Future<void> _saveHistory(SharedPreferences prefs) async {
     final historyJson = _sessionHistory.map((session) {
-      return '${session['duration']}|${session['completed']}|${session['date'].toIso8601String()}';
+      final category = session['category'] as SessionCategory;
+      return '${session['duration']}|${session['completed']}|${session['date'].toIso8601String()}|${category.name}';
     }).toList();
     await prefs.setStringList(_getUserKey('stats_session_history'), historyJson);
   }

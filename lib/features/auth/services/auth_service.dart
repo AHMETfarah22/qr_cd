@@ -1,5 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
+
+// Helper function to hash passwords
+String _hashPassword(String password) {
+  final bytes = utf8.encode(password);
+  final hash = sha256.convert(bytes);
+  return hash.toString();
+}
 
 class AuthService extends ChangeNotifier {
   String? _userEmail;
@@ -56,7 +65,7 @@ class AuthService extends ChangeNotifier {
       
       // Save user data with email prefix
       await prefs.setString('user_${normalizedEmail}_name', name);
-      await prefs.setString('user_${normalizedEmail}_password', password); // In production, use encryption!
+      await prefs.setString('user_${normalizedEmail}_password', _hashPassword(password)); // Hash password!
       
       // Set current user
       await prefs.setString('current_user_email', normalizedEmail);
@@ -99,8 +108,8 @@ class AuthService extends ChangeNotifier {
         return {'success': false, 'message': 'Kullanıcı bulunamadı. Lütfen kayıt olun'};
       }
 
-      // Verify credentials
-      if (password == savedPassword) {
+      // Verify credentials (compare hashed passwords)
+      if (_hashPassword(password) == savedPassword) {
         // Set current user
         await prefs.setString('current_user_email', normalizedEmail);
         await prefs.setBool('is_logged_in', true);
@@ -128,6 +137,44 @@ class AuthService extends ChangeNotifier {
     _userEmail = null;
     _userName = null;
     notifyListeners();
+  }
+
+  // Change password
+  Future<Map<String, dynamic>> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    if (_userEmail == null) {
+      return {'success': false, 'message': 'Kullanıcı bilgisi bulunamadı'};
+    }
+
+    // Validation
+    if (currentPassword.trim().isEmpty) {
+      return {'success': false, 'message': 'Mevcut şifrenizi girin'};
+    }
+    if (newPassword.trim().isEmpty) {
+      return {'success': false, 'message': 'Yeni şifrenizi girin'};
+    }
+    if (newPassword.length < 6) {
+      return {'success': false, 'message': 'Yeni şifre en az 6 karakter olmalıdır'};
+    }
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final savedPassword = prefs.getString('user_${_userEmail}_password');
+
+      // Verify current password (compare hashed)
+      if (savedPassword != _hashPassword(currentPassword)) {
+        return {'success': false, 'message': 'Mevcut şifre hatalı'};
+      }
+
+      // Update password (hash new password)
+      await prefs.setString('user_${_userEmail}_password', _hashPassword(newPassword));
+
+      return {'success': true, 'message': 'Şifre başarıyla değiştirildi'};
+    } catch (e) {
+      return {'success': false, 'message': 'Şifre değiştirme sırasında hata oluştu'};
+    }
   }
 
   // Delete account
