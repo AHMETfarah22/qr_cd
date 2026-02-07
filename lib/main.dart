@@ -15,7 +15,21 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthService()),
         ChangeNotifierProvider(create: (_) => SettingsService()),
-        ChangeNotifierProvider(create: (_) => StatisticsService()),
+        ChangeNotifierProxyProvider<AuthService, StatisticsService>(
+          create: (context) {
+            final authService = context.read<AuthService>();
+            final statsService = StatisticsService();
+            // Set current user when creating the service
+            statsService.setCurrentUser(authService.userEmail);
+            return statsService;
+          },
+          update: (context, authService, previousStatsService) {
+            // Update statistics service when auth state changes
+            final statsService = previousStatsService ?? StatisticsService();
+            statsService.setCurrentUser(authService.userEmail);
+            return statsService;
+          },
+        ),
         Provider(create: (_) => SensorService()),
         ChangeNotifierProxyProvider<SettingsService, AudioService>(
           create: (context) => AudioService(context.read<SettingsService>()),

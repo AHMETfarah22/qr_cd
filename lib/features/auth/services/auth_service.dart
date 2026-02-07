@@ -17,9 +17,13 @@ class AuthService extends ChangeNotifier {
   // Load user data from SharedPreferences
   Future<void> _loadUserData() async {
     final prefs = await SharedPreferences.getInstance();
-    _userEmail = prefs.getString('user_email');
-    _userName = prefs.getString('user_name');
+    _userEmail = prefs.getString('current_user_email');
     _isLoggedIn = prefs.getBool('is_logged_in') ?? false;
+    
+    if (_isLoggedIn && _userEmail != null) {
+      _userName = prefs.getString('user_${_userEmail}_name');
+    }
+    
     notifyListeners();
   }
 
@@ -42,15 +46,24 @@ class AuthService extends ChangeNotifier {
 
     try {
       final prefs = await SharedPreferences.getInstance();
+      final normalizedEmail = email.trim().toLowerCase();
       
-      // Save user data
-      await prefs.setString('user_name', name);
-      await prefs.setString('user_email', email);
-      await prefs.setString('user_password', password); // In production, use encryption!
+      // Check if user already exists
+      final existingPassword = prefs.getString('user_${normalizedEmail}_password');
+      if (existingPassword != null) {
+        return {'success': false, 'message': 'Bu e-posta adresi zaten kayıtlı'};
+      }
+      
+      // Save user data with email prefix
+      await prefs.setString('user_${normalizedEmail}_name', name);
+      await prefs.setString('user_${normalizedEmail}_password', password); // In production, use encryption!
+      
+      // Set current user
+      await prefs.setString('current_user_email', normalizedEmail);
       await prefs.setBool('is_logged_in', true);
 
       _userName = name;
-      _userEmail = email;
+      _userEmail = normalizedEmail;
       _isLoggedIn = true;
       notifyListeners();
 
@@ -75,20 +88,24 @@ class AuthService extends ChangeNotifier {
 
     try {
       final prefs = await SharedPreferences.getInstance();
-      final savedEmail = prefs.getString('user_email');
-      final savedPassword = prefs.getString('user_password');
-      final savedName = prefs.getString('user_name');
+      final normalizedEmail = email.trim().toLowerCase();
+      
+      // Get saved user data for this email
+      final savedPassword = prefs.getString('user_${normalizedEmail}_password');
+      final savedName = prefs.getString('user_${normalizedEmail}_name');
 
       // Check if user exists
-      if (savedEmail == null) {
+      if (savedPassword == null) {
         return {'success': false, 'message': 'Kullanıcı bulunamadı. Lütfen kayıt olun'};
       }
 
       // Verify credentials
-      if (email == savedEmail && password == savedPassword) {
+      if (password == savedPassword) {
+        // Set current user
+        await prefs.setString('current_user_email', normalizedEmail);
         await prefs.setBool('is_logged_in', true);
         
-        _userEmail = savedEmail;
+        _userEmail = normalizedEmail;
         _userName = savedName;
         _isLoggedIn = true;
         notifyListeners();
@@ -106,14 +123,35 @@ class AuthService extends ChangeNotifier {
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('is_logged_in', false);
+    await prefs.remove('current_user_email');
     _isLoggedIn = false;
+    _userEmail = null;
+    _userName = null;
     notifyListeners();
   }
 
   // Delete account
   Future<void> deleteAccount() async {
+    if (_userEmail == null) return;
+    
     final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
+    
+    // Remove this user's data
+    await prefs.remove('user_${_userEmail}_name');
+    await prefs.remove('user_${_userEmail}_password');
+    await prefs.remove('user_${_userEmail}_stats_total_sessions');
+    await prefs.remove('user_${_userEmail}_stats_completed_sessions');
+    await prefs.remove('user_${_userEmail}_stats_cancelled_sessions');
+    await prefs.remove('user_${_userEmail}_stats_total_minutes');
+    await prefs.remove('user_${_userEmail}_stats_current_streak');
+    await prefs.remove('user_${_userEmail}_stats_badges');
+    await prefs.remove('user_${_userEmail}_stats_last_focus_date');
+    await prefs.remove('user_${_userEmail}_stats_session_history');
+    
+    // Clear current session
+    await prefs.setBool('is_logged_in', false);
+    await prefs.remove('current_user_email');
+    
     _userEmail = null;
     _userName = null;
     _isLoggedIn = false;

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StatisticsService extends ChangeNotifier {
+  String? _currentUserEmail;
   int _totalSessions = 0;
   int _completedSessions = 0;
   int _cancelledSessions = 0;
@@ -32,24 +33,50 @@ class StatisticsService extends ChangeNotifier {
     _loadStatistics();
   }
 
+  // Set current user and load their statistics
+  Future<void> setCurrentUser(String? email) async {
+    if (_currentUserEmail != email) {
+      _currentUserEmail = email;
+      await _loadStatistics();
+    }
+  }
+
+  // Get key prefix for current user
+  String _getUserKey(String key) {
+    if (_currentUserEmail == null) return key;
+    return 'user_${_currentUserEmail}_$key';
+  }
+
   // Load statistics from SharedPreferences
   Future<void> _loadStatistics() async {
     final prefs = await SharedPreferences.getInstance();
-    _totalSessions = prefs.getInt('stats_total_sessions') ?? 0;
-    _completedSessions = prefs.getInt('stats_completed_sessions') ?? 0;
-    _cancelledSessions = prefs.getInt('stats_cancelled_sessions') ?? 0;
-    _totalMinutes = prefs.getInt('stats_total_minutes') ?? 0;
-    _currentStreak = prefs.getInt('stats_current_streak') ?? 0;
-    _badges = prefs.getStringList('stats_badges') ?? [];
     
-    final lastDateStr = prefs.getString('stats_last_focus_date');
+    // If no user is logged in, reset all stats
+    if (_currentUserEmail == null) {
+      _currentUserEmail = prefs.getString('current_user_email');
+    }
+    
+    if (_currentUserEmail == null) {
+      _resetLocalStats();
+      notifyListeners();
+      return;
+    }
+    
+    _totalSessions = prefs.getInt(_getUserKey('stats_total_sessions')) ?? 0;
+    _completedSessions = prefs.getInt(_getUserKey('stats_completed_sessions')) ?? 0;
+    _cancelledSessions = prefs.getInt(_getUserKey('stats_cancelled_sessions')) ?? 0;
+    _totalMinutes = prefs.getInt(_getUserKey('stats_total_minutes')) ?? 0;
+    _currentStreak = prefs.getInt(_getUserKey('stats_current_streak')) ?? 0;
+    _badges = prefs.getStringList(_getUserKey('stats_badges')) ?? [];
+    
+    final lastDateStr = prefs.getString(_getUserKey('stats_last_focus_date'));
     if (lastDateStr != null) {
       _lastFocusDate = DateTime.parse(lastDateStr);
       _checkStreakReset();
     }
     
     // Load session history (last 20 sessions)
-    final historyJson = prefs.getStringList('stats_session_history') ?? [];
+    final historyJson = prefs.getStringList(_getUserKey('stats_session_history')) ?? [];
     _sessionHistory = historyJson.map((json) {
       final parts = json.split('|');
       return {
@@ -60,6 +87,17 @@ class StatisticsService extends ChangeNotifier {
     }).toList();
     
     notifyListeners();
+  }
+
+  void _resetLocalStats() {
+    _totalSessions = 0;
+    _completedSessions = 0;
+    _cancelledSessions = 0;
+    _totalMinutes = 0;
+    _currentStreak = 0;
+    _lastFocusDate = null;
+    _badges = [];
+    _sessionHistory = [];
   }
 
   void _checkStreakReset() {
@@ -73,14 +111,18 @@ class StatisticsService extends ChangeNotifier {
 
   // Start a new session
   Future<void> startSession() async {
+    if (_currentUserEmail == null) return;
+    
     _totalSessions++;
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('stats_total_sessions', _totalSessions);
+    await prefs.setInt(_getUserKey('stats_total_sessions'), _totalSessions);
     notifyListeners();
   }
 
   // Complete a session
   Future<void> completeSession(int durationMinutes) async {
+    if (_currentUserEmail == null) return;
+    
     _completedSessions++;
     _totalMinutes += durationMinutes;
     
@@ -114,11 +156,11 @@ class StatisticsService extends ChangeNotifier {
     }
     
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('stats_completed_sessions', _completedSessions);
-    await prefs.setInt('stats_total_minutes', _totalMinutes);
-    await prefs.setInt('stats_current_streak', _currentStreak);
-    await prefs.setString('stats_last_focus_date', _lastFocusDate!.toIso8601String());
-    await prefs.setStringList('stats_badges', _badges);
+    await prefs.setInt(_getUserKey('stats_completed_sessions'), _completedSessions);
+    await prefs.setInt(_getUserKey('stats_total_minutes'), _totalMinutes);
+    await prefs.setInt(_getUserKey('stats_current_streak'), _currentStreak);
+    await prefs.setString(_getUserKey('stats_last_focus_date'), _lastFocusDate!.toIso8601String());
+    await prefs.setStringList(_getUserKey('stats_badges'), _badges);
     await _saveHistory(prefs);
     
     notifyListeners();
@@ -143,6 +185,8 @@ class StatisticsService extends ChangeNotifier {
 
   // Cancel a session
   Future<void> cancelSession(int durationMinutes) async {
+    if (_currentUserEmail == null) return;
+    
     _cancelledSessions++;
     _totalMinutes += durationMinutes;
     
@@ -159,8 +203,8 @@ class StatisticsService extends ChangeNotifier {
     }
     
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('stats_cancelled_sessions', _cancelledSessions);
-    await prefs.setInt('stats_total_minutes', _totalMinutes);
+    await prefs.setInt(_getUserKey('stats_cancelled_sessions'), _cancelledSessions);
+    await prefs.setInt(_getUserKey('stats_total_minutes'), _totalMinutes);
     await _saveHistory(prefs);
     
     notifyListeners();
@@ -171,23 +215,24 @@ class StatisticsService extends ChangeNotifier {
     final historyJson = _sessionHistory.map((session) {
       return '${session['duration']}|${session['completed']}|${session['date'].toIso8601String()}';
     }).toList();
-    await prefs.setStringList('stats_session_history', historyJson);
+    await prefs.setStringList(_getUserKey('stats_session_history'), historyJson);
   }
 
   // Reset all statistics
   Future<void> resetStatistics() async {
-    _totalSessions = 0;
-    _completedSessions = 0;
-    _cancelledSessions = 0;
-    _totalMinutes = 0;
-    _sessionHistory.clear();
+    if (_currentUserEmail == null) return;
+    
+    _resetLocalStats();
     
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('stats_total_sessions');
-    await prefs.remove('stats_completed_sessions');
-    await prefs.remove('stats_cancelled_sessions');
-    await prefs.remove('stats_total_minutes');
-    await prefs.remove('stats_session_history');
+    await prefs.remove(_getUserKey('stats_total_sessions'));
+    await prefs.remove(_getUserKey('stats_completed_sessions'));
+    await prefs.remove(_getUserKey('stats_cancelled_sessions'));
+    await prefs.remove(_getUserKey('stats_total_minutes'));
+    await prefs.remove(_getUserKey('stats_session_history'));
+    await prefs.remove(_getUserKey('stats_current_streak'));
+    await prefs.remove(_getUserKey('stats_badges'));
+    await prefs.remove(_getUserKey('stats_last_focus_date'));
     
     notifyListeners();
   }
