@@ -4,6 +4,13 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/services/settings_service.dart';
 import '../../../core/widgets/common_text_field.dart';
 import '../../auth/services/auth_service.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:flutter/services.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'package:file_picker/file_picker.dart';
+import '../../../core/services/backup_service.dart';
+import '../../auth/services/statistics_service.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -104,6 +111,165 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ],
       ),
     );
+  }
+
+  void _shareApp() {
+    Share.share(
+      'Focus Flow uygulamasını keşfet! Odaklanmanı ve verimliliğini artırmana yardımcı olur. 🚀\n\nİndir: https://focusflow.example.com',
+      subject: 'Focus Flow - Odaklanma Uygulaması',
+    );
+  }
+
+  Future<void> _showBackupDialog(BuildContext context) async {
+    final authService = Provider.of<AuthService>(context, listen: false);
+    if (authService.userEmail == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Yedekleme için giriş yapmalısınız')),
+      );
+      return;
+    }
+
+    try {
+      // 1. Get JSON data
+      final jsonString = await BackupService.exportUserData(authService.userEmail!);
+
+      if (jsonString == null) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Yedeklenecek veri bulunamadı')),
+          );
+        }
+        return;
+      }
+
+      // 2. Create a temporary file
+      final directory = await getTemporaryDirectory();
+      final dateStr = DateTime.now().toIso8601String().split('T')[0];
+      final fileName = 'focus_flow_backup_$dateStr.json';
+      final file = File('${directory.path}/$fileName');
+      
+      await file.writeAsString(jsonString);
+
+      // 3. Share the file
+      if (context.mounted) {
+        await Share.shareXFiles(
+          [XFile(file.path)],
+          text: 'Focus Flow Yedek Dosyası ($dateStr)',
+          subject: 'Focus Flow Yedek',
+        );
+      }
+      
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Yedekleme hatası: $e'), backgroundColor: Colors.red),
+        );
+      }
+    }
+  }
+
+  Future<void> _showRestoreDialog(BuildContext context) async {
+    // 1. Pick file
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['json'],
+      );
+
+      if (result == null) {
+        // User canceled the picker
+        return;
+      }
+
+      final file = File(result.files.single.path!);
+      final jsonString = await file.readAsString();
+      
+      if (jsonString.isEmpty) return;
+
+      final authService = Provider.of<AuthService>(context, listen: false);
+      if (authService.userEmail == null) return;
+
+      // 2. Confirm restoration
+      if (!context.mounted) return;
+      
+      bool confirm = await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          backgroundColor: AppColors.process,
+          title: const Text('Geri Yükleme Onayı', style: TextStyle(color: Colors.white)),
+          content: const Text(
+            'Seçilen dosyadan veriler geri yüklenecek. Mevcut verilerinizin üzerine yazılacaktır. Devam etmek istiyor musunuz?',
+            style: TextStyle(color: AppColors.textSecondary),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false), // Cancel
+              child: const Text('İptal', style: TextStyle(color: AppColors.textSecondary)),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true), // Confirm
+              child: const Text('Geri Yükle', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+            ),
+          ],
+        ),
+      ) ?? false;
+
+      if (!confirm) return;
+
+      // 3. Process Import
+      final importResult = await BackupService.importUserData(jsonString, authService.userEmail!);
+
+      if (!context.mounted) return;
+
+      if (importResult['success']) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(importResult['message']),
+            backgroundColor: Colors.green,
+          ),
+        );
+        
+        // Reload stats
+        await Provider.of<StatisticsService>(context, listen: false).setCurrentUser(authService.userEmail);
+        
+        // Suggest re-login or restart
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => AlertDialog(
+            backgroundColor: AppColors.process,
+            title: const Text('Başarılı', style: TextStyle(color: Colors.white)),
+            content: const Text(
+              'Veriler başarıyla yüklendi. Uygulamanın güncel verilerle çalışabilmesi için yeniden başlatılması önerilir.',
+              style: TextStyle(color: AppColors.textSecondary),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  authService.logout();
+                  Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+                },
+                child: const Text('Tamam', style: TextStyle(color: AppColors.accent)),
+              ),
+            ],
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(importResult['message']),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Dosya okuma hatası: $e'), backgroundColor: Colors.red),
+        );
+      }
+    }
   }
 
   @override
@@ -224,6 +390,50 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   color: AppColors.textSecondary,
                   fontSize: 12,
                   fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+            const SizedBox(height: 32),
+            _buildSectionTitle('VERİ YÖNETİMİ'),
+            const SizedBox(height: 16),
+            _buildSettingCard(
+              title: 'Verileri Yedekle',
+              subtitle: 'Verilerinizi dışa aktarın',
+              icon: Icons.cloud_upload_outlined,
+              trailing: IconButton(
+                icon: const Icon(Icons.arrow_forward_ios, color: AppColors.accent, size: 18),
+                onPressed: () => _showBackupDialog(context),
+              ),
+            ),
+            const SizedBox(height: 12),
+            _buildSettingCard(
+              title: 'Geri Yükle',
+              subtitle: 'Yedekten verileri yükleyin',
+              icon: Icons.cloud_download_outlined,
+              trailing: IconButton(
+                icon: const Icon(Icons.arrow_forward_ios, color: AppColors.accent, size: 18),
+                onPressed: () => _showRestoreDialog(context),
+              ),
+            ),
+            const SizedBox(height: 32),
+            _buildSectionTitle('UYGULAMA'),
+            const SizedBox(height: 16),
+            _buildSettingCard(
+              title: 'Arkadaşlarınla Paylaş',
+              subtitle: 'WhatsApp veya diğer uygulamalarla paylaşın',
+              icon: Icons.share_outlined,
+              trailing: IconButton(
+                icon: const Icon(Icons.arrow_forward_ios, color: AppColors.accent, size: 18),
+                onPressed: _shareApp,
+              ),
+            ),
+            const SizedBox(height: 24),
+            Center(
+              child: Text(
+                'Versiyon 1.0.0',
+                style: TextStyle(
+                  color: AppColors.textSecondary.withValues(alpha: 0.5),
+                  fontSize: 12,
                 ),
               ),
             ),

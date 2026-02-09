@@ -107,6 +107,21 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
     }
   }
 
+  // Restore state from persisted statistics
+  void syncWithStats(int savedCompletedSessions) {
+    if (_completedSessions != savedCompletedSessions) {
+      _completedSessions = savedCompletedSessions;
+      
+      // Calculate level based on completed sessions
+      // If 0 sessions, Level 1.
+      // If >= 1 sessions, Level = Sessions + 1
+      _level = _completedSessions + 1;
+      
+      _updateInitialDuration();
+      notifyListeners();
+    }
+  }
+
   void startTimer() {
     if (_state == TimerState.running) return;
 

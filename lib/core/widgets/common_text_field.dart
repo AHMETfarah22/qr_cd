@@ -64,7 +64,7 @@ class _CommonTextFieldState extends State<CommonTextField> {
             ? IconButton(
                 icon: Icon(
                   _isObscured ? Icons.visibility : Icons.visibility_off,
-                  color: AppColors.textSecondary,
+                  color: _isObscured ? AppColors.textSecondary : AppColors.accent,
                 ),
                 onPressed: () {
                   setState(() {

@@ -185,6 +185,13 @@ class StatisticsChartScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 _buildStatRow(
+                  icon: Icons.calendar_today_rounded,
+                  color: Colors.orange,
+                  label: 'Aktif Günler',
+                  value: '${stats.activeDays}',
+                ),
+                const SizedBox(height: 12),
+                _buildStatRow(
                   icon: Icons.access_time,
                   color: AppColors.accent,
                   label: 'Toplam Süre',

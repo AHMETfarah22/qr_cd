@@ -373,6 +373,7 @@ class _TimerScreenState extends State<TimerScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       timerService.startTimer();
+                      statsService.startSession(); // Track new session start
                       audioService.playStartSound(); 
                     },
                     style: ElevatedButton.styleFrom(

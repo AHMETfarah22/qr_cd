@@ -5,6 +5,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/widgets/common_button.dart';
 import '../../../core/widgets/common_text_field.dart';
 import '../services/auth_service.dart';
+import '../services/statistics_service.dart';
 import 'register_screen.dart';
 import 'account_screen.dart';
 import '../../timer/screens/timer_screen.dart';
@@ -52,6 +53,14 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!mounted) return;
 
     if (result['success']) {
+      // Force update statistics with new user
+      if (mounted) {
+        await Provider.of<StatisticsService>(context, listen: false)
+            .setCurrentUser(email);
+      }
+      
+      if (!mounted) return;
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const TimerScreen()),
@@ -64,6 +73,36 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       );
     }
+  }
+
+  void _showForgotPasswordDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.process,
+        title: const Text('Şifremi Unuttum', style: TextStyle(color: Colors.white)),
+        content: const Text(
+          'Şifrenizi unuttuğunuz için yeni bir hesap oluşturmanız gerekecek. Emin misiniz?',
+          style: TextStyle(color: AppColors.textSecondary),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Hayır', style: TextStyle(color: AppColors.textSecondary)),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Close dialog
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const RegisterScreen()),
+              );
+            },
+            child: const Text('Evet', style: TextStyle(color: AppColors.accent, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -147,6 +186,19 @@ class _LoginScreenState extends State<LoginScreen> {
               hintText: 'Şifrenizi giriniz',
               obscureText: true,
               showPasswordToggle: true,
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: _showForgotPasswordDialog,
+                child: const Text(
+                  'Şifremi Unuttum?',
+                  style: TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
             ),
             const SizedBox(height: 24),
             _isLoading

@@ -1,0 +1,12 @@
+flutter_native_splash:
+  color: "#080C14"
+  # Use icon if no separate splash image
+  image: "assets/icon/app_icon.png"
+  branding: "assets/icon/app_icon.png"
+  color_dark: "#080C14"
+  image_dark: "assets/icon/app_icon.png"
+  branding_dark: "assets/icon/app_icon.png"
+  
+  android_12:
+    image: "assets/icon/app_icon.png"
+    icon_background_color: "#080C14"

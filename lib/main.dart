@@ -36,14 +36,18 @@ void main() {
           update: (context, settings, previous) =>
               previous ?? AudioService(settings),
         ),
-        ChangeNotifierProxyProvider3<SensorService, AudioService, SettingsService, TimerService>(
+        ChangeNotifierProxyProvider4<SensorService, AudioService, SettingsService, StatisticsService, TimerService>(
           create: (context) => TimerService(
             context.read<SensorService>(),
             context.read<AudioService>(),
             context.read<SettingsService>(),
           ),
-          update: (context, sensor, audio, settings, previous) =>
-              previous ?? TimerService(sensor, audio, settings),
+          update: (context, sensor, audio, settings, stats, previous) {
+            final service = previous ?? TimerService(sensor, audio, settings);
+            // Sync timer service state (level) with persisted statistics
+            service.syncWithStats(stats.completedSessions);
+            return service;
+          },
         ),
       ],
       child: const FocusFlowApp(),

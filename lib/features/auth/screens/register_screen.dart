@@ -4,6 +4,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/widgets/common_button.dart';
 import '../../../core/widgets/common_text_field.dart';
 import '../services/auth_service.dart';
+import '../services/statistics_service.dart';
 import '../../timer/screens/timer_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -64,6 +65,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
       
       // Navigate to Timer Screen after successful registration
+      if (mounted) {
+        await Provider.of<StatisticsService>(context, listen: false)
+            .setCurrentUser(email);
+      }
+      
+      if (!mounted) return;
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const TimerScreen()),

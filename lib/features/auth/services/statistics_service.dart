@@ -21,6 +21,17 @@ class StatisticsService extends ChangeNotifier {
   List<String> get badges => _badges;
   List<Map<String, dynamic>> get sessionHistory => _sessionHistory;
 
+  // Calculate unique days with activity from history
+  int get activeDays {
+    if (_sessionHistory.isEmpty) return 0;
+    final uniqueDays = <String>{};
+    for (var session in _sessionHistory) {
+      final date = session['date'] as DateTime;
+      uniqueDays.add('${date.year}-${date.month}-${date.day}');
+    }
+    return uniqueDays.length;
+  }
+
   String get totalTimeFormatted {
     final hours = _totalMinutes ~/ 60;
     final minutes = _totalMinutes % 60;
@@ -76,17 +87,24 @@ class StatisticsService extends ChangeNotifier {
       _checkStreakReset();
     }
     
-    // Load session history (last 20 sessions)
+    // Load session history
     final historyJson = prefs.getStringList(_getUserKey('stats_session_history')) ?? [];
-    _sessionHistory = historyJson.map((json) {
-      final parts = json.split('|');
-      return {
-        'duration': int.parse(parts[0]),
-        'completed': parts[1] == 'true',
-        'date': DateTime.parse(parts[2]),
-        'category': parts.length > 3 ? SessionCategoryExtension.fromString(parts[3]) : SessionCategory.other,
-      };
-    }).toList();
+    try {
+      _sessionHistory = historyJson.map((json) {
+        final parts = json.split('|');
+        if (parts.length < 3) return null; // Skip invalid entries
+        
+        return {
+          'duration': int.parse(parts[0]),
+          'completed': parts[1] == 'true',
+          'date': DateTime.parse(parts[2]),
+          'category': parts.length > 3 ? SessionCategoryExtension.fromString(parts[3]) : SessionCategory.other,
+        };
+      }).where((element) => element != null).cast<Map<String, dynamic>>().toList();
+    } catch (e) {
+      debugPrint('Error loading session history: $e');
+      _sessionHistory = [];
+    }
     
     notifyListeners();
   }
@@ -154,8 +172,8 @@ class StatisticsService extends ChangeNotifier {
       'category': category,
     });
     
-    if (_sessionHistory.length > 20) {
-      _sessionHistory = _sessionHistory.sublist(0, 20);
+    if (_sessionHistory.length > 500) {
+      _sessionHistory = _sessionHistory.sublist(0, 500);
     }
     
     final prefs = await SharedPreferences.getInstance();
@@ -202,8 +220,8 @@ class StatisticsService extends ChangeNotifier {
     });
     
     // Keep only last 20 sessions
-    if (_sessionHistory.length > 20) {
-      _sessionHistory = _sessionHistory.sublist(0, 20);
+    if (_sessionHistory.length > 500) {
+      _sessionHistory = _sessionHistory.sublist(0, 500);
     }
     
     final prefs = await SharedPreferences.getInstance();
