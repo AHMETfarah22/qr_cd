@@ -1,11 +1,11 @@
-import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/models/session_category.dart';
 import '../../auth/screens/account_screen.dart';
-import '../../auth/services/statistics_service.dart';
+
 import '../services/timer_service.dart';
 import '../services/audio_service.dart';
 
@@ -200,18 +200,48 @@ class _TimerScreenState extends State<TimerScreen> {
                             width: 1,
                           ),
                         ),
-                        child: Text(
-                          timerService.state == TimerState.idle 
-                              ? "HAZIR" 
-                              : (timerService.state == TimerState.running ? "ODAKLAN" : "HATALI"),
-                          style: TextStyle(
-                            color: timerService.state == TimerState.failure 
-                                ? AppColors.error 
-                                : AppColors.accent,
-                            fontSize: 12,
-                            letterSpacing: 1.5,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        child: Builder(
+                          builder: (context) {
+                            String statusText;
+                            Color statusColor;
+                            
+                            switch (timerService.state) {
+                              case TimerState.idle:
+                                statusText = "HAZIR";
+                                statusColor = AppColors.accent;
+                                break;
+                              case TimerState.running:
+                                statusText = "ODAKLAN";
+                                statusColor = AppColors.accent;
+                                break;
+                              case TimerState.paused:
+                                statusText = "DURAKLATILDI";
+                                statusColor = Colors.orange;
+                                break;
+                              case TimerState.failure:
+                                statusText = "HATALI";
+                                statusColor = AppColors.error;
+                                break;
+                              case TimerState.success:
+                                statusText = "BAŞARILI";
+                                statusColor = Colors.green;
+                                break;
+                              case TimerState.breakTime:
+                                statusText = "MOLA";
+                                statusColor = Colors.blue;
+                                break;
+                            }
+                            
+                            return Text(
+                              statusText,
+                              style: TextStyle(
+                                color: statusColor,
+                                fontSize: 12,
+                                letterSpacing: 1.5,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ],
@@ -257,10 +287,10 @@ class _TimerScreenState extends State<TimerScreen> {
                         ),
                       ),
                       Slider(
-                        value: (timerService.currentTimeSeconds ~/ 60).toDouble().clamp(60.0, 600.0),
-                        min: 60,
-                        max: 600,
-                        divisions: 9,
+                        value: (timerService.totalTimeSeconds ~/ 60).toDouble().clamp(5.0, 120.0),
+                        min: 5,
+                        max: 120,
+                        divisions: 23,
                         activeColor: AppColors.accent,
                         inactiveColor: AppColors.process,
                         onChanged: (value) {
@@ -378,8 +408,7 @@ class _TimerScreenState extends State<TimerScreen> {
                   ),
                 ),
 
-                  ],
-                ),
+
 
               if (timerService.state == TimerState.success)
                 Column(

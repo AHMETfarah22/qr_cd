@@ -323,6 +323,7 @@ class AuthService extends ChangeNotifier {
     
     _userEmail = null;
     _userName = null;
+    _userImagePath = null;
     _isLoggedIn = false;
     notifyListeners();
   }

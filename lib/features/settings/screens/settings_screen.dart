@@ -5,12 +5,13 @@ import '../../../core/services/settings_service.dart';
 import '../../../core/widgets/common_text_field.dart';
 import '../../auth/services/auth_service.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:flutter/services.dart';
+
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import '../../../core/services/backup_service.dart';
 import '../../auth/services/statistics_service.dart';
+import '../../auth/screens/login_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -93,7 +94,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 newPassword: newPassword,
               );
 
-              Navigator.pop(dialogContext);
+              if (dialogContext.mounted) {
+                Navigator.pop(dialogContext);
+              }
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -114,10 +117,57 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _shareApp() {
-    Share.share(
-      'Focus Flow uygulamasını keşfet! Odaklanmanı ve verimliliğini artırmana yardımcı olur. 🚀\n\nİndir: https://focusflow.example.com',
-      subject: 'Focus Flow - Odaklanma Uygulaması',
+    SharePlus.instance.share(
+      ShareParams(
+        text: 'Focus Flow uygulamasını keşfet! Odaklanmanı ve verimliliğini artırmana yardımcı olur. 🚀\n\nİndir: https://focusflow.example.com',
+        subject: 'Focus Flow - Odaklanma Uygulaması',
+      ),
     );
+  }
+
+  Future<void> _showResetStatisticsDialog(BuildContext context) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.process,
+        title: const Text(
+          'İstatistikleri Sıfırla',
+          style: TextStyle(color: Colors.white),
+        ),
+        content: const Text(
+          'Tüm oturum geçmişi, seri, rozetler ve istatistikler silinecektir. Bu işlem geri alınamaz!\n\nDevam etmek istiyor musunuz?',
+          style: TextStyle(color: AppColors.textSecondary),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('İptal', style: TextStyle(color: AppColors.textSecondary)),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text(
+              'Sıfırla',
+              style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
+    ) ?? false;
+
+    if (!confirm) return;
+    if (!context.mounted) return;
+
+    final statsService = Provider.of<StatisticsService>(context, listen: false);
+    await statsService.resetStatistics();
+
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('İstatistikler başarıyla sıfırlandı'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    }
   }
 
   Future<void> _showBackupDialog(BuildContext context) async {
@@ -152,10 +202,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
       // 3. Share the file
       if (context.mounted) {
-        await Share.shareXFiles(
-          [XFile(file.path)],
-          text: 'Focus Flow Yedek Dosyası ($dateStr)',
-          subject: 'Focus Flow Yedek',
+        await SharePlus.instance.share(
+          ShareParams(
+            files: [XFile(file.path)],
+            text: 'Focus Flow Yedek Dosyası ($dateStr)',
+            subject: 'Focus Flow Yedek',
+          ),
         );
       }
       
@@ -185,6 +237,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       final jsonString = await file.readAsString();
       
       if (jsonString.isEmpty) return;
+
+      if (!context.mounted) return;
 
       final authService = Provider.of<AuthService>(context, listen: false);
       if (authService.userEmail == null) return;
@@ -232,6 +286,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         // Reload stats
         await Provider.of<StatisticsService>(context, listen: false).setCurrentUser(authService.userEmail);
         
+        if (!context.mounted) return;
+        
         // Suggest re-login or restart
         showDialog(
           context: context,
@@ -247,7 +303,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
               TextButton(
                 onPressed: () {
                   authService.logout();
-                  Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (_) => const LoginScreen()),
+                    (route) => false,
+                  );
                 },
                 child: const Text('Tamam', style: TextStyle(color: AppColors.accent)),
               ),
@@ -413,6 +473,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
               trailing: IconButton(
                 icon: const Icon(Icons.arrow_forward_ios, color: AppColors.accent, size: 18),
                 onPressed: () => _showRestoreDialog(context),
+              ),
+            ),
+            const SizedBox(height: 12),
+            _buildSettingCard(
+              title: 'İstatistikleri Sıfırla',
+              subtitle: 'Tüm oturum verilerini temizleyin',
+              icon: Icons.delete_sweep_outlined,
+              trailing: IconButton(
+                icon: const Icon(Icons.arrow_forward_ios, color: Colors.red, size: 18),
+                onPressed: () => _showResetStatisticsDialog(context),
               ),
             ),
             const SizedBox(height: 32),

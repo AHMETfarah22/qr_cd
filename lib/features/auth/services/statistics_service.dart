@@ -24,12 +24,17 @@ class StatisticsService extends ChangeNotifier {
   // Calculate unique days with activity from history
   int get activeDays {
     if (_sessionHistory.isEmpty) return 0;
-    final uniqueDays = <String>{};
-    for (var session in _sessionHistory) {
-      final date = session['date'] as DateTime;
-      uniqueDays.add('${date.year}-${date.month}-${date.day}');
+    try {
+      final uniqueDays = <String>{};
+      for (var session in _sessionHistory) {
+        final date = session['date'] as DateTime;
+        uniqueDays.add('${date.year}-${date.month}-${date.day}');
+      }
+      return uniqueDays.length;
+    } catch (e) {
+      debugPrint('Error calculating active days: $e');
+      return 0;
     }
-    return uniqueDays.length;
   }
 
   String get totalTimeFormatted {
@@ -86,9 +91,7 @@ class StatisticsService extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     
     // If no user is logged in, reset all stats
-    if (_currentUserEmail == null) {
-      _currentUserEmail = prefs.getString('current_user_email');
-    }
+    _currentUserEmail ??= prefs.getString('current_user_email');
     
     if (_currentUserEmail == null) {
       _resetLocalStats();

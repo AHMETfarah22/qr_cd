@@ -7,6 +7,8 @@ import '../../../core/services/settings_service.dart';
 import '../../../core/models/session_category.dart';
 import 'package:phone_state/phone_state.dart';
 import 'package:do_not_disturb/do_not_disturb.dart';
+import '../../../core/services/notification_service.dart';
+import '../../auth/services/statistics_service.dart';
 
 enum TimerState { idle, running, paused, failure, success, breakTime }
 
@@ -209,6 +211,8 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
     _updateInitialDuration();
 
     // Notify statistics service
+    if (_statisticsService != null) {
+      final totalMinutes = (_totalTimeSeconds / 60).ceil();
       _statisticsService!.completeSession(totalMinutes, category: _currentCategory);
     }
 
@@ -241,6 +245,12 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
   // Cancel timer and record statistics
   void cancelTimer(int durationMinutes) {
     if (_state != TimerState.running && _state != TimerState.paused) return;
+    
+    // Record cancelled session to statistics before resetting
+    _statisticsService?.cancelSession(
+      durationMinutes > 0 ? durationMinutes : 1,
+      category: _currentCategory,
+    );
     
     resetTimer();
   }
@@ -277,6 +287,10 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
   void dispose() {
     _timer?.cancel();
     _sensorSubscription?.cancel();
+    _phoneStateSubscription?.cancel();
+    _disableDND();
+    WidgetsBinding.instance.removeObserver(this);
+    WakelockPlus.disable();
     super.dispose();
   }
 }

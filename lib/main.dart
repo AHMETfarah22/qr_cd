@@ -8,6 +8,7 @@ import 'features/auth/services/statistics_service.dart';
 import 'features/timer/services/audio_service.dart';
 import 'features/timer/services/sensor_service.dart';
 import 'features/timer/services/timer_service.dart';
+import 'features/timer/screens/timer_screen.dart';
 
 import 'package:intl/date_symbol_data_local.dart';
 import 'core/services/notification_service.dart';
@@ -23,7 +24,19 @@ void main() async {
       providers: [
         Provider<NotificationService>.value(value: notificationService),
         ChangeNotifierProvider(create: (_) => AuthService()),
-        ChangeNotifierProvider(create: (_) => SettingsService()),
+        ChangeNotifierProxyProvider<AuthService, SettingsService>(
+          create: (context) {
+            final authService = context.read<AuthService>();
+            final settingsService = SettingsService();
+            settingsService.setCurrentUser(authService.userEmail);
+            return settingsService;
+          },
+          update: (context, authService, previousSettingsService) {
+            final settingsService = previousSettingsService ?? SettingsService();
+            settingsService.setCurrentUser(authService.userEmail);
+            return settingsService;
+          },
+        ),
         ChangeNotifierProxyProvider<AuthService, StatisticsService>(
           create: (context) {
             final authService = context.read<AuthService>();
@@ -39,7 +52,10 @@ void main() async {
             return statsService;
           },
         ),
-        Provider(create: (_) => SensorService()),
+        Provider(
+          create: (_) => SensorService(),
+          dispose: (_, service) => service.dispose(),
+        ),
         ChangeNotifierProxyProvider<SettingsService, AudioService>(
           create: (context) => AudioService(context.read<SettingsService>()),
           update: (context, settings, previous) =>
@@ -74,7 +90,15 @@ class FocusFlowApp extends StatelessWidget {
       title: 'Focus Flow',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme,
-      home: const LoginScreen(),
+      home: Consumer<AuthService>(
+        builder: (context, authService, _) {
+          // Auto-login: if user was previously logged in, go directly to TimerScreen
+          if (authService.isLoggedIn) {
+            return const TimerScreen();
+          }
+          return const LoginScreen();
+        },
+      ),
     );
   }
 }

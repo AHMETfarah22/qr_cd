@@ -44,8 +44,12 @@ class AudioService extends ChangeNotifier {
 
     // Handle Vibration
     if (_settingsService.vibrationEnabled) {
-      if (await Vibration.hasVibrator() ?? false) {
-        Vibration.vibrate(pattern: [500, 1000, 500, 1000], repeat: 0);
+      try {
+        if (await Vibration.hasVibrator()) {
+          await Vibration.vibrate(pattern: [500, 1000, 500, 1000], repeat: 0);
+        }
+      } catch (e) {
+        debugPrint("AudioService Vibration Error: $e");
       }
     }
   }
@@ -69,12 +73,16 @@ class AudioService extends ChangeNotifier {
 
   Future<void> playStartSound() async {
     // Basic haptic feedback for start
-    if (await Vibration.hasVibrator() ?? false) {
-      if (await Vibration.hasAmplitudeControl() ?? false) {
-        Vibration.vibrate(duration: 100, amplitude: 128);
-      } else {
-        Vibration.vibrate(duration: 100);
+    try {
+      if (await Vibration.hasVibrator()) {
+        if (await Vibration.hasAmplitudeControl()) {
+          await Vibration.vibrate(duration: 100, amplitude: 128);
+        } else {
+          await Vibration.vibrate(duration: 100);
+        }
       }
+    } catch (e) {
+      debugPrint("AudioService Start Vibration Error: $e");
     }
     debugPrint("AudioService: Play Start Sound (Vibration only for now)");
   }

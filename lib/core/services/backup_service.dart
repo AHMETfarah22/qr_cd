@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BackupService {
@@ -38,7 +39,7 @@ class BackupService {
 
       return jsonEncode(backup);
     } catch (e) {
-      print('Export error: $e');
+      debugPrint('Export error: $e');
       return null;
     }
   }
