@@ -220,6 +220,9 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
       id: 1,
       title: 'Tebrikler!',
       body: 'Odaklanma oturumu başarıyla tamamlandı. Harikasın!',
+      payload: 'success',
+      ongoing: true, // User requested persistent notification
+      playSound: true,
     );
 
     WakelockPlus.disable();
@@ -244,22 +247,37 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
 
   // Cancel timer and record statistics
   void cancelTimer(int durationMinutes) {
-    if (_state != TimerState.running && _state != TimerState.paused) return;
+    if (_state != TimerState.running && _state != TimerState.paused && _state != TimerState.breakTime && _state != TimerState.failure) return;
     
     // Record cancelled session to statistics before resetting
-    _statisticsService?.cancelSession(
-      durationMinutes > 0 ? durationMinutes : 1,
-      category: _currentCategory,
-    );
+    // Check if it's a break time being cancelled
+    if (_state == TimerState.breakTime) {
+       _statisticsService?.cancelSession(
+         durationMinutes > 0 ? durationMinutes : 1,
+         category: SessionCategory.breakTime,
+       );
+    } else {
+       _statisticsService?.cancelSession(
+         durationMinutes > 0 ? durationMinutes : 1,
+         category: _currentCategory,
+       );
+    }
     
     resetTimer();
   }
 
   void startBreak(int minutes) {
     _timer?.cancel();
+    
+    // Store previous category to restore after break (optional, or keep generic)
+    // _previousCategory = _currentCategory;
+    
     _state = TimerState.breakTime;
     _totalTimeSeconds = minutes * 60;
     _currentTimeSeconds = _totalTimeSeconds;
+    
+    // Record start of break session
+    _statisticsService?.startSession();
     
     debugPrint("TimerService: Starting BREAK for $minutes minutes");
     notifyListeners();
@@ -270,13 +288,22 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
         notifyListeners();
       } else {
         _timer?.cancel();
+        
+        // Record completed break session
+        _statisticsService?.completeSession(minutes, category: SessionCategory.breakTime);
+        
         _state = TimerState.idle;
         _notificationService.showNotification(
           id: 2,
           title: 'Mola Bitti!',
           body: 'Yeni bir odaklanma seansına hazırsın.',
+          playSound: true,
+          ongoing: false,
         );
-        _audioService.playStartSound(); // Use distinct sound if available
+        
+        // Play alarm sound for break end
+        _audioService.playAlarm(); 
+        
         _updateInitialDuration();
         notifyListeners();
       }

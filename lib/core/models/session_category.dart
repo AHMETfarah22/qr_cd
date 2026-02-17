@@ -8,6 +8,7 @@ enum SessionCategory {
   meditation,
   exercise,
   creative,
+  breakTime,
   other,
 }
 
@@ -26,6 +27,8 @@ extension SessionCategoryExtension on SessionCategory {
         return 'Egzersiz';
       case SessionCategory.creative:
         return 'Yaratıcı İş';
+      case SessionCategory.breakTime:
+        return 'Mola';
       case SessionCategory.other:
         return 'Diğer';
     }
@@ -45,6 +48,8 @@ extension SessionCategoryExtension on SessionCategory {
         return Icons.fitness_center_outlined;
       case SessionCategory.creative:
         return Icons.palette_outlined;
+      case SessionCategory.breakTime:
+        return Icons.coffee_outlined;
       case SessionCategory.other:
         return Icons.more_horiz_outlined;
     }
@@ -64,6 +69,8 @@ extension SessionCategoryExtension on SessionCategory {
         return Colors.red;
       case SessionCategory.creative:
         return Colors.pink;
+      case SessionCategory.breakTime:
+        return Colors.teal;
       case SessionCategory.other:
         return AppColors.textSecondary;
     }

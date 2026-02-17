@@ -79,25 +79,7 @@ class SessionHistoryScreen extends StatelessWidget {
                 children: [
                   _buildWeeklySummary(statsService),
                   Expanded(
-                    child: ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      itemCount: sessions.length,
-                      itemBuilder: (context, index) {
-                        final session = sessions[index];
-                        final duration = session['duration'] as int;
-                        final completed = session['completed'] as bool;
-                        final date = session['date'] as DateTime;
-                        final category = session['category'] as SessionCategory;
-        
-                        return _buildSessionCard(
-                          duration: duration,
-                          completed: completed,
-                          date: date,
-                          category: category,
-                          context: context,
-                        );
-                      },
-                    ),
+                    child: _buildSessionList(sessions),
                   ),
                 ],
               ),
@@ -234,6 +216,71 @@ class SessionHistoryScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildSessionList(List<Map<String, dynamic>> sessions) {
+    // Group sessions by date
+    final groupedSessions = <String, List<Map<String, dynamic>>>{};
+    
+    for (var session in sessions) {
+      final date = session['date'] as DateTime;
+      final dateKey = DateFormat('dd MMM yyyy', 'tr_TR').format(date);
+      if (!groupedSessions.containsKey(dateKey)) {
+        groupedSessions[dateKey] = [];
+      }
+      groupedSessions[dateKey]!.add(session);
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      itemCount: groupedSessions.length,
+      itemBuilder: (context, index) {
+        final dateKey = groupedSessions.keys.elementAt(index);
+        final daySessions = groupedSessions[dateKey]!;
+        
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 4.0),
+              child: Text(
+                _getDateLabel(dateKey),
+                style: const TextStyle(
+                  color: AppColors.accent,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.0,
+                ),
+              ),
+            ),
+            ...daySessions.map((session) {
+              final duration = session['duration'] as int;
+              final completed = session['completed'] as bool;
+              final date = session['date'] as DateTime;
+              final category = session['category'] as SessionCategory;
+
+              return _buildSessionCard(
+                duration: duration,
+                completed: completed,
+                date: date,
+                category: category,
+                context: context,
+              );
+            }),
+          ],
+        );
+      },
+    );
+  }
+
+  String _getDateLabel(String dateKey) {
+    final now = DateTime.now();
+    final today = DateFormat('dd MMM yyyy', 'tr_TR').format(now);
+    final yesterday = DateFormat('dd MMM yyyy', 'tr_TR').format(now.subtract(const Duration(days: 1)));
+    
+    if (dateKey == today) return 'BUGÜN';
+    if (dateKey == yesterday) return 'DÜN';
+    return dateKey.toUpperCase();
   }
 
   Widget _buildWeeklySummary(StatisticsService stats) {

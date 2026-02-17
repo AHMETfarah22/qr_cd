@@ -34,8 +34,11 @@ class NotificationService {
     required int id,
     required String title,
     required String body,
+    String? payload,
+    bool ongoing = false,
+    bool playSound = true,
   }) async {
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+    final AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
       'focus_flow_channel',
       'Focus Flow Notifications',
@@ -43,9 +46,12 @@ class NotificationService {
       importance: Importance.max,
       priority: Priority.high,
       showWhen: true,
+      ongoing: ongoing,
+      playSound: playSound,
+      styleInformation: const BigTextStyleInformation(''),
     );
 
-    const NotificationDetails platformChannelSpecifics =
+    final NotificationDetails platformChannelSpecifics =
         NotificationDetails(android: androidPlatformChannelSpecifics);
 
     await flutterLocalNotificationsPlugin.show(
@@ -53,6 +59,7 @@ class NotificationService {
       title,
       body,
       platformChannelSpecifics,
+      payload: payload,
     );
   }
 }
