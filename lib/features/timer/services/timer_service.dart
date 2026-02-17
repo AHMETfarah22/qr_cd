@@ -186,6 +186,7 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
 
   void _failTimer() {
     _timer?.cancel();
+    _sensorSubscription?.cancel();
     _phoneStateSubscription?.cancel();
     _disableDND();
     _state = TimerState.failure;

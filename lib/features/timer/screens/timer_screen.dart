@@ -497,14 +497,16 @@ class _TimerScreenState extends State<TimerScreen> {
                         color: Colors.transparent,
                         child: InkWell(
                           onTap: () {
+                            // Always stop alarm first when user interacts
+                            audioService.stopAlarm();
+
                             if (timerService.state == TimerState.breakTime) {
                                timerService.resetTimer();
                             } else {
-                              // Calculate elapsed minutes
-                              final elapsedSeconds = timerService.totalTimeSeconds - timerService.currentTimeSeconds;
-                              final durationCompleted = (elapsedSeconds / 60).ceil();
-                              audioService.stopAlarm();
-                              timerService.cancelTimer(durationCompleted > 0 ? durationCompleted : 1);
+                               // Calculate elapsed minutes
+                               final elapsedSeconds = timerService.totalTimeSeconds - timerService.currentTimeSeconds;
+                               final durationCompleted = (elapsedSeconds / 60).ceil();
+                               timerService.cancelTimer(durationCompleted > 0 ? durationCompleted : 1);
                             }
                           },
                           borderRadius: BorderRadius.circular(30),
