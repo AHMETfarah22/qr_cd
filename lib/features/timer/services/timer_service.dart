@@ -8,16 +8,18 @@ import '../../../core/models/session_category.dart';
 import 'package:phone_state/phone_state.dart';
 import 'package:do_not_disturb/do_not_disturb.dart';
 
-enum TimerState { idle, running, paused, failure, success }
+enum TimerState { idle, running, paused, failure, success, breakTime }
 
 class TimerService extends ChangeNotifier with WidgetsBindingObserver {
   final SensorService _sensorService;
   final AudioService _audioService;
   final SettingsService _settingsService;
+  final NotificationService _notificationService;
+  StatisticsService? _statisticsService;
   final DoNotDisturbPlugin _doNotDisturb = DoNotDisturbPlugin(); // Doğru sınıf ismi
   StreamSubscription? _phoneStateSubscription;
 
-  TimerService(this._sensorService, this._audioService, this._settingsService) {
+  TimerService(this._sensorService, this._audioService, this._settingsService, this._notificationService) {
     WidgetsBinding.instance.addObserver(this);
     // Initialize with settings if not in level 1
     _updateInitialDuration();
@@ -81,6 +83,7 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
   int get completedSessions => _completedSessions;
 
   int _totalTimeSeconds = 30; 
+  int get totalTimeSeconds => _totalTimeSeconds;
   int _currentTimeSeconds = 30;
   int get currentTimeSeconds => _currentTimeSeconds;
   double get progress => _currentTimeSeconds / _totalTimeSeconds;
@@ -107,16 +110,14 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
     }
   }
 
-  // Restore state from persisted statistics
-  void syncWithStats(int savedCompletedSessions) {
-    if (_completedSessions != savedCompletedSessions) {
-      _completedSessions = savedCompletedSessions;
-      
-      // Calculate level based on completed sessions
-      // If 0 sessions, Level 1.
-      // If >= 1 sessions, Level = Sessions + 1
+  // Sync state and dependencies
+  void updateDependencies(StatisticsService statsService) {
+    _statisticsService = statsService;
+    
+    if (_completedSessions != statsService.completedSessions) {
+      _completedSessions = statsService.completedSessions;
+      // Recalculate level
       _level = _completedSessions + 1;
-      
       _updateInitialDuration();
       notifyListeners();
     }
@@ -134,6 +135,10 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
     _enableDND();
     _startTicker();
     WakelockPlus.enable();
+    
+    // Notify statistics service
+    _statisticsService?.startSession();
+    
     notifyListeners();
   }
 
@@ -203,6 +208,16 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
     // Always update duration after completion/level up
     _updateInitialDuration();
 
+    // Notify statistics service
+      _statisticsService!.completeSession(totalMinutes, category: _currentCategory);
+    }
+
+    _notificationService.showNotification(
+      id: 1,
+      title: 'Tebrikler!',
+      body: 'Odaklanma oturumu başarıyla tamamlandı. Harikasın!',
+    );
+
     WakelockPlus.disable();
     notifyListeners();
   }
@@ -221,6 +236,41 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
     _updateInitialDuration();
     
     notifyListeners();
+  }
+
+  // Cancel timer and record statistics
+  void cancelTimer(int durationMinutes) {
+    if (_state != TimerState.running && _state != TimerState.paused) return;
+    
+    resetTimer();
+  }
+
+  void startBreak(int minutes) {
+    _timer?.cancel();
+    _state = TimerState.breakTime;
+    _totalTimeSeconds = minutes * 60;
+    _currentTimeSeconds = _totalTimeSeconds;
+    
+    debugPrint("TimerService: Starting BREAK for $minutes minutes");
+    notifyListeners();
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_currentTimeSeconds > 0) {
+        _currentTimeSeconds--;
+        notifyListeners();
+      } else {
+        _timer?.cancel();
+        _state = TimerState.idle;
+        _notificationService.showNotification(
+          id: 2,
+          title: 'Mola Bitti!',
+          body: 'Yeni bir odaklanma seansına hazırsın.',
+        );
+        _audioService.playStartSound(); // Use distinct sound if available
+        _updateInitialDuration();
+        notifyListeners();
+      }
+    });
   }
 
   @override

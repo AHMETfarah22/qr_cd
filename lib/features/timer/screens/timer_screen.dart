@@ -17,23 +17,7 @@ class TimerScreen extends StatefulWidget {
 }
 
 class _TimerScreenState extends State<TimerScreen> {
-  TimerState? _previousState;
-  
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final timerService = Provider.of<TimerService>(context, listen: false);
-    final statsService = Provider.of<StatisticsService>(context, listen: false);
-    
-    // Track state changes to detect completion
-    if (_previousState != null && _previousState != TimerState.success && timerService.state == TimerState.success) {
-      // Timer just completed successfully
-      final durationMinutes = ((timerService.currentTimeSeconds / 60).ceil());
-      final totalMinutes = timerService.level == 1 ? 1 : 60; // Level 1 is 30 seconds (round to 1 min), Level 2+ is 60 minutes
-      statsService.completeSession(totalMinutes, category: timerService.currentCategory);
-    }
-    _previousState = timerService.state;
-  }
+
   
   @override
   Widget build(BuildContext context) {
@@ -57,7 +41,6 @@ class _TimerScreenState extends State<TimerScreen> {
     }
 
     final audioService = Provider.of<AudioService>(context);
-    final statsService = Provider.of<StatisticsService>(context, listen: false);
     
     return Scaffold(
       backgroundColor: timerService.state == TimerState.failure 
@@ -266,7 +249,7 @@ class _TimerScreenState extends State<TimerScreen> {
                   Column(
                     children: [
                       Text(
-                        "${(timerService.currentTimeSeconds ~/ 3600)} Saat Odaklanma",
+                        "${(timerService.totalTimeSeconds ~/ 60)} Dakika Odaklanma",
                         style: const TextStyle(
                           color: AppColors.accent,
                           fontSize: 16,
@@ -373,7 +356,6 @@ class _TimerScreenState extends State<TimerScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       timerService.startTimer();
-                      statsService.startSession(); // Track new session start
                       audioService.playStartSound(); 
                     },
                     style: ElevatedButton.styleFrom(
@@ -396,6 +378,9 @@ class _TimerScreenState extends State<TimerScreen> {
                   ),
                 ),
 
+                  ],
+                ),
+
               if (timerService.state == TimerState.success)
                 Column(
                   children: [
@@ -405,21 +390,60 @@ class _TimerScreenState extends State<TimerScreen> {
                       size: 60,
                     ),
                     const SizedBox(height: 16),
-                    ElevatedButton(
+                    const Text(
+                      "MOLA ZAMANI",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.5,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            timerService.startBreak(15);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.process.withValues(alpha: 0.3),
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              side: BorderSide(color: AppColors.accent.withValues(alpha: 0.5)),
+                            ),
+                          ),
+                          child: const Text("15 dk Mola"),
+                        ),
+                        const SizedBox(width: 16),
+                        ElevatedButton(
+                          onPressed: () {
+                            timerService.startBreak(30);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.process.withValues(alpha: 0.3),
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              side: BorderSide(color: AppColors.accent.withValues(alpha: 0.5)),
+                            ),
+                          ),
+                          child: const Text("30 dk Mola"),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    TextButton(
                       onPressed: () {
                         timerService.resetTimer();
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.process,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
                       child: const Text(
-                        "DEVAM ET",
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, letterSpacing: 1.0),
+                        "Mola Verme, Devam Et",
+                        style: TextStyle(color: AppColors.textSecondary),
                       ),
                     ),
                   ],
@@ -444,11 +468,15 @@ class _TimerScreenState extends State<TimerScreen> {
                         color: Colors.transparent,
                         child: InkWell(
                           onTap: () {
-                            final durationCompleted = ((1 - timerService.progress) * (timerService.currentTimeSeconds / (timerService.progress > 0 ? timerService.progress : 1)) / 60).ceil();
-                            
-                            audioService.stopAlarm();
-                            statsService.cancelSession(durationCompleted > 0 ? durationCompleted : 1, category: timerService.currentCategory);
-                            timerService.resetTimer();
+                            if (timerService.state == TimerState.breakTime) {
+                               timerService.resetTimer();
+                            } else {
+                              // Calculate elapsed minutes
+                              final elapsedSeconds = timerService.totalTimeSeconds - timerService.currentTimeSeconds;
+                              final durationCompleted = (elapsedSeconds / 60).ceil();
+                              audioService.stopAlarm();
+                              timerService.cancelTimer(durationCompleted > 0 ? durationCompleted : 1);
+                            }
                           },
                           borderRadius: BorderRadius.circular(30),
                           child: Container(
@@ -475,9 +503,9 @@ class _TimerScreenState extends State<TimerScreen> {
                                   size: 20,
                                 ),
                                 const SizedBox(width: 8),
-                                const Text(
-                                  "VAZGEÇ", 
-                                  style: TextStyle(
+                                Text(
+                                  timerService.state == TimerState.breakTime ? "MOLAYI BİTİR" : "VAZGEÇ", 
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -534,6 +562,8 @@ class _TimerScreenState extends State<TimerScreen> {
         return timerService.completedSessions == 1 
             ? "TEBRİKLER! İlk aşama tamam.\n1 saatlik odaklanma açıldı!"
             : "Tebrikler! Oturum tamamlandı.";
+      case TimerState.breakTime:
+        return "Dinlenme zamanı...\nİyi molalar!";
     }
   }
 }

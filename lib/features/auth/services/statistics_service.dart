@@ -41,6 +41,28 @@ class StatisticsService extends ChangeNotifier {
     return '$minutes dakika';
   }
 
+  // Calculate total minutes for the current week (starting Monday)
+  int get weeklyTotalMinutes {
+    final now = DateTime.now();
+    // Monday = 1, Sunday = 7
+    // Calculate start of week (Monday)
+    final daysToSubtract = now.weekday - 1;
+    final startOfWeek = DateTime(now.year, now.month, now.day).subtract(Duration(days: daysToSubtract));
+    
+    int total = 0;
+    for (var session in _sessionHistory) {
+      if (session['completed'] == true) {
+        final date = session['date'] as DateTime;
+        if (date.isAfter(startOfWeek) || date.isAtSameMomentAs(startOfWeek)) {
+          total += session['duration'] as int;
+        }
+      }
+    }
+    return total;
+  }
+  
+  bool get hasWeeklyCertificate => weeklyTotalMinutes >= 300; // 5 hours = 300 minutes
+
   StatisticsService() {
     _loadStatistics();
   }
@@ -123,7 +145,10 @@ class StatisticsService extends ChangeNotifier {
   void _checkStreakReset() {
     if (_lastFocusDate == null) return;
     final now = DateTime.now();
-    final difference = now.difference(_lastFocusDate!).inDays;
+    final today = DateTime(now.year, now.month, now.day);
+    final last = DateTime(_lastFocusDate!.year, _lastFocusDate!.month, _lastFocusDate!.day);
+    
+    final difference = today.difference(last).inDays;
     if (difference > 1) {
       _currentStreak = 0;
     }
@@ -149,10 +174,16 @@ class StatisticsService extends ChangeNotifier {
     final now = DateTime.now();
     
     // Update Streak
-    if (_lastFocusDate == null) {
+    final today = DateTime(now.year, now.month, now.day);
+    DateTime? last;
+    if (_lastFocusDate != null) {
+      last = DateTime(_lastFocusDate!.year, _lastFocusDate!.month, _lastFocusDate!.day);
+    }
+
+    if (last == null) {
       _currentStreak = 1;
     } else {
-      final diff = now.difference(_lastFocusDate!).inDays;
+      final diff = today.difference(last).inDays;
       if (diff == 1) {
         _currentStreak++;
       } else if (diff > 1) {

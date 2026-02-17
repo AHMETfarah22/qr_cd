@@ -350,7 +350,12 @@ class StatisticsChartScreen extends StatelessWidget {
     
     for (var session in stats.sessionHistory) {
       final sessionDate = session['date'] as DateTime;
-      final daysDiff = now.difference(sessionDate).inDays;
+      
+      // Normalize dates to midnight for accurate day comparison
+      final today = DateTime(now.year, now.month, now.day);
+      final sDate = DateTime(sessionDate.year, sessionDate.month, sessionDate.day);
+      
+      final daysDiff = today.difference(sDate).inDays;
       
       if (daysDiff >= 0 && daysDiff < 7) {
         if (session['completed'] == true) {

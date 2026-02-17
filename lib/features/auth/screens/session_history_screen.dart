@@ -44,7 +44,7 @@ class SessionHistoryScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   const Text(
-                    'Henüz oturum geçmişi yok',
+                    'Henüz kaydedilmiş bir oturum yok',
                     style: TextStyle(
                       color: AppColors.textSecondary,
                       fontSize: 18,
@@ -53,34 +53,54 @@ class SessionHistoryScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   const Text(
-                    'İlk odaklanma seansını başlat!',
+                    'Hemen odaklanmaya başla ve ilk kaydını oluştur!',
                     style: TextStyle(
                       color: AppColors.textSecondary,
                       fontSize: 14,
                     ),
                   ),
+                  const SizedBox(height: 24),
+                  ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.accent,
+                      foregroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    child: const Text('Odaklanmaya Başla'),
+                  ),
                 ],
               ),
             )
-          : ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: sessions.length,
-              itemBuilder: (context, index) {
-                final session = sessions[index];
-                final duration = session['duration'] as int;
-                final completed = session['completed'] as bool;
-                final date = session['date'] as DateTime;
-                final category = session['category'] as SessionCategory;
-
-                return _buildSessionCard(
-                  duration: duration,
-                  completed: completed,
-                  date: date,
-                  category: category,
-                  context: context,
-                );
-              },
-            ),
+            : Column(
+                children: [
+                  _buildWeeklySummary(statsService),
+                  Expanded(
+                    child: ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      itemCount: sessions.length,
+                      itemBuilder: (context, index) {
+                        final session = sessions[index];
+                        final duration = session['duration'] as int;
+                        final completed = session['completed'] as bool;
+                        final date = session['date'] as DateTime;
+                        final category = session['category'] as SessionCategory;
+        
+                        return _buildSessionCard(
+                          duration: duration,
+                          completed: completed,
+                          date: date,
+                          category: category,
+                          context: context,
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
     );
   }
 
@@ -155,7 +175,7 @@ class SessionHistoryScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      completed ? 'BAŞARILI' : 'VAZGEÇME',
+                      completed ? 'BAŞARILI' : 'YARIM KALDI',
                       style: TextStyle(
                         color: completed ? Colors.green : Colors.red,
                         fontSize: 12,
@@ -208,6 +228,79 @@ class SessionHistoryScreen extends StatelessWidget {
                     ),
                   ],
                 ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildWeeklySummary(StatisticsService stats) {
+    final weeklyMinutes = stats.weeklyTotalMinutes;
+    final hours = weeklyMinutes ~/ 60;
+    final minutes = weeklyMinutes % 60;
+    final hasCertificate = stats.hasWeeklyCertificate;
+
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: hasCertificate ? Colors.blue.withValues(alpha: 0.1) : Colors.red.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: hasCertificate ? Colors.blue.withValues(alpha: 0.3) : Colors.red.withValues(alpha: 0.2),
+          width: 1.5,
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: hasCertificate ? Colors.blue.withValues(alpha: 0.2) : Colors.red.withValues(alpha: 0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.stars_rounded,
+              size: 36,
+              color: hasCertificate ? Colors.blue : Colors.red,
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  hasCertificate ? "HAFTALIK HEDEF TAMAM!" : "HEDEFE ULAŞILAMADI",
+                  style: TextStyle(
+                    color: hasCertificate ? Colors.blue : Colors.red,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.0,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  "Bu hafta toplam $hours saat $minutes dakika odaklandın.",
+                  style: const TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 12,
+                  ),
+                ),
+                if (!hasCertificate)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child: Text(
+                      "${(300 - weeklyMinutes)} dakika daha gerekli!",
+                      style: const TextStyle(
+                        color: Colors.redAccent,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),

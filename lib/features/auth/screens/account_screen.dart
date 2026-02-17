@@ -5,6 +5,9 @@ import '../services/auth_service.dart';
 import '../services/statistics_service.dart';
 import '../../settings/screens/settings_screen.dart';
 import 'login_screen.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'session_history_screen.dart';
 import 'statistics_chart_screen.dart';
 
@@ -59,34 +62,55 @@ class AccountScreen extends StatelessWidget {
             Center(
               child: Column(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: AppColors.accent.withValues(alpha: 0.5),
-                        width: 2,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.accent.withValues(alpha: 0.15),
-                          blurRadius: 20,
-                          spreadRadius: 5,
+                  Stack(
+                    alignment: Alignment.bottomRight,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: AppColors.accent.withValues(alpha: 0.5),
+                            width: 2,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.accent.withValues(alpha: 0.15),
+                              blurRadius: 20,
+                              spreadRadius: 5,
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: CircleAvatar(
-                      radius: 50,
-                      backgroundColor: AppColors.process.withValues(alpha: 0.5),
-                      child: Text(
-                        authService.userName?.substring(0, 1).toUpperCase() ?? 'U',
-                        style: const TextStyle(
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.accent,
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundColor: AppColors.process.withValues(alpha: 0.5),
+                          backgroundImage: authService.userImagePath != null 
+                              ? FileImage(File(authService.userImagePath!))
+                              : null,
+                          child: authService.userImagePath == null 
+                              ? Text(
+                                  authService.userName?.substring(0, 1).toUpperCase() ?? 'U',
+                                  style: const TextStyle(
+                                    fontSize: 40,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.accent,
+                                  ),
+                                )
+                              : null,
                         ),
                       ),
-                    ),
+                      GestureDetector(
+                        onTap: () => _pickImage(context, authService),
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: const BoxDecoration(
+                            color: AppColors.accent,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.edit, color: Colors.black, size: 16),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 16),
                   Text(
@@ -746,5 +770,19 @@ class AccountScreen extends StatelessWidget {
         ],
       ),
     );
+
+  }
+
+ Future<void> _pickImage(BuildContext context, AuthService authService) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      final appDir = await getApplicationDocumentsDirectory();
+      final fileName = pickedFile.name;
+      final savedImage = await File(pickedFile.path).copy('${appDir.path}/$fileName');
+      
+      authService.updateProfileImage(savedImage.path);
+    }
   }
 }
