@@ -8,6 +8,7 @@ import '../../auth/screens/account_screen.dart';
 
 import '../services/timer_service.dart';
 import '../services/audio_service.dart';
+import '../../../l10n/app_localizations.dart';
 
 class TimerScreen extends StatefulWidget {
   const TimerScreen({super.key});
@@ -41,6 +42,7 @@ class _TimerScreenState extends State<TimerScreen> {
     }
 
     final audioService = Provider.of<AudioService>(context);
+    final l10n = AppLocalizations.of(context)!;
     
     return Scaffold(
       backgroundColor: timerService.state == TimerState.failure 
@@ -49,9 +51,9 @@ class _TimerScreenState extends State<TimerScreen> {
       appBar: AppBar(
         title: Column(
           children: [
-            const Text(
-              "ODAKLANMA SAYACI",
-              style: TextStyle(
+            Text(
+              l10n.focusTimer,
+              style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 2.0,
@@ -59,7 +61,7 @@ class _TimerScreenState extends State<TimerScreen> {
             ),
             if (timerService.level > 1)
               Text(
-                "SEVİYE ${timerService.level}",
+                l10n.level(timerService.level),
                 style: const TextStyle(
                   fontSize: 10,
                   color: AppColors.accent,
@@ -88,13 +90,13 @@ class _TimerScreenState extends State<TimerScreen> {
             ),
             child: IconButton(
               icon: const Icon(Icons.person_rounded, size: 20, color: AppColors.accent),
-              tooltip: 'Hesap Bilgileri',
+              tooltip: l10n.accountInfo,
               onPressed: () {
                 if (timerService.state == TimerState.running) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Timer çalışırken hesaba gidemezsiniz!"),
-                      duration: Duration(seconds: 2),
+                    SnackBar(
+                      content: Text(l10n.cannotGoToAccount),
+                      duration: const Duration(seconds: 2),
                       backgroundColor: Colors.red,
                     ),
                   );
@@ -207,27 +209,27 @@ class _TimerScreenState extends State<TimerScreen> {
                             
                             switch (timerService.state) {
                               case TimerState.idle:
-                                statusText = "HAZIR";
+                                statusText = l10n.ready;
                                 statusColor = AppColors.accent;
                                 break;
                               case TimerState.running:
-                                statusText = "ODAKLAN";
+                                statusText = l10n.focus;
                                 statusColor = AppColors.accent;
                                 break;
                               case TimerState.paused:
-                                statusText = "DURAKLATILDI";
+                                statusText = l10n.paused;
                                 statusColor = Colors.orange;
                                 break;
                               case TimerState.failure:
-                                statusText = "HATALI";
+                                statusText = l10n.failed;
                                 statusColor = AppColors.error;
                                 break;
                               case TimerState.success:
-                                statusText = "BAŞARILI";
+                                statusText = l10n.success;
                                 statusColor = Colors.green;
                                 break;
                               case TimerState.breakTime:
-                                statusText = "MOLA";
+                                statusText = l10n.breakLabel;
                                 statusColor = Colors.blue;
                                 break;
                             }
@@ -256,9 +258,9 @@ class _TimerScreenState extends State<TimerScreen> {
                 if (timerService.level == 1)
                   Column(
                     children: [
-                      const Text(
-                        "30 Saniye Odaklanma Testi",
-                        style: TextStyle(
+                      Text(
+                        l10n.secondsFocusTest,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -267,7 +269,7 @@ class _TimerScreenState extends State<TimerScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        "Başlangıç Seviyesi",
+                        l10n.beginnerLevel,
                         style: TextStyle(
                           color: AppColors.accent.withValues(alpha: 0.7),
                           fontSize: 12,
@@ -279,7 +281,7 @@ class _TimerScreenState extends State<TimerScreen> {
                   Column(
                     children: [
                       Text(
-                        "${(timerService.totalTimeSeconds ~/ 60)} Dakika Odaklanma",
+                        l10n.minuteFocus(timerService.totalTimeSeconds ~/ 60),
                         style: const TextStyle(
                           color: AppColors.accent,
                           fontSize: 16,
@@ -303,9 +305,9 @@ class _TimerScreenState extends State<TimerScreen> {
                 const SizedBox(height: 24),
                 
                 // Category Selector
-                const Text(
-                  'KATEGORİ SEÇ',
-                  style: TextStyle(
+                Text(
+                  l10n.selectCategory,
+                  style: const TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 11,
                     fontWeight: FontWeight.bold,
@@ -353,7 +355,7 @@ class _TimerScreenState extends State<TimerScreen> {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              category.displayName,
+                              category.getDisplayName(context),
                               style: TextStyle(
                                 color: isSelected ? category.color : AppColors.textSecondary,
                                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
@@ -397,9 +399,9 @@ class _TimerScreenState extends State<TimerScreen> {
                       ),
                       elevation: 0,
                     ),
-                    child: const Text(
-                      "BAŞLAT",
-                      style: TextStyle(
+                    child: Text(
+                      l10n.start,
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w800,
                         letterSpacing: 2.0,
@@ -419,9 +421,9 @@ class _TimerScreenState extends State<TimerScreen> {
                       size: 60,
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      "MOLA ZAMANI",
-                      style: TextStyle(
+                    Text(
+                      l10n.breakTimeTitle,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -445,7 +447,7 @@ class _TimerScreenState extends State<TimerScreen> {
                               side: BorderSide(color: AppColors.accent.withValues(alpha: 0.5)),
                             ),
                           ),
-                          child: const Text("15 dk Mola"),
+                          child: Text(l10n.minBreak(15)),
                         ),
                         const SizedBox(width: 16),
                         ElevatedButton(
@@ -461,7 +463,7 @@ class _TimerScreenState extends State<TimerScreen> {
                               side: BorderSide(color: AppColors.accent.withValues(alpha: 0.5)),
                             ),
                           ),
-                          child: const Text("30 dk Mola"),
+                          child: Text(l10n.minBreak(30)),
                         ),
                       ],
                     ),
@@ -470,9 +472,9 @@ class _TimerScreenState extends State<TimerScreen> {
                       onPressed: () {
                         timerService.resetTimer();
                       },
-                      child: const Text(
-                        "Mola Verme, Devam Et",
-                        style: TextStyle(color: AppColors.textSecondary),
+                      child: Text(
+                        l10n.dontTakeBreak,
+                        style: const TextStyle(color: AppColors.textSecondary),
                       ),
                     ),
                   ],
@@ -535,7 +537,7 @@ class _TimerScreenState extends State<TimerScreen> {
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                  timerService.state == TimerState.breakTime ? "MOLAYI BİTİR" : "VAZGEÇ", 
+                                  timerService.state == TimerState.breakTime ? l10n.endBreak : l10n.cancel, 
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
@@ -558,7 +560,7 @@ class _TimerScreenState extends State<TimerScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
-                  _getStatusMessage(timerService),
+                  _getStatusMessage(timerService, l10n),
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: AppColors.textSecondary.withValues(alpha: 0.6),
@@ -577,24 +579,24 @@ class _TimerScreenState extends State<TimerScreen> {
     );
   }
 
-  String _getStatusMessage(TimerService timerService) {
+  String _getStatusMessage(TimerService timerService, AppLocalizations l10n) {
     switch (timerService.state) {
       case TimerState.idle:
         return timerService.level == 1 
-            ? "30 saniyelik testi tamamla ve\ngerçek odaklanmaya başla!" 
-            : "Süreyi ayarla, kategori seç ve odaklan!";
+            ? l10n.statusIdleLvl1 
+            : l10n.statusIdle;
       case TimerState.running:
-        return "Derin odaklanma başlıyor...\nTelefonu ters çevir!";
+        return l10n.statusRunning;
       case TimerState.paused:
-        return "Duraklatıldı";
+        return l10n.statusPaused;
       case TimerState.failure:
-        return "ODAK BOZULDU!\nTelefonu kaldırdın.";
+        return l10n.statusFailure;
       case TimerState.success:
         return timerService.completedSessions == 1 
-            ? "TEBRİKLER! İlk aşama tamam.\n1 saatlik odaklanma açıldı!"
-            : "Tebrikler! Oturum tamamlandı.";
+            ? l10n.statusSuccessFirst
+            : l10n.statusSuccess;
       case TimerState.breakTime:
-        return "Dinlenme zamanı...\nİyi molalar!";
+        return l10n.statusBreak;
     }
   }
 }

@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'session_history_screen.dart';
 import 'statistics_chart_screen.dart';
+import '../../../l10n/app_localizations.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
@@ -17,13 +18,14 @@ class AccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text(
-          'HESAP BİLGİLERİ',
-          style: TextStyle(
+        title: Text(
+          l10n.accountInfoTitle,
+          style: const TextStyle(
             fontSize: 14, // Slightly smaller
             fontWeight: FontWeight.bold,
             letterSpacing: 2.0,
@@ -114,7 +116,7 @@ class AccountScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    authService.userName ?? 'Kullanıcı',
+                    authService.userName ?? l10n.user,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 24,
@@ -145,10 +147,10 @@ class AccountScreen extends StatelessWidget {
             const SizedBox(height: 40),
             
             // Statistics Section Header
-            const Align(
+            Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                'ODAKLANMA ÖZETİ',
+                l10n.focusSummary,
                 style: TextStyle(
                   color: AppColors.accent,
                   fontSize: 12,
@@ -174,9 +176,9 @@ class AccountScreen extends StatelessWidget {
                         Expanded(
                           child: _buildStatCard(
                             icon: Icons.play_circle_outline,
-                            title: 'Toplam',
+                            title: l10n.total,
                             value: '${statsService.totalSessions}',
-                            subtitle: 'Oturum',
+                            subtitle: l10n.session(statsService.totalSessions),
                             color: Colors.blue.shade300,
                             context: context,
                           ),
@@ -185,9 +187,9 @@ class AccountScreen extends StatelessWidget {
                         Expanded(
                           child: _buildStatCard(
                             icon: Icons.check_circle_outline,
-                            title: 'Başarılı',
+                            title: l10n.successful,
                             value: '${statsService.completedSessions}',
-                            subtitle: 'Oturum',
+                            subtitle: l10n.session(statsService.completedSessions),
                             color: Colors.green.shade300,
                             context: context,
                           ),
@@ -200,9 +202,9 @@ class AccountScreen extends StatelessWidget {
                         Expanded(
                           child: _buildStatCard(
                             icon: Icons.cancel_outlined,
-                            title: 'Vazgeçilen',
+                            title: l10n.cancelled,
                             value: '${statsService.cancelledSessions}',
-                            subtitle: 'Oturum',
+                            subtitle: l10n.session(statsService.cancelledSessions),
                             color: Colors.red.shade300,
                             context: context,
                           ),
@@ -211,7 +213,7 @@ class AccountScreen extends StatelessWidget {
                         Expanded(
                           child: _buildStatCard(
                             icon: Icons.access_time_rounded,
-                            title: 'Toplam Süre',
+                            title: l10n.totalTime,
                             value: statsService.totalTimeFormatted,
                             subtitle: '',
                             color: Colors.orange.shade300,
@@ -225,10 +227,10 @@ class AccountScreen extends StatelessWidget {
                     
                     // Badges Section
                     if (statsService.badges.isNotEmpty) ...[
-                      const Align(
+                      Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'KAZANILAN ROZETLER',
+                          l10n.earnedBadges,
                           style: TextStyle(
                             color: AppColors.accent,
                             fontSize: 12,
@@ -249,16 +251,16 @@ class AccountScreen extends StatelessWidget {
                         ),
                         itemCount: statsService.badges.length,
                         itemBuilder: (context, index) {
-                          return _buildBadgeItem(statsService.badges[index]);
+                          return _buildBadgeItem(statsService.badges[index], l10n);
                         },
                       ),
                       const SizedBox(height: 32),
                     ],
 
-                    const Align(
+                    Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'BAŞARI ANALİZİ',
+                        l10n.successAnalysis,
                         style: TextStyle(
                           color: AppColors.accent,
                           fontSize: 12,
@@ -269,7 +271,7 @@ class AccountScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     // Success Rate
-                    _buildSuccessRateCard(statsService, context),
+                    _buildSuccessRateCard(statsService, context, l10n),
                     
                     const SizedBox(height: 24),
                     
@@ -306,13 +308,13 @@ class AccountScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(16),
                           ),
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.history_rounded, color: AppColors.accent),
-                            SizedBox(width: 12),
+                            const Icon(Icons.history_rounded, color: AppColors.accent),
+                            const SizedBox(width: 12),
                             Text(
-                              'OTURUM GEÇMİŞİ',
+                              l10n.sessionHistory,
                               style: TextStyle(
                                 color: AppColors.accent,
                                 fontSize: 16,
@@ -370,7 +372,7 @@ class AccountScreen extends StatelessWidget {
                     Icon(Icons.bar_chart_rounded, color: Colors.purple.shade200),
                     const SizedBox(width: 12),
                     Text(
-                      'DETAYLI GRAFİKLER',
+                      l10n.detailedCharts,
                       style: TextStyle(
                         color: Colors.purple.shade200,
                         fontSize: 16,
@@ -386,7 +388,7 @@ class AccountScreen extends StatelessWidget {
             const SizedBox(height: 48),
 
             // Logout & Delete Buttons
-            _buildActionButtons(context, authService),
+            _buildActionButtons(context, authService, l10n),
             
             const SizedBox(height: 32),
           ],
@@ -396,7 +398,7 @@ class AccountScreen extends StatelessWidget {
   }
 
   // Extracted Action Buttons to clean up build method
-  Widget _buildActionButtons(BuildContext context, AuthService authService) {
+  Widget _buildActionButtons(BuildContext context, AuthService authService, AppLocalizations l10n) {
     return Column(
       children: [
         // Logout Button
@@ -410,7 +412,7 @@ class AccountScreen extends StatelessWidget {
             ),
           ),
           child: ElevatedButton(
-            onPressed: () => _confirmLogout(context, authService),
+            onPressed: () => _confirmLogout(context, authService, l10n),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.transparent,
               shadowColor: Colors.transparent,
@@ -419,14 +421,14 @@ class AccountScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
               ),
             ),
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.logout_rounded, color: AppColors.textSecondary),
-                SizedBox(width: 8),
+                const Icon(Icons.logout_rounded, color: AppColors.textSecondary),
+                const SizedBox(width: 8),
                 Text(
-                  'ÇIKIŞ YAP',
-                  style: TextStyle(
+                  l10n.logout,
+                  style: const TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -441,9 +443,9 @@ class AccountScreen extends StatelessWidget {
         
         // Delete Account Button
         TextButton(
-          onPressed: () => _confirmDeleteAccount(context, authService),
+          onPressed: () => _confirmDeleteAccount(context, authService, l10n),
           child: Text(
-            'Hesabı Sil',
+            l10n.deleteAccount,
             style: TextStyle(
               color: Colors.red.withValues(alpha: 0.7),
               fontSize: 14,
@@ -454,24 +456,24 @@ class AccountScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _confirmLogout(BuildContext context, AuthService authService) async {
+  Future<void> _confirmLogout(BuildContext context, AuthService authService, AppLocalizations l10n) async {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.process,
-        title: const Text('Çıkış Yap', style: TextStyle(color: Colors.white)),
-        content: const Text(
-          'Çıkış yapmak istediğinizden emin misiniz?',
-          style: TextStyle(color: AppColors.textSecondary),
+        title: Text(l10n.logout.toLowerCase(), style: const TextStyle(color: Colors.white)),
+        content: Text(
+          l10n.logoutConfirm,
+          style: const TextStyle(color: AppColors.textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('İptal', style: TextStyle(color: AppColors.textSecondary)),
+            child: Text(l10n.cancelBtn, style: const TextStyle(color: AppColors.textSecondary)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Çıkış Yap', style: TextStyle(color: AppColors.accent)),
+            child: Text(l10n.logout.toLowerCase(), style: const TextStyle(color: AppColors.accent)),
           ),
         ],
       ),
@@ -489,25 +491,25 @@ class AccountScreen extends StatelessWidget {
     }
   }
 
-  Future<void> _confirmDeleteAccount(BuildContext context, AuthService authService) async {
+  Future<void> _confirmDeleteAccount(BuildContext context, AuthService authService, AppLocalizations l10n) async {
     // Similar to logout but for delete
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.process,
-        title: const Text('Hesabı Sil', style: TextStyle(color: Colors.red)),
-        content: const Text(
-          'Hesabınızı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.',
-          style: TextStyle(color: AppColors.textSecondary),
+        title: Text(l10n.deleteAccount, style: const TextStyle(color: Colors.red)),
+        content: Text(
+          l10n.deleteAccountConfirm,
+          style: const TextStyle(color: AppColors.textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('İptal', style: TextStyle(color: AppColors.textSecondary)),
+            child: Text(l10n.cancelBtn, style: const TextStyle(color: AppColors.textSecondary)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('SİL', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+            child: Text(l10n.delete, style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -591,7 +593,7 @@ class AccountScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSuccessRateCard(StatisticsService statsService, BuildContext context) {
+  Widget _buildSuccessRateCard(StatisticsService statsService, BuildContext context, AppLocalizations l10n) {
     // Safely calculate success rate
     final double successRate = statsService.totalSessions > 0 
         ? (statsService.completedSessions / statsService.totalSessions * 100) 
@@ -625,9 +627,9 @@ class AccountScreen extends StatelessWidget {
                     child: Icon(Icons.emoji_events_rounded, color: color, size: 24),
                   ),
                   const SizedBox(width: 16),
-                  const Text(
-                    'Başarı Oranı',
-                    style: TextStyle(
+                   Text(
+                    l10n.successRate,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -661,6 +663,7 @@ class AccountScreen extends StatelessWidget {
   }
 
   Widget _buildStreakCard(StatisticsService stats, BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
       decoration: BoxDecoration(
@@ -684,9 +687,9 @@ class AccountScreen extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'GÜNLÜK SERİ',
-                style: TextStyle(
+              Text(
+                l10n.dailyStreak,
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 13,
                   fontWeight: FontWeight.bold,
@@ -695,7 +698,7 @@ class AccountScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                '${stats.currentStreak} GÜN!',
+                '${stats.currentStreak} ${l10n.day(stats.currentStreak)}!',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 36,
@@ -718,20 +721,23 @@ class AccountScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBadgeItem(String badgeName) {
+  Widget _buildBadgeItem(String badgeName, AppLocalizations l10n) {
     IconData icon;
     Color color;
 
     switch (badgeName) {
       case 'Erkenci Kuş':
+        badgeName = l10n.badgeEarlyBird;
         icon = Icons.wb_sunny_rounded;
         color = Colors.amber;
         break;
       case 'Maratoncu':
+        badgeName = l10n.badgeMarathoner;
         icon = Icons.timer_rounded;
         color = Colors.blueAccent;
         break;
       case 'Usta Odaklanıcı':
+        badgeName = l10n.badgeMaster;
         icon = Icons.workspace_premium_rounded;
         color = Colors.purpleAccent;
         break;

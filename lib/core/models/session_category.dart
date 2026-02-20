@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
+import '../../l10n/app_localizations.dart';
 
 enum SessionCategory {
   work,
@@ -13,6 +14,35 @@ enum SessionCategory {
 }
 
 extension SessionCategoryExtension on SessionCategory {
+  String get localizedName {
+    // This will be replaced by actual localization call in the UI
+    return displayName;
+  }
+
+  String getDisplayName(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    if (l10n == null) return displayName;
+    
+    switch (this) {
+      case SessionCategory.work:
+        return l10n.catWork;
+      case SessionCategory.study:
+        return l10n.catStudy;
+      case SessionCategory.reading:
+        return l10n.catReading;
+      case SessionCategory.meditation:
+        return l10n.catMeditation;
+      case SessionCategory.exercise:
+        return l10n.catExercise;
+      case SessionCategory.creative:
+        return l10n.catCreative;
+      case SessionCategory.breakTime:
+        return l10n.catBreak;
+      case SessionCategory.other:
+        return l10n.catOther;
+    }
+  }
+
   String get displayName {
     switch (this) {
       case SessionCategory.work:

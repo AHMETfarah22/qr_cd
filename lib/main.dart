@@ -12,10 +12,13 @@ import 'features/timer/screens/timer_screen.dart';
 
 import 'package:intl/date_symbol_data_local.dart';
 import 'core/services/notification_service.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('tr_TR', null);
+  await initializeDateFormatting('en_US', null);
   final notificationService = NotificationService();
   await notificationService.init();
   
@@ -90,6 +93,16 @@ class FocusFlowApp extends StatelessWidget {
       title: 'Focus Flow',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en'),
+        Locale('tr'),
+      ],
       home: Consumer<AuthService>(
         builder: (context, authService, _) {
           // Auto-login: if user was previously logged in, go directly to TimerScreen

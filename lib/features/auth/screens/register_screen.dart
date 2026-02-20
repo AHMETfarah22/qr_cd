@@ -6,6 +6,7 @@ import '../../../core/widgets/common_text_field.dart';
 import '../services/auth_service.dart';
 import '../services/statistics_service.dart';
 import '../../timer/screens/timer_screen.dart';
+import '../../../l10n/app_localizations.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -34,9 +35,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final password = _passwordController.text.trim();
 
     if (name.isEmpty || email.isEmpty || password.isEmpty) {
+      final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Lütfen tüm alanları doldurun'),
+        SnackBar(
+          content: Text(l10n.fillAllFields),
           backgroundColor: Colors.red,
         ),
       );
@@ -88,9 +90,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Kayıt Ol'),
+        title: Text(l10n.register),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -103,7 +106,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             children: [
             const SizedBox(height: 20),
             Text(
-              "Yeni Hesap Oluştur",
+              l10n.createNewAccount,
               style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -111,26 +114,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              "Odaklanmaya ve üretkenliğe bugün başlayın.",
+              l10n.startFocusingToday,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AppColors.textSecondary,
                   ),
             ),
             const SizedBox(height: 16),
-            const Align(
+            Align(
               alignment: Alignment.centerLeft,
-              child: Text("Ad Soyad *", style: TextStyle(fontWeight: FontWeight.bold)),
+              child: Text("${l10n.nameSurname} *", style: const TextStyle(fontWeight: FontWeight.bold)),
             ),
             const SizedBox(height: 8),
             CommonTextField(
               controller: _nameController,
-              hintText: 'Adınızı ve soyadınızı girin',
+              hintText: l10n.enterNameSurname,
             ),
             const SizedBox(height: 16),
-            const Align(
+            Align(
               alignment: Alignment.centerLeft,
-              child: Text("E-posta *", style: TextStyle(fontWeight: FontWeight.bold)),
+              child: Text("${l10n.email} *", style: const TextStyle(fontWeight: FontWeight.bold)),
             ),
             const SizedBox(height: 8),
             CommonTextField(
@@ -139,9 +142,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
               keyboardType: TextInputType.emailAddress,
             ),
             const SizedBox(height: 16),
-            const Align(
+            Align(
               alignment: Alignment.centerLeft,
-              child: Text("Şifre *", style: TextStyle(fontWeight: FontWeight.bold)),
+              child: Text("${l10n.password} *", style: const TextStyle(fontWeight: FontWeight.bold)),
             ),
             const SizedBox(height: 8),
             CommonTextField(
@@ -152,7 +155,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              "Kayıt olarak Kullanım Koşulları'nı ve Gizlilik Politikası'nı kabul etmiş olursunuz.",
+              l10n.agreeTerms,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: AppColors.textSecondary,
@@ -162,7 +165,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             _isLoading
                 ? const CircularProgressIndicator(color: AppColors.accent)
                 : CommonButton(
-                    text: "Hesap Oluştur",
+                    text: l10n.createAccount,
                     onPressed: _handleRegister,
                   ),
             const SizedBox(height: 24),
@@ -171,14 +174,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
               crossAxisAlignment: WrapCrossAlignment.center,
               spacing: 4,
               children: [
-                const Text("Zaten bir hesabınız var mı? ", style: TextStyle(color: AppColors.textSecondary)),
+                Text(l10n.alreadyHaveAccount, style: const TextStyle(color: AppColors.textSecondary)),
                 GestureDetector(
                   onTap: () {
                     Navigator.pop(context);
                   },
-                  child: const Text(
-                    "Giriş Yap",
-                    style: TextStyle(
+                  child: Text(
+                    l10n.login,
+                    style: const TextStyle(
                       color: AppColors.accent,
                       fontWeight: FontWeight.bold,
                     ),

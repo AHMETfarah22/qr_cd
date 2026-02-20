@@ -1,0 +1,104 @@
+{
+  "@@locale": "tr",
+  "focusTimer": "ODAKLANMA SAYACI",
+  "level": "SEVİYE {level}",
+  "@level": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "accountInfo": "Hesap Bilgileri",
+  "cannotGoToAccount": "Timer çalışırken hesaba gidemezsiniz!",
+  "ready": "HAZIR",
+  "focus": "ODAKLAN",
+  "paused": "DURAKLATILDI",
+  "failed": "HATALI",
+  "success": "BAŞARILI",
+  "breakLabel": "MOLA",
+  "secondsFocusTest": "30 Saniye Odaklanma Testi",
+  "beginnerLevel": "Başlangıç Seviyesi",
+  "minuteFocus": "{minutes} Dakika Odaklanma",
+  "@minuteFocus": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "selectCategory": "KATEGORİ SEÇ",
+  "start": "BAŞLAT",
+  "breakTimeTitle": "MOLA ZAMANI",
+  "minBreak": "{minutes} dk Mola",
+  "@minBreak": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "dontTakeBreak": "Mola Verme, Devam Et",
+  "endBreak": "MOLAYI BİTİR",
+  "cancel": "VAZGEÇ",
+  "statusIdleLvl1": "30 saniyelik testi tamamla ve\ngerçek odaklanmaya başla!",
+  "statusIdle": "Süreyi ayarla, kategori seç ve odaklan!",
+  "statusRunning": "Derin odaklanma başlıyor...\nTelefonu ters çevir!",
+  "statusPaused": "Duraklatıldı",
+  "statusFailure": "ODAK BOZULDU!\nTelefonu kaldırdın.",
+  "statusSuccessFirst": "TEBRİKLER! İlk aşama tamam.\n1 saatlik odaklanma açıldı!",
+  "statusSuccess": "Tebrikler! Oturum tamamlandı.",
+  "statusBreak": "Dinlenme zamanı...\nİyi molalar!",
+  "catWork": "Çalışma",
+  "catStudy": "Ders Çalışma",
+  "catReading": "Okuma",
+  "catMeditation": "Meditasyon",
+  "catExercise": "Egzersiz",
+  "catCreative": "Yaratıcı İş",
+  "catBreak": "Mola",
+  "catOther": "Diğer",
+  "login": "Giriş Yap",
+  "register": "Kayıt Ol",
+  "email": "E-posta",
+  "password": "Şifre",
+  "forgotPassword": "Şifremi Unuttum?",
+  "enterEmailPassword": "Lütfen e-posta ve şifrenizi girin",
+  "welcome": "Hoş Geldiniz",
+  "startFocusingToday": "Odaklanmaya ve üretkenliğe bugün başlayın.",
+  "enterYourPassword": "Şifrenizi giriniz",
+  "dontHaveAccount": "Hesabınız yok mu? ",
+  "forgotPasswordDialog": "Şifrenizi unuttuğunuz için yeni bir hesap oluşturmanız gerekecek. Emin misiniz?",
+  "yes": "Evet",
+  "no": "Hayır",
+  "fillAllFields": "Lütfen tüm alanları doldurun",
+  "createAccount": "Hesap Oluştur",
+  "createNewAccount": "Yeni Hesap Oluştur",
+  "nameSurname": "Ad Soyad",
+  "enterNameSurname": "Adınızı ve soyadınızı girin",
+  "agreeTerms": "Kayıt olarak Kullanım Koşulları'nı ve Gizlilik Politikası'nı kabul etmiş olursunuz.",
+  "alreadyHaveAccount": "Zaten bir hesabınız var mı? ",
+  "accountInfoTitle": "HESAP BİLGİLERİ",
+  "focusSummary": "ODAKLANMA ÖZETİ",
+  "total": "Toplam",
+  "successful": "Başarılı",
+  "cancelled": "Vazgeçilen",
+  "totalTime": "Toplam Süre",
+  "session": "Oturum",
+  "earnedBadges": "KAZANILAN ROZETLER",
+  "successAnalysis": "BAŞARI ANALİZİ",
+  "sessionHistory": "OTURUM GEÇMİŞİ",
+  "detailedCharts": "DETAYLI GRAFİKLER",
+  "logout": "ÇIKIŞ YAP",
+  "deleteAccount": "Hesabı Sil",
+  "logoutConfirm": "Çıkış yapmak istediğinizden emin misiniz?",
+  "deleteAccountConfirm": "Hesabınızı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+  "delete": "SİL",
+  "cancelBtn": "İptal",
+  "successRate": "Başarı Oranı",
+  "dailyStreak": "GÜNLÜK SERİ",
+  "day": "GÜN",
+  "badgeEarlyBird": "Erkenci Kuş",
+  "badgeMarathoner": "Maratoncu",
+  "badgeMaster": "Usta Odaklanıcı",
+  "user": "Kullanıcı"
+}

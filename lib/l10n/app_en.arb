@@ -1,0 +1,104 @@
+{
+  "@@locale": "en",
+  "focusTimer": "FOCUS TIMER",
+  "level": "LEVEL {level}",
+  "@level": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "accountInfo": "Account Info",
+  "cannotGoToAccount": "You cannot go to account while timer is running!",
+  "ready": "READY",
+  "focus": "FOCUS",
+  "paused": "PAUSED",
+  "failed": "FAILED",
+  "success": "SUCCESS",
+  "breakLabel": "BREAK",
+  "secondsFocusTest": "30 Seconds Focus Test",
+  "beginnerLevel": "Beginner Level",
+  "minuteFocus": "{minutes} Minute Focus",
+  "@minuteFocus": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "selectCategory": "SELECT CATEGORY",
+  "start": "START",
+  "breakTimeTitle": "BREAK TIME",
+  "minBreak": "{minutes} min Break",
+  "@minBreak": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "dontTakeBreak": "Don't take a break, continue",
+  "endBreak": "END BREAK",
+  "cancel": "CANCEL",
+  "statusIdleLvl1": "Complete the 30-second test and\nstart real focus!",
+  "statusIdle": "Set duration, select category and focus!",
+  "statusRunning": "Deep focus starts...\nTurn your phone over!",
+  "statusPaused": "Paused",
+  "statusFailure": "FOCUS BROKEN!\nYou lifted the phone.",
+  "statusSuccessFirst": "CONGRATULATIONS! First stage complete.\n1 hour focus unlocked!",
+  "statusSuccess": "Congratulations! Session completed.",
+  "statusBreak": "Rest time...\nHave a good break!",
+  "catWork": "Work",
+  "catStudy": "Study",
+  "catReading": "Reading",
+  "catMeditation": "Meditation",
+  "catExercise": "Exercise",
+  "catCreative": "Creative",
+  "catBreak": "Break",
+  "catOther": "Other",
+  "login": "Login",
+  "register": "Register",
+  "email": "Email",
+  "password": "Password",
+  "forgotPassword": "Forgot Password?",
+  "enterEmailPassword": "Please enter email and password",
+  "welcome": "Welcome",
+  "startFocusingToday": "Start focusing and being productive today.",
+  "enterYourPassword": "Enter your password",
+  "dontHaveAccount": "Don't have an account? ",
+  "forgotPasswordDialog": "You will need to create a new account since you forgot your password. Are you sure?",
+  "yes": "Yes",
+  "no": "No",
+  "fillAllFields": "Please fill in all fields",
+  "createAccount": "Create Account",
+  "createNewAccount": "Create New Account",
+  "nameSurname": "Name Surname",
+  "enterNameSurname": "Enter your name and surname",
+  "agreeTerms": "By registering, you agree to the Terms of Service and Privacy Policy.",
+  "alreadyHaveAccount": "Already have an account? ",
+  "accountInfoTitle": "ACCOUNT INFO",
+  "focusSummary": "FOCUS SUMMARY",
+  "total": "Total",
+  "successful": "Successful",
+  "cancelled": "Cancelled",
+  "totalTime": "Total Time",
+  "session": "{count, plural, =1{Session} other{Sessions}}",
+  "earnedBadges": "EARNED BADGES",
+  "successAnalysis": "SUCCESS ANALYSIS",
+  "sessionHistory": "SESSION HISTORY",
+  "detailedCharts": "DETAILED CHARTS",
+  "logout": "LOGOUT",
+  "deleteAccount": "Delete Account",
+  "logoutConfirm": "Are you sure you want to logout?",
+  "deleteAccountConfirm": "Are you sure you want to delete your account? This action cannot be undone.",
+  "delete": "DELETE",
+  "cancelBtn": "Cancel",
+  "successRate": "Success Rate",
+  "dailyStreak": "DAILY STREAK",
+  "day": "{count, plural, =1{DAY} other{DAYS}}",
+  "badgeEarlyBird": "Early Bird",
+  "badgeMarathoner": "Marathoner",
+  "badgeMaster": "Master Focuser",
+  "user": "User"
+}

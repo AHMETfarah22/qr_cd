@@ -9,6 +9,7 @@ import '../services/statistics_service.dart';
 import 'register_screen.dart';
 import 'account_screen.dart';
 import '../../timer/screens/timer_screen.dart';
+import '../../../l10n/app_localizations.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -34,9 +35,10 @@ class _LoginScreenState extends State<LoginScreen> {
     final password = _passwordController.text.trim();
 
     if (email.isEmpty || password.isEmpty) {
+      final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Lütfen e-posta ve şifrenizi girin'),
+        SnackBar(
+          content: Text(l10n.enterEmailPassword),
           backgroundColor: Colors.red,
         ),
       );
@@ -76,19 +78,20 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _showForgotPasswordDialog() {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.process,
-        title: const Text('Şifremi Unuttum', style: TextStyle(color: Colors.white)),
-        content: const Text(
-          'Şifrenizi unuttuğunuz için yeni bir hesap oluşturmanız gerekecek. Emin misiniz?',
-          style: TextStyle(color: AppColors.textSecondary),
+        title: Text(l10n.forgotPassword.replaceAll('?', ''), style: const TextStyle(color: Colors.white)),
+        content: Text(
+          l10n.forgotPasswordDialog,
+          style: const TextStyle(color: AppColors.textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Hayır', style: TextStyle(color: AppColors.textSecondary)),
+            child: Text(l10n.no, style: const TextStyle(color: AppColors.textSecondary)),
           ),
           TextButton(
             onPressed: () {
@@ -98,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 MaterialPageRoute(builder: (context) => const RegisterScreen()),
               );
             },
-            child: const Text('Evet', style: TextStyle(color: AppColors.accent, fontWeight: FontWeight.bold)),
+            child: Text(l10n.yes, style: const TextStyle(color: AppColors.accent, fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -107,11 +110,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final authService = Provider.of<AuthService>(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Giriş Yap'),
+        title: Text(l10n.login),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -150,7 +154,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 24),
             Text(
-              "Hoş Geldiniz",
+              l10n.welcome,
               style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -158,16 +162,16 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              "Odaklanmaya ve üretkenliğe bugün başlayın.",
+              l10n.startFocusingToday,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AppColors.textSecondary,
                   ),
             ),
             const SizedBox(height: 32),
-            const Align(
+            Align(
               alignment: Alignment.centerLeft,
-              child: Text("E-posta *", style: TextStyle(fontWeight: FontWeight.bold)),
+              child: Text("${l10n.email} *", style: const TextStyle(fontWeight: FontWeight.bold)),
             ),
             const SizedBox(height: 8),
             CommonTextField(
@@ -176,14 +180,14 @@ class _LoginScreenState extends State<LoginScreen> {
               keyboardType: TextInputType.emailAddress,
             ),
             const SizedBox(height: 16),
-            const Align(
+            Align(
               alignment: Alignment.centerLeft,
-              child: Text("Şifre *", style: TextStyle(fontWeight: FontWeight.bold)),
+              child: Text("${l10n.password} *", style: const TextStyle(fontWeight: FontWeight.bold)),
             ),
             const SizedBox(height: 16),
             CommonTextField(
               controller: _passwordController,
-              hintText: 'Şifrenizi giriniz',
+              hintText: l10n.enterYourPassword,
               obscureText: true,
               showPasswordToggle: true,
             ),
@@ -191,9 +195,9 @@ class _LoginScreenState extends State<LoginScreen> {
               alignment: Alignment.centerRight,
               child: TextButton(
                 onPressed: _showForgotPasswordDialog,
-                child: const Text(
-                  'Şifremi Unuttum?',
-                  style: TextStyle(
+                child: Text(
+                  l10n.forgotPassword,
+                  style: const TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 12,
                   ),
@@ -204,7 +208,7 @@ class _LoginScreenState extends State<LoginScreen> {
             _isLoading
                 ? const CircularProgressIndicator(color: AppColors.accent)
                 : CommonButton(
-                    text: "Giriş Yap",
+                    text: l10n.login,
                     onPressed: _handleLogin,
                   ),
             const SizedBox(height: 24),
@@ -213,7 +217,7 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: WrapCrossAlignment.center,
               spacing: 4,
               children: [
-                const Text("Hesabınız yok mu? ", style: TextStyle(color: AppColors.textSecondary)),
+                Text(l10n.dontHaveAccount, style: const TextStyle(color: AppColors.textSecondary)),
                 GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -221,9 +225,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       MaterialPageRoute(builder: (context) => const RegisterScreen()),
                     );
                   },
-                  child: const Text(
-                    "Kayıt Ol",
-                    style: TextStyle(
+                  child: Text(
+                    l10n.register,
+                    style: const TextStyle(
                       color: AppColors.accent,
                       decoration: TextDecoration.underline,
                       fontWeight: FontWeight.bold,
