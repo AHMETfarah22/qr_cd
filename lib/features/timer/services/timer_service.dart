@@ -20,6 +20,7 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
   StatisticsService? _statisticsService;
   final DoNotDisturbPlugin _doNotDisturb = DoNotDisturbPlugin(); // Doğru sınıf ismi
   StreamSubscription? _phoneStateSubscription;
+  Map<String, String> _localizedStrings = {};
 
   TimerService(this._sensorService, this._audioService, this._settingsService, this._notificationService) {
     WidgetsBinding.instance.addObserver(this);
@@ -144,15 +145,14 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
     notifyListeners();
   }
 
+  void updateLocalization(Map<String, String> strings) {
+    _localizedStrings = strings;
+  }
+
   void _startTicker() {
     _timer?.cancel();
+    // Start ticker without immediate decrement to avoid 1-second jump
     debugPrint("Ticker: INITIALIZED at $_currentTimeSeconds seconds");
-    
-    // Decrement immediately for better UX so user sees change at 0ms
-    if (_currentTimeSeconds > 0) {
-      _currentTimeSeconds--;
-      notifyListeners();
-    }
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_currentTimeSeconds > 0) {
@@ -219,8 +219,8 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
 
     _notificationService.showNotification(
       id: 1,
-      title: 'Tebrikler!',
-      body: 'Odaklanma oturumu başarıyla tamamlandı. Harikasın!',
+      title: _localizedStrings['successTitle'] ?? 'Tebrikler!',
+      body: _localizedStrings['successBody'] ?? 'Odaklanma oturumu başarıyla tamamlandı. Harikasın!',
       payload: 'success',
       ongoing: true, // User requested persistent notification
       playSound: true,
@@ -296,8 +296,8 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
         _state = TimerState.idle;
         _notificationService.showNotification(
           id: 2,
-          title: 'Mola Bitti!',
-          body: 'Yeni bir odaklanma seansına hazırsın.',
+          title: _localizedStrings['breakEndTitle'] ?? 'Mola Bitti!',
+          body: _localizedStrings['breakEndBody'] ?? 'Yeni bir odaklanma seansına hazırsın.',
           playSound: true,
           ongoing: false,
         );

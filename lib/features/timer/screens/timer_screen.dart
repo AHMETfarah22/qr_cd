@@ -44,6 +44,16 @@ class _TimerScreenState extends State<TimerScreen> {
     final audioService = Provider.of<AudioService>(context);
     final l10n = AppLocalizations.of(context)!;
     
+    // Update TimerService with localized notification strings
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      timerService.updateLocalization({
+        'successTitle': l10n.notifSuccessTitle,
+        'successBody': l10n.notifSuccessBody,
+        'breakEndTitle': l10n.notifBreakEndTitle,
+        'breakEndBody': l10n.notifBreakEndBody,
+      });
+    });
+    
     return Scaffold(
       backgroundColor: timerService.state == TimerState.failure 
           ? AppColors.error.withValues(alpha: 0.1)

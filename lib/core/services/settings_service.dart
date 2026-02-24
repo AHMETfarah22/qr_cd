@@ -7,6 +7,8 @@ class SettingsService extends ChangeNotifier {
   AlarmSound _alarmSound = AlarmSound.bird;
   bool _vibrationEnabled = true;
   int _preferredFocusDurationMinutes = 25;
+  bool _isDarkMode = true;
+  bool _isOnboardingCompleted = false;
   bool _isLoaded = false;
 
   String? _userEmail;
@@ -14,6 +16,8 @@ class SettingsService extends ChangeNotifier {
   AlarmSound get alarmSound => _alarmSound;
   bool get vibrationEnabled => _vibrationEnabled;
   int get preferredFocusDurationMinutes => _preferredFocusDurationMinutes;
+  bool get isDarkMode => _isDarkMode;
+  bool get isOnboardingCompleted => _isOnboardingCompleted;
   bool get isLoaded => _isLoaded;
 
   SettingsService() {
@@ -43,6 +47,8 @@ class SettingsService extends ChangeNotifier {
       
       _vibrationEnabled = prefs.getBool(_getKey('settings_vibration_enabled')) ?? true;
       _preferredFocusDurationMinutes = prefs.getInt(_getKey('settings_focus_duration')) ?? 25;
+      _isDarkMode = prefs.getBool(_getKey('settings_is_dark_mode')) ?? true;
+      _isOnboardingCompleted = prefs.getBool(_getKey('settings_onboarding_completed')) ?? false;
       
       _isLoaded = true;
       notifyListeners();
@@ -71,6 +77,20 @@ class SettingsService extends ChangeNotifier {
     _preferredFocusDurationMinutes = minutes;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_getKey('settings_focus_duration'), minutes);
+    notifyListeners();
+  }
+
+  Future<void> setDarkMode(bool isDark) async {
+    _isDarkMode = isDark;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_getKey('settings_is_dark_mode'), isDark);
+    notifyListeners();
+  }
+
+  Future<void> setOnboardingCompleted(bool completed) async {
+    _isOnboardingCompleted = completed;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_getKey('settings_onboarding_completed'), completed);
     notifyListeners();
   }
 }

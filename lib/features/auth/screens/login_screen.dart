@@ -9,6 +9,7 @@ import '../services/statistics_service.dart';
 import 'register_screen.dart';
 import 'account_screen.dart';
 import '../../timer/screens/timer_screen.dart';
+import '../../onboarding/screens/onboarding_screen.dart';
 import '../../../l10n/app_localizations.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -63,10 +64,18 @@ class _LoginScreenState extends State<LoginScreen> {
       
       if (!mounted) return;
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const TimerScreen()),
-      );
+      final settingsService = Provider.of<SettingsService>(context, listen: false);
+      if (!settingsService.isOnboardingCompleted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const TimerScreen()),
+        );
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

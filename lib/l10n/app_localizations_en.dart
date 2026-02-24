@@ -275,4 +275,250 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get user => 'User';
+
+  @override
+  String get settingsTitle => 'SETTINGS';
+
+  @override
+  String get sectionVoiceNotification => 'VOICE AND NOTIFICATION';
+
+  @override
+  String get alarmSound => 'Alarm Sound';
+
+  @override
+  String get vibration => 'Vibration';
+
+  @override
+  String get on => 'On';
+
+  @override
+  String get off => 'Off';
+
+  @override
+  String get sectionFocusSettings => 'FOCUS SETTINGS';
+
+  @override
+  String get defaultDuration => 'Default Duration';
+
+  @override
+  String mins(Object minutes) {
+    return '$minutes minutes';
+  }
+
+  @override
+  String get sectionAccountSettings => 'ACCOUNT SETTINGS';
+
+  @override
+  String get changePassword => 'Change Password';
+
+  @override
+  String get updatePasswordSubtitle => 'Update your account password';
+
+  @override
+  String get passwordSecureNote => 'Note: Your password is stored securely.';
+
+  @override
+  String get sectionDataManagement => 'DATA MANAGEMENT';
+
+  @override
+  String get backupData => 'Backup Data';
+
+  @override
+  String get exportDataSubtitle => 'Export your data';
+
+  @override
+  String get restoreData => 'Restore Data';
+
+  @override
+  String get importDataSubtitle => 'Load data from backup';
+
+  @override
+  String get resetStatistics => 'Reset Statistics';
+
+  @override
+  String get resetStatsSubtitle => 'Clear all session data';
+
+  @override
+  String get sectionApplication => 'APPLICATION';
+
+  @override
+  String get shareWithFriends => 'Share with Friends';
+
+  @override
+  String get shareSubtitle => 'Share via WhatsApp or other apps';
+
+  @override
+  String version(Object version) {
+    return 'Version $version';
+  }
+
+  @override
+  String get historyTitle => 'SESSION HISTORY';
+
+  @override
+  String get noHistoryYet => 'No session history yet';
+
+  @override
+  String get startFocusNow =>
+      'Start focusing now and create your first record!';
+
+  @override
+  String get startFocusingBtn => 'Start Focusing';
+
+  @override
+  String get weeklyGoalSuccess => 'WEEKLY GOAL REACHED!';
+
+  @override
+  String get weeklyGoalFailed => 'GOAL NOT REACHED';
+
+  @override
+  String weeklyMinutesNote(Object hours, Object minutes) {
+    return 'You focused for a total of $hours hours $minutes minutes this week.';
+  }
+
+  @override
+  String moreMinutesRequired(Object minutes) {
+    return '$minutes more minutes required!';
+  }
+
+  @override
+  String get today => 'TODAY';
+
+  @override
+  String get yesterday => 'YESTERDAY';
+
+  @override
+  String get successLabel => 'SUCCESSFUL';
+
+  @override
+  String get failedLabel => 'FAILED';
+
+  @override
+  String get timeAgoJustNow => 'Just now';
+
+  @override
+  String timeAgoMinutes(Object minutes) {
+    return '$minutes min ago';
+  }
+
+  @override
+  String timeAgoHours(Object hours) {
+    return '$hours hours ago';
+  }
+
+  @override
+  String timeAgoDays(Object days) {
+    return '$days days ago';
+  }
+
+  @override
+  String get statisticsTitle => 'STATISTICS';
+
+  @override
+  String get categoryDistribution => 'CATEGORY DISTRIBUTION';
+
+  @override
+  String get weeklyActivity => 'LAST 7 DAYS ACTIVITY';
+
+  @override
+  String get timeDistribution => 'TIME DISTRIBUTION';
+
+  @override
+  String get noDataYet => 'No data yet';
+
+  @override
+  String get successfulSessions => 'Completed';
+
+  @override
+  String get cancelledSessionsCount => 'Cancelled';
+
+  @override
+  String get activeDaysCount => 'Active Days';
+
+  @override
+  String get hoursShort => 'h';
+
+  @override
+  String get minutesShort => 'm';
+
+  @override
+  String hoursLong(Object hours) {
+    return '$hours hours';
+  }
+
+  @override
+  String minutesLong(Object minutes) {
+    return '$minutes minutes';
+  }
+
+  @override
+  String get sectionAppearance => 'APPEARANCE';
+
+  @override
+  String get darkMode => 'Dark Mode';
+
+  @override
+  String get notifSuccessTitle => 'Congratulations!';
+
+  @override
+  String get notifSuccessBody =>
+      'Focus session completed successfully. You\'re awesome!';
+
+  @override
+  String get notifBreakEndTitle => 'Break Over!';
+
+  @override
+  String get notifBreakEndBody => 'You are ready for a new focus session.';
+
+  @override
+  String get onboardingWelcome => 'Welcome to Focus Flow';
+
+  @override
+  String get onboardingWelcomeDesc =>
+      'Let\'s set up your focus environment for the best experience.';
+
+  @override
+  String get onboardingSensorTitle => 'Sensor Access';
+
+  @override
+  String get onboardingSensorDesc =>
+      'Focus Flow uses the accelerometer to detect if your phone is face down. This helps you stay focused!';
+
+  @override
+  String get onboardingDndTitle => 'Do Not Disturb';
+
+  @override
+  String get onboardingDndDesc =>
+      'To block distracting notifications, we need permission to manage Do Not Disturb mode.';
+
+  @override
+  String get onboardingPhoneTitle => 'Call Detection';
+
+  @override
+  String get onboardingPhoneDesc =>
+      'If you receive a call during focus, we\'ll automatically pause to let you decide.';
+
+  @override
+  String get btnGrant => 'Grant Permission';
+
+  @override
+  String get btnNext => 'NEXT';
+
+  @override
+  String get btnBack => 'BACK';
+
+  @override
+  String get btnStart => 'GET STARTED';
+
+  @override
+  String get permissionGranted => 'Permission Granted';
+
+  @override
+  String get permissionDenied => 'Permission Denied';
+
+  @override
+  String get tutorialTitle => 'App Tutorial';
+
+  @override
+  String get tutorialSubtitle => 'Show onboarding guide again';
 }

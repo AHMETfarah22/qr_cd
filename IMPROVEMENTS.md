@@ -1,146 +1,71 @@
 # Focus Flow - İyileştirme Planı
 
-## 🔴 YÜKSEK ÖNCELİK (Hemen Yapılmalı)
-
-### 1. Session History Görüntüleme Sayfası
-**Durum:** Eksik  
-**Önem:** Kritik - Kullanıcılar geçmişlerini göremez
-
-**Yapılacaklar:**
-- [ ] Session history listesi sayfası oluştur
-- [ ] Her session için tarih, süre, durum göster
-- [ ] Filtreleme ekle (günlük, haftalık, aylık)
-- [ ] Account screen'den session history'ye link ekle
-
-### 2. Şifre Görünürlük Toggle Düzelt
-**Durum:** Çalışmıyor  
-**Önem:** Kullanıcı deneyimi
-
-**Yapılacaklar:**
-- [ ] Login screen'de şifre göster/gizle butonu ekle
-- [ ] Register screen'de şifre göster/gizle butonu ekle
-- [ ] CommonTextField widget'ına obscureText toggle ekle
-
-### 3. Şifre Güvenliği İyileştir
-**Durum:** Güvensiz (düz metin)  
-**Önem:** GÜVENLİK RİSKİ
-
-**Yapılacaklar:**
-- [ ] `crypto` veya `encrypt` paketi ekle
-- [ ] Şifreleri hash'le (örn: SHA-256)
-- [ ] Mevcut şifreleri migration yap
-- [ ] Salt ekle
-
-### 4. Şifre Değiştirme Özelliği
-**Durum:** Yok  
-**Önem:** Yüksek - Temel özellik
-
-**Yapılacaklar:**
-- [ ] Settings screen'e şifre değiştirme bölümü ekle
-- [ ] Eski şifre doğrulama ekle
-- [ ] Yeni şifre onay alanı ekle
+## ✅ TAMAMLANANLAR (Son Güncellemeyle)
+- [x] **Session History Sayfası:** Tüm geçmiş verileri günlük gruplanmış halde görüntüleyebilme.
+- [x] **Şifre Güvenliği:** `crypto` ve `flutter_secure_storage` kullanılarak hash+salt şifreleme ve güvenli saklama.
+- [x] **Şifre Değiştirme:** Ayarlar bölümünden eski şifre doğrulamalı şifre güncelleme.
+- [x] **Çoklu Dil Desteği:** İngilizce ve Türkçe dil desteği (L10n).
+- [x] **Dark/Light Mode:** Ayarlar üzerinden tema değiştirme ve kalıcı saklama.
+- [x] **Gelişmiş İstatistikler:** `fl_chart` ile başarı oranı, kategori dağılımı ve haftalık aktivite grafikleri.
+- [x] **Profil Resmi:** Kullanıcı bazlı profil fotoğrafı seçme ve saklama.
+- [x] **Veri Yedekleme/Geri Yükleme:** JSON formatında dışa aktarma ve geri yükleme.
+- [x] **Kategoriler:** Odaklanma oturumlarını kategorize etme ve kategori bazlı analiz.
 
 ---
 
-## 🟡 ORTA ÖNCELİK (Yakında Yapılmalı)
+## 🔴 YÜKSEK ÖNCELİK (Sıradaki Adımlar)
 
-### 5. Session Kategorileri
+### 1. Onboarding / Tutorial
 **Yapılacaklar:**
-- [ ] Session başlatırken kategori seçimi ekle (Çalışma, Okuma, Meditasyon, vb.)
-- [ ] Her kategori için ayrı istatistik göster
-- [ ] Kategori bazlı filtreleme
+- [ ] İlk kullanımda uygulama rehberi ekle.
+- [ ] İzinleri (Sensör, DND) açıklayan bilgilendirme ekranları.
 
-### 6. Session Notları
+### 2. DND İzni ve Güvenlik Kontrolü
 **Yapılacaklar:**
-- [ ] Session tamamlandığında not ekleme imkanı
-- [ ] Not görüntüleme geçmişte
-- [ ] Not düzenleme/silme
-
-### 7. İstatistik Grafikleri
-**Yapılacaklar:**
-- [ ] `fl_chart` paketi ekle
-- [ ] Haftalık odaklanma grafiği
-- [ ] Aylık başarı trendi
-- [ ] Kategori dağılım grafiği
-
-### 8. Bildirimler
-**Yapılacaklar:**
-- [ ] `flutter_local_notifications` paketi ekle
-- [ ] Session tamamlandığında bildirim
-- [ ] Günlük hatırlatıcı (opsiyonel)
-- [ ] Streak hatırlatıcısı
-
-### 9. Dark/Light Mode Toggle
-**Yapılacaklar:**
-- [ ] Light theme oluştur
-- [ ] Settings'e theme seçici ekle
-- [ ] Theme değişimini kaydet
-
-### 10. Onboarding/Tutorial
-**Yapılacaklar:**
-- [ ] İlk kullanımda uygulama rehberi
-- [ ] Özellik açıklamaları
-- [ ] İzinleri açıklama (sensör, DND, vb.)
+- [ ] DND izni yoksa kullanıcıyı uyar.
+- [ ] Phone State izni eksikliğinde uyarı ver.
 
 ---
 
-## 🟢 DÜŞÜK ÖNCELİK (Güzel Olur)
+## 🟡 ORTA ÖNCELİK
 
-### 11. Sosyal Özellikler
-- [ ] Leaderboard (lider tablosu)
-- [ ] Arkadaş ekleme
-- [ ] Başarı paylaşma
+### 3. Session Notları
+**Yapılacaklar:**
+- [ ] Session tamamlandığında kısa not ekleme.
+- [ ] Geçmiş sayfasında notları görüntüleme.
 
-### 12. Hedef Belirleme
-- [ ] Günlük hedef belirleme
-- [ ] Haftalık hedef takibi
-- [ ] Hedef başarı bildirimleri
+### 4. Gelişmiş Hedef Takibi
+**Yapılacaklar:**
+- [ ] Günlük/Haftalık odaklanma hedefleri belirleme.
+- [ ] Hedefe yaklaşınca bildirim gönderme.
 
-### 13. Pomodoro Modu
-- [ ] 25 dk çalış / 5 dk mola formatı
-- [ ] Özelleştirilebilir pomodoro süreleri
-- [ ] Uzun mola desteği
+### 5. AI Odaklanma Koçu (Yeni Fikir)
+**Yapılacaklar:**
+- [ ] Gemini API entegrasyonu ile odaklanma verilerini analiz etme.
+- [ ] Kullanıcıya özel verimlilik ipuçları sunma.
 
-### 14. Widget Support
-- [ ] Home screen widget
-- [ ] Hızlı başlat butonu
-- [ ] İstatistik özeti widget
+---
 
-### 15. Export/Backup
-- [ ] İstatistikleri CSV olarak export et
-- [ ] Verileri yedekle/geri yükle
-- [ ] Cloud sync (Firebase)
+## 🟢 DÜŞÜK ÖNCELİK
 
-### 16. Profil Resmi
-- [ ] Profil fotoğrafı yükleme
-- [ ] Avatar seçenekleri
+### 6. Pomodoro Modu
+- [ ] Klasik 25+5 formatı desteği.
 
-### 17. Ödül Sistemi
-- [ ] Seviye sistemi genişlet
-- [ ] Daha fazla rozet ekle  
-- [ ] Ödül görselleri ve animasyonlar
+### 7. Sosyal Özellikler
+- [ ] Arkadaşlarla başarı paylaşma (Paylaş butonu var, genişletilebilir).
+- [ ] Basit bir leaderboard sistemi.
 
-### 18. Multi-language Support
-- [ ] İngilizce dil desteği
-- [ ] Dil seçimi settings'e ekle
+### 8. Widget Support
+- [ ] Ana ekran için hızlı başlat veya günlük durum widgetı.
 
 ---
 
 ## 🐛 BİLİNEN BUGLAR
-
-### 1. Timer İlk Başlatmada 1 Saniye Atlayabilir
-**Durum:** Minimize bug  
-**Çözüm:** `_startTicker()` metodunda immediately decrement yapılıyor, kontrol et
-
-### 2. DND İzni Olmadığında Session Başarısız Olmuyor
-**Durum:** İzinsiz çalışıyor ama işlevsiz  
-**Çözüm:** İzin kontrolünü başlangıçta yap
+- [ ] Timer ilk başlatmada bazen 1 saniye atlayabiliyor.
+- [ ] Bazı cihazlarda arka planda bildirim sesi geç gelebiliyor.
 
 ---
 
 ## 📌 NOTLAR
-
-- Tüm değişikliklerden sonra multi-user desteğini test et
-- Her özellik eklendiğinde GitHub'a commit at
-- UI/UX tutarlılığını koru (AppColors, tema)
-- Performance'ı düzenli test et
+- UI/UX artık hem Koyu hem Açık temada tutarlı.
+- Dil desteği yeni eklenen özelliklerle güncellenmeli.

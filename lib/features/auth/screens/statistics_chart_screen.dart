@@ -15,9 +15,9 @@ class StatisticsChartScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text(
-          'İSTATİSTİKLER',
-          style: TextStyle(
+        title: Text(
+          AppLocalizations.of(context)!.statisticsTitle,
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
             letterSpacing: 2.0,
@@ -37,28 +37,28 @@ class StatisticsChartScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Success Rate Circular Chart
-            _buildSectionHeader('BAŞARI ORANI'),
+            _buildSectionHeader(AppLocalizations.of(context)!.successRate.toUpperCase()),
             const SizedBox(height: 16),
             _buildSuccessRateChart(statsService),
             
             const SizedBox(height: 32),
             
             // Category Distribution Pie Chart
-            _buildSectionHeader('KATEGORİ DAĞILIMI'),
+            _buildSectionHeader(AppLocalizations.of(context)!.categoryDistribution),
             const SizedBox(height: 16),
             _buildCategoryPieChart(statsService),
             
             const SizedBox(height: 32),
             
             // Weekly Activity Bar Chart
-            _buildSectionHeader('SON 7 GÜN AKTİVİTE'),
+            _buildSectionHeader(AppLocalizations.of(context)!.weeklyActivity),
             const SizedBox(height: 16),
             _buildWeeklyActivityChart(statsService),
             
             const SizedBox(height: 32),
             
             // Time Distribution
-            _buildSectionHeader('ZAMAN DAĞILIMI'),
+            _buildSectionHeader(AppLocalizations.of(context)!.timeDistribution),
             const SizedBox(height: 16),
             _buildTimeDistribution(statsService),
           ],
@@ -152,9 +152,9 @@ class StatisticsChartScreen extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const Text(
-                      'Başarı',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations.of(context)!.successRate.split(' ').first, // Just "Success" or localized
+                      style: const TextStyle(
                         color: AppColors.textSecondary,
                         fontSize: 12,
                       ),
@@ -170,31 +170,28 @@ class StatisticsChartScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildStatRow(
-                  icon: Icons.check_circle,
-                  color: Colors.green,
-                  label: 'Tamamlanan',
+                  label: AppLocalizations.of(context)!.successfulSessions,
                   value: '${stats.completedSessions}',
                 ),
                 const SizedBox(height: 12),
                 _buildStatRow(
                   icon: Icons.cancel,
                   color: Colors.red,
-                  label: 'Vazgeçilen',
+                  label: AppLocalizations.of(context)!.cancelledSessionsCount,
                   value: '${stats.cancelledSessions}',
                 ),
                 const SizedBox(height: 12),
                 _buildStatRow(
                   icon: Icons.calendar_today_rounded,
                   color: Colors.orange,
-                  label: 'Aktif Günler',
+                  label: AppLocalizations.of(context)!.activeDaysCount,
                   value: '${stats.activeDays}',
                 ),
                 const SizedBox(height: 12),
                 _buildStatRow(
                   icon: Icons.access_time,
                   color: AppColors.accent,
-                  label: 'Toplam Süre',
+                  label: AppLocalizations.of(context)!.totalTime,
                   value: stats.totalTimeFormatted,
                 ),
               ],
@@ -258,7 +255,7 @@ class StatisticsChartScreen extends StatelessWidget {
     }
 
     if (categoryCount.isEmpty) {
-      return _buildEmptyState('Henüz kategori verisi yok');
+      return _buildEmptyState(AppLocalizations.of(context)!.noDataYet);
     }
 
     final total = categoryCount.values.reduce((a, b) => a + b);
@@ -323,13 +320,13 @@ class StatisticsChartScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 6),
-                  Text(
-                    '${entry.key.displayName} (${entry.value})',
-                    style: const TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 12,
+                    Text(
+                      '${entry.key.getDisplayName(context)} (${entry.value})',
+                      style: const TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 12,
+                      ),
                     ),
-                  ),
                 ],
               );
             }).toList(),
@@ -478,7 +475,7 @@ class StatisticsChartScreen extends StatelessWidget {
     }
 
     if (categoryTime.isEmpty) {
-      return _buildEmptyState('Henüz tamamlanmış oturum yok');
+      return _buildEmptyState(AppLocalizations.of(context)!.noDataYet);
     }
 
     final totalTime = categoryTime.values.reduce((a, b) => a + b);
@@ -519,7 +516,7 @@ class StatisticsChartScreen extends StatelessWidget {
                         Icon(entry.key.icon, color: entry.key.color, size: 18),
                         const SizedBox(width: 8),
                         Text(
-                          entry.key.displayName,
+                          entry.key.getDisplayName(context),
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 14,
@@ -529,7 +526,7 @@ class StatisticsChartScreen extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      hours > 0 ? '$hours s $minutes dk' : '$minutes dk',
+                      hours > 0 ? '${hours}${AppLocalizations.of(context)!.hoursShort} ${minutes}${AppLocalizations.of(context)!.minutesShort}' : '${minutes} ${AppLocalizations.of(context)!.minutesShort}',
                       style: TextStyle(
                         color: entry.key.color,
                         fontSize: 13,

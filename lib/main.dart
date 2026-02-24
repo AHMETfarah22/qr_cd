@@ -9,6 +9,7 @@ import 'features/timer/services/audio_service.dart';
 import 'features/timer/services/sensor_service.dart';
 import 'features/timer/services/timer_service.dart';
 import 'features/timer/screens/timer_screen.dart';
+import 'features/onboarding/screens/onboarding_screen.dart';
 
 import 'package:intl/date_symbol_data_local.dart';
 import 'core/services/notification_service.dart';
@@ -89,29 +90,37 @@ class FocusFlowApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Focus Flow',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.darkTheme,
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('en'),
-        Locale('tr'),
-      ],
-      home: Consumer<AuthService>(
-        builder: (context, authService, _) {
-          // Auto-login: if user was previously logged in, go directly to TimerScreen
-          if (authService.isLoggedIn) {
-            return const TimerScreen();
-          }
-          return const LoginScreen();
-        },
-      ),
+    return Consumer<SettingsService>(
+      builder: (context, settingsService, _) {
+        return MaterialApp(
+          title: 'Focus Flow',
+          debugShowCheckedModeBanner: false,
+          theme: settingsService.isDarkMode ? AppTheme.darkTheme : AppTheme.lightTheme,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('en'),
+            Locale('tr'),
+          ],
+          home: Consumer<AuthService>(
+            builder: (context, authService, _) {
+              // Auto-login logic
+              if (authService.isLoggedIn) {
+                // If logged in, check if onboarding is complete
+                if (!settingsService.isOnboardingCompleted) {
+                  return const OnboardingScreen();
+                }
+                return const TimerScreen();
+              }
+              return const LoginScreen();
+            },
+          ),
+        );
+      },
     );
   }
 }

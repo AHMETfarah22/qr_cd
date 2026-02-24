@@ -263,4 +263,250 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get user => 'Kullanıcı';
+
+  @override
+  String get settingsTitle => 'AYARLAR';
+
+  @override
+  String get sectionVoiceNotification => 'SES VE BİLDİRİM';
+
+  @override
+  String get alarmSound => 'Alarm Sesi';
+
+  @override
+  String get vibration => 'Titreşim';
+
+  @override
+  String get on => 'Açık';
+
+  @override
+  String get off => 'Kapalı';
+
+  @override
+  String get sectionFocusSettings => 'ODAKLANMA AYARLARI';
+
+  @override
+  String get defaultDuration => 'Varsayılan Süre';
+
+  @override
+  String mins(Object minutes) {
+    return '$minutes dakika';
+  }
+
+  @override
+  String get sectionAccountSettings => 'HESAP AYARLARI';
+
+  @override
+  String get changePassword => 'Şifre Değiştir';
+
+  @override
+  String get updatePasswordSubtitle => 'Hesap şifrenizi güncelleyin';
+
+  @override
+  String get passwordSecureNote =>
+      'Not: Şifreniz güvenli bir şekilde saklanır.';
+
+  @override
+  String get sectionDataManagement => 'VERİ YÖNETİMİ';
+
+  @override
+  String get backupData => 'Verileri Yedekle';
+
+  @override
+  String get exportDataSubtitle => 'Verilerinizi dışa aktarın';
+
+  @override
+  String get restoreData => 'Geri Yükle';
+
+  @override
+  String get importDataSubtitle => 'Yedekten verileri yükleyin';
+
+  @override
+  String get resetStatistics => 'İstatistikleri Sıfırla';
+
+  @override
+  String get resetStatsSubtitle => 'Tüm oturum verilerini temizleyin';
+
+  @override
+  String get sectionApplication => 'UYGULAMA';
+
+  @override
+  String get shareWithFriends => 'Arkadaşlarınla Paylaş';
+
+  @override
+  String get shareSubtitle => 'WhatsApp veya diğer uygulamalarla paylaşın';
+
+  @override
+  String version(Object version) {
+    return 'Versiyon $version';
+  }
+
+  @override
+  String get historyTitle => 'OTURUM GEÇMİŞİ';
+
+  @override
+  String get noHistoryYet => 'Henüz kaydedilmiş bir oturum yok';
+
+  @override
+  String get startFocusNow => 'Hemen odaklanmaya başla ve ilk kaydını oluştur!';
+
+  @override
+  String get startFocusingBtn => 'Odaklanmaya Başla';
+
+  @override
+  String get weeklyGoalSuccess => 'HAFTALIK HEDEF TAMAM!';
+
+  @override
+  String get weeklyGoalFailed => 'HEDEFE ULAŞILAMADI';
+
+  @override
+  String weeklyMinutesNote(Object hours, Object minutes) {
+    return 'Bu hafta toplam $hours saat $minutes dakika odaklandın.';
+  }
+
+  @override
+  String moreMinutesRequired(Object minutes) {
+    return '$minutes dakika daha gerekli!';
+  }
+
+  @override
+  String get today => 'BUGÜN';
+
+  @override
+  String get yesterday => 'DÜN';
+
+  @override
+  String get successLabel => 'BAŞARILI';
+
+  @override
+  String get failedLabel => 'YARIM KALDI';
+
+  @override
+  String get timeAgoJustNow => 'Az önce';
+
+  @override
+  String timeAgoMinutes(Object minutes) {
+    return '$minutes dk önce';
+  }
+
+  @override
+  String timeAgoHours(Object hours) {
+    return '$hours saat önce';
+  }
+
+  @override
+  String timeAgoDays(Object days) {
+    return '$days gün önce';
+  }
+
+  @override
+  String get statisticsTitle => 'İSTATİSTİKLER';
+
+  @override
+  String get categoryDistribution => 'KATEGORİ DAĞILIMI';
+
+  @override
+  String get weeklyActivity => 'SON 7 GÜN AKTİVİTE';
+
+  @override
+  String get timeDistribution => 'ZAMAN DAĞILIMI';
+
+  @override
+  String get noDataYet => 'Henüz veri yok';
+
+  @override
+  String get successfulSessions => 'Tamamlanan';
+
+  @override
+  String get cancelledSessionsCount => 'Vazgeçilen';
+
+  @override
+  String get activeDaysCount => 'Aktif Günler';
+
+  @override
+  String get hoursShort => 's';
+
+  @override
+  String get minutesShort => 'dk';
+
+  @override
+  String hoursLong(Object hours) {
+    return '$hours saat';
+  }
+
+  @override
+  String minutesLong(Object minutes) {
+    return '$minutes dakika';
+  }
+
+  @override
+  String get sectionAppearance => 'GÖRÜNÜM';
+
+  @override
+  String get darkMode => 'Koyu Tema';
+
+  @override
+  String get notifSuccessTitle => 'Tebrikler!';
+
+  @override
+  String get notifSuccessBody =>
+      'Odaklanma oturumu başarıyla tamamlandı. Harikasın!';
+
+  @override
+  String get notifBreakEndTitle => 'Mola Bitti!';
+
+  @override
+  String get notifBreakEndBody => 'Yeni bir odaklanma seansına hazırsın.';
+
+  @override
+  String get onboardingWelcome => 'Focus Flow\'a Hoş Geldiniz';
+
+  @override
+  String get onboardingWelcomeDesc =>
+      'En iyi deneyim için odaklanma ortamınızı ayarlayalım.';
+
+  @override
+  String get onboardingSensorTitle => 'Sensör Erişimi';
+
+  @override
+  String get onboardingSensorDesc =>
+      'Focus Flow, telefonunuzun ters çevrildiğini algılamak için ivmeölçeri kullanır. Bu odaklanmanıza yardımcı olur!';
+
+  @override
+  String get onboardingDndTitle => 'Rahatsız Etme';
+
+  @override
+  String get onboardingDndDesc =>
+      'Dikkat dağıtıcı bildirimleri engellemek için Rahatsız Etme modunu yönetme iznine ihtiyacımız var.';
+
+  @override
+  String get onboardingPhoneTitle => 'Arama Algılama';
+
+  @override
+  String get onboardingPhoneDesc =>
+      'Odaklanma sırasında bir arama gelirse, karar vermeniz için otomatik olarak duraklatacağız.';
+
+  @override
+  String get btnGrant => 'İzin Ver';
+
+  @override
+  String get btnNext => 'İLERİ';
+
+  @override
+  String get btnBack => 'GERİ';
+
+  @override
+  String get btnStart => 'BAŞLAYALIM';
+
+  @override
+  String get permissionGranted => 'İzin Verildi';
+
+  @override
+  String get permissionDenied => 'İzin Reddildi';
+
+  @override
+  String get tutorialTitle => 'Uygulama Rehberi';
+
+  @override
+  String get tutorialSubtitle => 'Tanıtım ekranlarını tekrar göster';
 }

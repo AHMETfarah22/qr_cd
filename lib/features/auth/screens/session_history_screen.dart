@@ -16,9 +16,9 @@ class SessionHistoryScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text(
-          'OTURUM GEÇMİŞİ',
-          style: TextStyle(
+        title: Text(
+          AppLocalizations.of(context)!.historyTitle,
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
             letterSpacing: 2.0,
@@ -43,18 +43,18 @@ class SessionHistoryScreen extends StatelessWidget {
                     color: AppColors.textSecondary.withValues(alpha: 0.5),
                   ),
                   const SizedBox(height: 16),
-                  const Text(
-                    'Henüz kaydedilmiş bir oturum yok',
-                    style: TextStyle(
+                  Text(
+                    AppLocalizations.of(context)!.noHistoryYet,
+                    style: const TextStyle(
                       color: AppColors.textSecondary,
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   const SizedBox(height: 8),
-                  const Text(
-                    'Hemen odaklanmaya başla ve ilk kaydını oluştur!',
-                    style: TextStyle(
+                  Text(
+                    AppLocalizations.of(context)!.startFocusNow,
+                    style: const TextStyle(
                       color: AppColors.textSecondary,
                       fontSize: 14,
                     ),
@@ -70,7 +70,7 @@ class SessionHistoryScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    child: const Text('Odaklanmaya Başla'),
+                    child: Text(AppLocalizations.of(context)!.startFocusingBtn),
                   ),
                 ],
               ),
@@ -99,10 +99,11 @@ class SessionHistoryScreen extends StatelessWidget {
     final hours = duration ~/ 60;
     final minutes = duration % 60;
     String durationText;
+    String durationText;
     if (hours > 0) {
-      durationText = '${hours}s ${minutes}dk';
+      durationText = '${hours}${AppLocalizations.of(context)!.hoursShort} ${minutes}${AppLocalizations.of(context)!.minutesShort}';
     } else {
-      durationText = '$minutes dakika';
+      durationText = AppLocalizations.of(context)!.mins(minutes);
     }
 
     return Container(
@@ -157,7 +158,7 @@ class SessionHistoryScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      completed ? 'BAŞARILI' : 'YARIM KALDI',
+                      completed ? AppLocalizations.of(context)!.successLabel : AppLocalizations.of(context)!.failedLabel,
                       style: TextStyle(
                         color: completed ? Colors.green : Colors.red,
                         fontSize: 12,
@@ -244,7 +245,7 @@ class SessionHistoryScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 4.0),
               child: Text(
-                _getDateLabel(dateKey),
+                _getDateLabel(dateKey, context),
                 style: const TextStyle(
                   color: AppColors.accent,
                   fontSize: 14,
@@ -273,13 +274,13 @@ class SessionHistoryScreen extends StatelessWidget {
     );
   }
 
-  String _getDateLabel(String dateKey) {
+  String _getDateLabel(String dateKey, BuildContext context) {
     final now = DateTime.now();
     final today = DateFormat('dd MMM yyyy', 'tr_TR').format(now);
     final yesterday = DateFormat('dd MMM yyyy', 'tr_TR').format(now.subtract(const Duration(days: 1)));
     
-    if (dateKey == today) return 'BUGÜN';
-    if (dateKey == yesterday) return 'DÜN';
+    if (dateKey == today) return AppLocalizations.of(context)!.today;
+    if (dateKey == yesterday) return AppLocalizations.of(context)!.yesterday;
     return dateKey.toUpperCase();
   }
 
@@ -320,7 +321,7 @@ class SessionHistoryScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  hasCertificate ? "HAFTALIK HEDEF TAMAM!" : "HEDEFE ULAŞILAMADI",
+                  hasCertificate ? AppLocalizations.of(context)!.weeklyGoalSuccess : AppLocalizations.of(context)!.weeklyGoalFailed,
                   style: TextStyle(
                     color: hasCertificate ? Colors.blue : Colors.red,
                     fontSize: 14,
@@ -330,7 +331,7 @@ class SessionHistoryScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  "Bu hafta toplam $hours saat $minutes dakika odaklandın.",
+                  AppLocalizations.of(context)!.weeklyMinutesNote(hours, minutes),
                   style: const TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 12,
@@ -340,7 +341,7 @@ class SessionHistoryScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 4.0),
                     child: Text(
-                      "${(300 - weeklyMinutes)} dakika daha gerekli!",
+                      AppLocalizations.of(context)!.moreMinutesRequired(300 - weeklyMinutes),
                       style: const TextStyle(
                         color: Colors.redAccent,
                         fontSize: 11,
@@ -356,21 +357,22 @@ class SessionHistoryScreen extends StatelessWidget {
     );
   }
 
-  String _getTimeAgo(DateTime date) {
+  String _getTimeAgo(DateTime date, BuildContext context) {
     final now = DateTime.now();
     final difference = now.difference(date);
+    final l10n = AppLocalizations.of(context)!;
 
     if (difference.inMinutes < 1) {
-      return 'Az önce';
+      return l10n.timeAgoJustNow;
     } else if (difference.inMinutes < 60) {
-      return '${difference.inMinutes} dk önce';
+      return l10n.timeAgoMinutes(difference.inMinutes);
     } else if (difference.inHours < 24) {
-      return '${difference.inHours} saat önce';
+      return l10n.timeAgoHours(difference.inHours);
     } else if (difference.inDays < 7) {
-      return '${difference.inDays} gün önce';
+      return l10n.timeAgoDays(difference.inDays);
     } else if (difference.inDays < 30) {
       final weeks = (difference.inDays / 7).floor();
-      return '$weeks hafta önce';
+      return '$weeks hafta önce'; // TODO: Localize these as well if needed
     } else if (difference.inDays < 365) {
       final months = (difference.inDays / 30).floor();
       return '$months ay önce';

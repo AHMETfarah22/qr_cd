@@ -6,6 +6,8 @@ import '../../../core/widgets/common_text_field.dart';
 import '../services/auth_service.dart';
 import '../services/statistics_service.dart';
 import '../../timer/screens/timer_screen.dart';
+import '../../onboarding/screens/onboarding_screen.dart';
+import '../../../core/services/settings_service.dart';
 import '../../../l10n/app_localizations.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -73,11 +75,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
       }
       
       if (!mounted) return;
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const TimerScreen()),
-      );
+      
+      final settingsService = Provider.of<SettingsService>(context, listen: false);
+      if (!settingsService.isOnboardingCompleted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const TimerScreen()),
+        );
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

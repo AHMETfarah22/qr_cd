@@ -10,6 +10,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import '../../../core/services/backup_service.dart';
+import '../../onboarding/screens/onboarding_screen.dart';
 import '../../auth/services/statistics_service.dart';
 import '../../auth/screens/login_screen.dart';
 
@@ -30,9 +31,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       context: context,
       builder: (dialogContext) => AlertDialog(
         backgroundColor: AppColors.process,
-        title: const Text(
-          'Şifre Değiştir',
-          style: TextStyle(color: Colors.white),
+        title: Text(
+          AppLocalizations.of(context)!.changePassword,
+          style: const TextStyle(color: Colors.white),
         ),
         content: SingleChildScrollView(
           child: Column(
@@ -40,21 +41,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
             children: [
               CommonTextField(
                 controller: currentPasswordController,
-                hintText: 'Mevcut Şifre',
+                hintText: AppLocalizations.of(context)!.password,
                 obscureText: true,
                 showPasswordToggle: true,
               ),
               const SizedBox(height: 16),
               CommonTextField(
                 controller: newPasswordController,
-                hintText: 'Yeni Şifre',
+                hintText: AppLocalizations.of(context)!.password,
                 obscureText: true,
                 showPasswordToggle: true,
               ),
               const SizedBox(height: 16),
               CommonTextField(
                 controller: confirmPasswordController,
-                hintText: 'Yeni Şifre (Tekrar)',
+                hintText: AppLocalizations.of(context)!.password,
                 obscureText: true,
                 showPasswordToggle: true,
               ),
@@ -64,9 +65,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text(
-              'İptal',
-              style: TextStyle(color: AppColors.textSecondary),
+            child: Text(
+              AppLocalizations.of(context)!.cancelBtn,
+              style: const TextStyle(color: AppColors.textSecondary),
             ),
           ),
           TextButton(
@@ -106,9 +107,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 );
               }
             },
-            child: const Text(
-              'Değiştir',
-              style: TextStyle(color: AppColors.accent),
+            child: Text(
+              AppLocalizations.of(context)!.changePassword,
+              style: const TextStyle(color: AppColors.accent),
             ),
           ),
         ],
@@ -130,9 +131,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.process,
-        title: const Text(
-          'İstatistikleri Sıfırla',
-          style: TextStyle(color: Colors.white),
+        title: Text(
+          AppLocalizations.of(context)!.resetStatistics,
+          style: const TextStyle(color: Colors.white),
         ),
         content: const Text(
           'Tüm oturum geçmişi, seri, rozetler ve istatistikler silinecektir. Bu işlem geri alınamaz!\n\nDevam etmek istiyor musunuz?',
@@ -146,8 +147,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             child: const Text(
-              'Sıfırla',
-              style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+              AppLocalizations.of(context)!.resetStatistics,
+              style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
             ),
           ),
         ],
@@ -339,9 +340,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text(
-          'AYARLAR',
-          style: TextStyle(
+        title: Text(
+          AppLocalizations.of(context)!.settingsTitle,
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
             letterSpacing: 2.0,
@@ -360,11 +361,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildSectionTitle('SES VE BİLDİRİM'),
+            _buildSectionTitle(AppLocalizations.of(context)!.sectionVoiceNotification),
             const SizedBox(height: 16),
             _buildSettingCard(
-              title: 'Alarm Sesi',
-              subtitle: _getAlarmSoundName(settingsService.alarmSound),
+              title: AppLocalizations.of(context)!.alarmSound,
+              subtitle: _getAlarmSoundName(settingsService.alarmSound, context),
               icon: Icons.notifications_active_outlined,
               trailing: DropdownButton<AlarmSound>(
                 value: settingsService.alarmSound,
@@ -380,7 +381,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   return DropdownMenuItem<AlarmSound>(
                     value: sound,
                     child: Text(
-                      _getAlarmSoundName(sound),
+                      _getAlarmSoundName(sound, context),
                       style: const TextStyle(color: Colors.white, fontSize: 14),
                     ),
                   );
@@ -389,8 +390,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             const SizedBox(height: 12),
             _buildSettingCard(
-              title: 'Titreşim',
-              subtitle: settingsService.vibrationEnabled ? 'Açık' : 'Kapalı',
+              title: AppLocalizations.of(context)!.vibration,
+              subtitle: settingsService.vibrationEnabled ? AppLocalizations.of(context)!.on : AppLocalizations.of(context)!.off,
               icon: Icons.vibration,
               trailing: Switch(
                 value: settingsService.vibrationEnabled,
@@ -399,11 +400,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
             const SizedBox(height: 32),
-            _buildSectionTitle('ODAKLANMA AYARLARI'),
+            _buildSectionTitle(AppLocalizations.of(context)!.sectionAppearance),
             const SizedBox(height: 16),
             _buildSettingCard(
-              title: 'Varsayılan Süre',
-              subtitle: '${settingsService.preferredFocusDurationMinutes} dakika',
+              title: AppLocalizations.of(context)!.darkMode,
+              subtitle: settingsService.isDarkMode ? AppLocalizations.of(context)!.on : AppLocalizations.of(context)!.off,
+              icon: Icons.dark_mode_outlined,
+              trailing: Switch(
+                value: settingsService.isDarkMode,
+                onChanged: (value) => settingsService.setDarkMode(value),
+                activeThumbColor: AppColors.accent,
+              ),
+            ),
+            const SizedBox(height: 32),
+            _buildSectionTitle(AppLocalizations.of(context)!.sectionFocusSettings),
+            const SizedBox(height: 16),
+            _buildSettingCard(
+              title: AppLocalizations.of(context)!.defaultDuration,
+              subtitle: AppLocalizations.of(context)!.mins(settingsService.preferredFocusDurationMinutes),
               icon: Icons.timer_outlined,
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -430,11 +444,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
             const SizedBox(height: 32),
-            _buildSectionTitle('HESAP AYARLARI'),
+            _buildSectionTitle(AppLocalizations.of(context)!.sectionAccountSettings),
             const SizedBox(height: 16),
             _buildSettingCard(
-              title: 'Şifre Değiştir',
-              subtitle: 'Hesap şifrenizi güncelleyin',
+              title: AppLocalizations.of(context)!.changePassword,
+              subtitle: AppLocalizations.of(context)!.updatePasswordSubtitle,
               icon: Icons.lock_outline,
               trailing: IconButton(
                 icon: const Icon(Icons.arrow_forward_ios, color: AppColors.accent, size: 18),
@@ -445,8 +459,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 12.0),
               child: Text(
-                'Not: Şifreniz güvenli bir şekilde saklanır.',
-                style: TextStyle(
+                AppLocalizations.of(context)!.passwordSecureNote,
+                style: const TextStyle(
                   color: AppColors.textSecondary,
                   fontSize: 12,
                   fontStyle: FontStyle.italic,
@@ -454,11 +468,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
             const SizedBox(height: 32),
-            _buildSectionTitle('VERİ YÖNETİMİ'),
+            _buildSectionTitle(AppLocalizations.of(context)!.sectionDataManagement),
             const SizedBox(height: 16),
             _buildSettingCard(
-              title: 'Verileri Yedekle',
-              subtitle: 'Verilerinizi dışa aktarın',
+              title: AppLocalizations.of(context)!.backupData,
+              subtitle: AppLocalizations.of(context)!.exportDataSubtitle,
               icon: Icons.cloud_upload_outlined,
               trailing: IconButton(
                 icon: const Icon(Icons.arrow_forward_ios, color: AppColors.accent, size: 18),
@@ -467,8 +481,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             const SizedBox(height: 12),
             _buildSettingCard(
-              title: 'Geri Yükle',
-              subtitle: 'Yedekten verileri yükleyin',
+              title: AppLocalizations.of(context)!.restoreData,
+              subtitle: AppLocalizations.of(context)!.importDataSubtitle,
               icon: Icons.cloud_download_outlined,
               trailing: IconButton(
                 icon: const Icon(Icons.arrow_forward_ios, color: AppColors.accent, size: 18),
@@ -477,8 +491,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             const SizedBox(height: 12),
             _buildSettingCard(
-              title: 'İstatistikleri Sıfırla',
-              subtitle: 'Tüm oturum verilerini temizleyin',
+              title: AppLocalizations.of(context)!.resetStatistics,
+              subtitle: AppLocalizations.of(context)!.resetStatsSubtitle,
               icon: Icons.delete_sweep_outlined,
               trailing: IconButton(
                 icon: const Icon(Icons.arrow_forward_ios, color: Colors.red, size: 18),
@@ -486,21 +500,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
             const SizedBox(height: 32),
-            _buildSectionTitle('UYGULAMA'),
+            _buildSectionTitle(AppLocalizations.of(context)!.sectionApplication),
             const SizedBox(height: 16),
             _buildSettingCard(
-              title: 'Arkadaşlarınla Paylaş',
-              subtitle: 'WhatsApp veya diğer uygulamalarla paylaşın',
+              title: AppLocalizations.of(context)!.shareWithFriends,
+              subtitle: AppLocalizations.of(context)!.shareSubtitle,
               icon: Icons.share_outlined,
               trailing: IconButton(
                 icon: const Icon(Icons.arrow_forward_ios, color: AppColors.accent, size: 18),
                 onPressed: _shareApp,
               ),
             ),
+            const SizedBox(height: 12),
+            _buildSettingCard(
+              title: AppLocalizations.of(context)!.tutorialTitle,
+              subtitle: AppLocalizations.of(context)!.tutorialSubtitle,
+              icon: Icons.help_outline_rounded,
+              trailing: IconButton(
+                icon: const Icon(Icons.arrow_forward_ios, color: AppColors.accent, size: 18),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+                  );
+                },
+              ),
+            ),
             const SizedBox(height: 24),
             Center(
               child: Text(
-                'Versiyon 1.0.0',
+                AppLocalizations.of(context)!.version('1.0.0'),
                 style: TextStyle(
                   color: AppColors.textSecondary.withValues(alpha: 0.5),
                   fontSize: 12,
@@ -513,10 +542,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  String _getAlarmSoundName(AlarmSound sound) {
+  String _getAlarmSoundName(AlarmSound sound, BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     switch (sound) {
       case AlarmSound.bird:
-        return 'Kuş Sesi';
+        return 'Kuş Sesi'; // TODO: These should also be in assets or localized
       case AlarmSound.siren:
         return 'Siren';
       case AlarmSound.zen:

@@ -38,12 +38,12 @@ class _CommonTextFieldState extends State<CommonTextField> {
       controller: widget.controller,
       obscureText: _isObscured,
       keyboardType: widget.keyboardType,
-      style: const TextStyle(color: Colors.white),
+      style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
       decoration: InputDecoration(
         hintText: widget.hintText,
         hintStyle: const TextStyle(color: AppColors.textSecondary),
         filled: true,
-        fillColor: AppColors.process,
+        fillColor: Theme.of(context).inputDecorationTheme.fillColor,
         contentPadding: const EdgeInsets.symmetric(
           vertical: 16,
           horizontal: 16,

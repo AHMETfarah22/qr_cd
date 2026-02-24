@@ -577,6 +577,450 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'User'**
   String get user;
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'SETTINGS'**
+  String get settingsTitle;
+
+  /// No description provided for @sectionVoiceNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'VOICE AND NOTIFICATION'**
+  String get sectionVoiceNotification;
+
+  /// No description provided for @alarmSound.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm Sound'**
+  String get alarmSound;
+
+  /// No description provided for @vibration.
+  ///
+  /// In en, this message translates to:
+  /// **'Vibration'**
+  String get vibration;
+
+  /// No description provided for @on.
+  ///
+  /// In en, this message translates to:
+  /// **'On'**
+  String get on;
+
+  /// No description provided for @off.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get off;
+
+  /// No description provided for @sectionFocusSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'FOCUS SETTINGS'**
+  String get sectionFocusSettings;
+
+  /// No description provided for @defaultDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Default Duration'**
+  String get defaultDuration;
+
+  /// No description provided for @mins.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} minutes'**
+  String mins(Object minutes);
+
+  /// No description provided for @sectionAccountSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'ACCOUNT SETTINGS'**
+  String get sectionAccountSettings;
+
+  /// No description provided for @changePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Password'**
+  String get changePassword;
+
+  /// No description provided for @updatePasswordSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Update your account password'**
+  String get updatePasswordSubtitle;
+
+  /// No description provided for @passwordSecureNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Note: Your password is stored securely.'**
+  String get passwordSecureNote;
+
+  /// No description provided for @sectionDataManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'DATA MANAGEMENT'**
+  String get sectionDataManagement;
+
+  /// No description provided for @backupData.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup Data'**
+  String get backupData;
+
+  /// No description provided for @exportDataSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Export your data'**
+  String get exportDataSubtitle;
+
+  /// No description provided for @restoreData.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore Data'**
+  String get restoreData;
+
+  /// No description provided for @importDataSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Load data from backup'**
+  String get importDataSubtitle;
+
+  /// No description provided for @resetStatistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Statistics'**
+  String get resetStatistics;
+
+  /// No description provided for @resetStatsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear all session data'**
+  String get resetStatsSubtitle;
+
+  /// No description provided for @sectionApplication.
+  ///
+  /// In en, this message translates to:
+  /// **'APPLICATION'**
+  String get sectionApplication;
+
+  /// No description provided for @shareWithFriends.
+  ///
+  /// In en, this message translates to:
+  /// **'Share with Friends'**
+  String get shareWithFriends;
+
+  /// No description provided for @shareSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Share via WhatsApp or other apps'**
+  String get shareSubtitle;
+
+  /// No description provided for @version.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version}'**
+  String version(Object version);
+
+  /// No description provided for @historyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'SESSION HISTORY'**
+  String get historyTitle;
+
+  /// No description provided for @noHistoryYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No session history yet'**
+  String get noHistoryYet;
+
+  /// No description provided for @startFocusNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Start focusing now and create your first record!'**
+  String get startFocusNow;
+
+  /// No description provided for @startFocusingBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Focusing'**
+  String get startFocusingBtn;
+
+  /// No description provided for @weeklyGoalSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'WEEKLY GOAL REACHED!'**
+  String get weeklyGoalSuccess;
+
+  /// No description provided for @weeklyGoalFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'GOAL NOT REACHED'**
+  String get weeklyGoalFailed;
+
+  /// No description provided for @weeklyMinutesNote.
+  ///
+  /// In en, this message translates to:
+  /// **'You focused for a total of {hours} hours {minutes} minutes this week.'**
+  String weeklyMinutesNote(Object hours, Object minutes);
+
+  /// No description provided for @moreMinutesRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} more minutes required!'**
+  String moreMinutesRequired(Object minutes);
+
+  /// No description provided for @today.
+  ///
+  /// In en, this message translates to:
+  /// **'TODAY'**
+  String get today;
+
+  /// No description provided for @yesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'YESTERDAY'**
+  String get yesterday;
+
+  /// No description provided for @successLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'SUCCESSFUL'**
+  String get successLabel;
+
+  /// No description provided for @failedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'FAILED'**
+  String get failedLabel;
+
+  /// No description provided for @timeAgoJustNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Just now'**
+  String get timeAgoJustNow;
+
+  /// No description provided for @timeAgoMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min ago'**
+  String timeAgoMinutes(Object minutes);
+
+  /// No description provided for @timeAgoHours.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} hours ago'**
+  String timeAgoHours(Object hours);
+
+  /// No description provided for @timeAgoDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{days} days ago'**
+  String timeAgoDays(Object days);
+
+  /// No description provided for @statisticsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'STATISTICS'**
+  String get statisticsTitle;
+
+  /// No description provided for @categoryDistribution.
+  ///
+  /// In en, this message translates to:
+  /// **'CATEGORY DISTRIBUTION'**
+  String get categoryDistribution;
+
+  /// No description provided for @weeklyActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'LAST 7 DAYS ACTIVITY'**
+  String get weeklyActivity;
+
+  /// No description provided for @timeDistribution.
+  ///
+  /// In en, this message translates to:
+  /// **'TIME DISTRIBUTION'**
+  String get timeDistribution;
+
+  /// No description provided for @noDataYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No data yet'**
+  String get noDataYet;
+
+  /// No description provided for @successfulSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get successfulSessions;
+
+  /// No description provided for @cancelledSessionsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get cancelledSessionsCount;
+
+  /// No description provided for @activeDaysCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Days'**
+  String get activeDaysCount;
+
+  /// No description provided for @hoursShort.
+  ///
+  /// In en, this message translates to:
+  /// **'h'**
+  String get hoursShort;
+
+  /// No description provided for @minutesShort.
+  ///
+  /// In en, this message translates to:
+  /// **'m'**
+  String get minutesShort;
+
+  /// No description provided for @hoursLong.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} hours'**
+  String hoursLong(Object hours);
+
+  /// No description provided for @minutesLong.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} minutes'**
+  String minutesLong(Object minutes);
+
+  /// No description provided for @sectionAppearance.
+  ///
+  /// In en, this message translates to:
+  /// **'APPEARANCE'**
+  String get sectionAppearance;
+
+  /// No description provided for @darkMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark Mode'**
+  String get darkMode;
+
+  /// No description provided for @notifSuccessTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Congratulations!'**
+  String get notifSuccessTitle;
+
+  /// No description provided for @notifSuccessBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus session completed successfully. You\'re awesome!'**
+  String get notifSuccessBody;
+
+  /// No description provided for @notifBreakEndTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Break Over!'**
+  String get notifBreakEndTitle;
+
+  /// No description provided for @notifBreakEndBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You are ready for a new focus session.'**
+  String get notifBreakEndBody;
+
+  /// No description provided for @onboardingWelcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to Focus Flow'**
+  String get onboardingWelcome;
+
+  /// No description provided for @onboardingWelcomeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s set up your focus environment for the best experience.'**
+  String get onboardingWelcomeDesc;
+
+  /// No description provided for @onboardingSensorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sensor Access'**
+  String get onboardingSensorTitle;
+
+  /// No description provided for @onboardingSensorDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus Flow uses the accelerometer to detect if your phone is face down. This helps you stay focused!'**
+  String get onboardingSensorDesc;
+
+  /// No description provided for @onboardingDndTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Do Not Disturb'**
+  String get onboardingDndTitle;
+
+  /// No description provided for @onboardingDndDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'To block distracting notifications, we need permission to manage Do Not Disturb mode.'**
+  String get onboardingDndDesc;
+
+  /// No description provided for @onboardingPhoneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Call Detection'**
+  String get onboardingPhoneTitle;
+
+  /// No description provided for @onboardingPhoneDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'If you receive a call during focus, we\'ll automatically pause to let you decide.'**
+  String get onboardingPhoneDesc;
+
+  /// No description provided for @btnGrant.
+  ///
+  /// In en, this message translates to:
+  /// **'Grant Permission'**
+  String get btnGrant;
+
+  /// No description provided for @btnNext.
+  ///
+  /// In en, this message translates to:
+  /// **'NEXT'**
+  String get btnNext;
+
+  /// No description provided for @btnBack.
+  ///
+  /// In en, this message translates to:
+  /// **'BACK'**
+  String get btnBack;
+
+  /// No description provided for @btnStart.
+  ///
+  /// In en, this message translates to:
+  /// **'GET STARTED'**
+  String get btnStart;
+
+  /// No description provided for @permissionGranted.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission Granted'**
+  String get permissionGranted;
+
+  /// No description provided for @permissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission Denied'**
+  String get permissionDenied;
+
+  /// No description provided for @tutorialTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'App Tutorial'**
+  String get tutorialTitle;
+
+  /// No description provided for @tutorialSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Show onboarding guide again'**
+  String get tutorialSubtitle;
 }
 
 class _AppLocalizationsDelegate
