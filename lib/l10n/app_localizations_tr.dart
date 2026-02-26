@@ -459,7 +459,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get notifBreakEndBody => 'Yeni bir odaklanma seansına hazırsın.';
 
   @override
-  String get onboardingWelcome => 'Focus Flow\'a Hoş Geldiniz';
+  String get onboardingWelcome => 'TScan\'a Hoş Geldiniz';
 
   @override
   String get onboardingWelcomeDesc =>
@@ -470,7 +470,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get onboardingSensorDesc =>
-      'Focus Flow, telefonunuzun ters çevrildiğini algılamak için ivmeölçeri kullanır. Bu odaklanmanıza yardımcı olur!';
+      'TScan, telefonunuzun ters çevrildiğini algılamak için ivmeölçeri kullanır. Bu odaklanmanıza yardımcı olur!';
 
   @override
   String get onboardingDndTitle => 'Rahatsız Etme';

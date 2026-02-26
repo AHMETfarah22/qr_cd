@@ -1,4 +1,4 @@
-package com.example.focus_flow
+package com.example.tscan
 
 import io.flutter.embedding.android.FlutterActivity
 

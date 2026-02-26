@@ -1,11 +1,11 @@
 {
-    "name": "Focus Flow",
-    "short_name": "Focus Flow",
+    "name": "TScan",
+    "short_name": "TScan",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "Focus Flow Application",
+    "description": "TScan Application",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

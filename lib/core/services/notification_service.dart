@@ -40,9 +40,9 @@ class NotificationService {
   }) async {
     final AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-      'focus_flow_channel',
-      'Focus Flow Notifications',
-      channelDescription: 'Notifications for Focus Flow sessions',
+      'tscan_channel',
+      'TScan Notifications',
+      channelDescription: 'Notifications for TScan sessions',
       importance: Importance.max,
       priority: Priority.high,
       showWhen: true,

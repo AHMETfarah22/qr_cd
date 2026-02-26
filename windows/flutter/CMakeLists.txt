@@ -32,7 +32,7 @@ list(APPEND FLUTTER_LIBRARY_HEADERS
   "flutter_texture_registrar.h"
 )
 list(TRANSFORM FLUTTER_LIBRARY_HEADERS PREPEND "${EPHEMERAL_DIR}/")
-add_library(flutter INTERFACE)
+add_library(flutter INTERFACE) 
 target_include_directories(flutter INTERFACE
   "${EPHEMERAL_DIR}"
 )

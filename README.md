@@ -1,4 +1,4 @@
-# 🎯 Focus Flow
+# 🎯 TScan
 
 **Odaklanmanızı artırmak için tasarlanmış akıllı zamanlayıcı uygulaması**
 
@@ -52,8 +52,8 @@
 
 ```bash
 # 1. Projeyi klonlayın
-git clone https://github.com/AHMETfarah22/qr_cd.git
-cd qr_cd
+git clone https://github.com/AHMETfarah22/tscan.git
+cd tscan
 
 # 2. Bağımlılıkları yükleyin
 flutter pub get
@@ -70,14 +70,14 @@ flutter run -d chrome     # Web
 #### **2. Hazır APK/EXE İndirme** (Kullanıcılar için)
 
 **Android APK:**
-- [GitHub Releases](https://github.com/AHMETfarah22/qr_cd/releases) sayfasından `app-release.apk` indirin
+- [GitHub Releases](https://github.com/AHMETfarah22/tscan/releases) sayfasından `app-release.apk` indirin
 - Telefonunuzda "Bilinmeyen Kaynaklardan Yükleme"yi aktifleştirin
 - APK'yı yükleyin ve kullanmaya başlayın
 
 **Windows EXE:**
-- [GitHub Releases](https://github.com/AHMETfarah22/qr_cd/releases) sayfasından Windows sürümünü indirin
+- [GitHub Releases](https://github.com/AHMETfarah22/tscan/releases) sayfasından Windows sürümünü indirin
 - ZIP dosyasını çıkartın
-- `focus_flow.exe` dosyasını çalıştırın
+- `tscan.exe` dosyasını çalıştırın
 
 ---
 
@@ -139,7 +139,7 @@ percent_indicator: ^4.2.5   # İlerleme göstergeleri
 
 - ✅ **Verileriniz cihazınızda kalır** - Bulut senkronizasyonu yok
 - ✅ **Offline çalışır** - İnternet bağlantısı gerektirmez
-- ⚠️ **Geliştirme aşamasında** - Şifreler henüz şifrelenmemiş
+- ✅ **Güvenli Şifreleme** - Şifreler hash+salt yöntemiyle korunur
 
 ---
 
@@ -171,7 +171,7 @@ Bu proje özel bir projedir. Kullanım için lütfen iletişime geçin.
 ## 🐛 **Sorun Bildirimi**
 
 Hata bulursanız veya öneriniz varsa:
-- [GitHub Issues](https://github.com/AHMETfarah22/qr_cd/issues) sayfasından bildirebilirsiniz
+- [GitHub Issues](https://github.com/AHMETfarah22/tscan/issues) sayfasından bildirebilirsiniz
 
 ---
 

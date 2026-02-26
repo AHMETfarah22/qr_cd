@@ -120,8 +120,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _shareApp() {
     SharePlus.instance.share(
       ShareParams(
-        text: 'Focus Flow uygulamasını keşfet! Odaklanmanı ve verimliliğini artırmana yardımcı olur. 🚀\n\nİndir: https://focusflow.example.com',
-        subject: 'Focus Flow - Odaklanma Uygulaması',
+        text: 'TScan uygulamasını keşfet! Odaklanmanı ve verimliliğini artırmana yardımcı olur. 🚀\n\nİndir: https://tscan.example.com',
+        subject: 'TScan - Odaklanma Uygulaması',
       ),
     );
   }
@@ -196,7 +196,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       // 2. Create a temporary file
       final directory = await getTemporaryDirectory();
       final dateStr = DateTime.now().toIso8601String().split('T')[0];
-      final fileName = 'focus_flow_backup_$dateStr.json';
+      final fileName = 'tscan_backup_$dateStr.json';
       final file = File('${directory.path}/$fileName');
       
       await file.writeAsString(jsonString);
@@ -206,8 +206,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         await SharePlus.instance.share(
           ShareParams(
             files: [XFile(file.path)],
-            text: 'Focus Flow Yedek Dosyası ($dateStr)',
-            subject: 'Focus Flow Yedek',
+            text: 'TScan Yedek Dosyası ($dateStr)',
+            subject: 'TScan Yedek',
           ),
         );
       }

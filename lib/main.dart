@@ -80,20 +80,20 @@ void main() async {
           },
         ),
       ],
-      child: const FocusFlowApp(),
+      child: const TScanApp(),
     ),
   );
 }
 
-class FocusFlowApp extends StatelessWidget {
-  const FocusFlowApp({super.key});
+class TScanApp extends StatelessWidget {
+  const TScanApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Consumer<SettingsService>(
       builder: (context, settingsService, _) {
         return MaterialApp(
-          title: 'Focus Flow',
+          title: 'TScan',
           debugShowCheckedModeBanner: false,
           theme: settingsService.isDarkMode ? AppTheme.darkTheme : AppTheme.lightTheme,
           localizationsDelegates: const [

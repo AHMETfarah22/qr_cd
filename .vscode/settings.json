@@ -1,5 +1,5 @@
 {
-    "cmake.sourceDirectory": "C:/develpment/Focus Flow/windows",
+    "cmake.sourceDirectory": "C:/develpment/TScan/windows",
     "C_Cpp.errorSquiggles": "disabled",
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
     "files.associations": {

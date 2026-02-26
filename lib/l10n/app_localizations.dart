@@ -929,7 +929,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingWelcome.
   ///
   /// In en, this message translates to:
-  /// **'Welcome to Focus Flow'**
+  /// **'Welcome to TScan'**
   String get onboardingWelcome;
 
   /// No description provided for @onboardingWelcomeDesc.
@@ -947,7 +947,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingSensorDesc.
   ///
   /// In en, this message translates to:
-  /// **'Focus Flow uses the accelerometer to detect if your phone is face down. This helps you stay focused!'**
+  /// **'TScan uses the accelerometer to detect if your phone is face down. This helps you stay focused!'**
   String get onboardingSensorDesc;
 
   /// No description provided for @onboardingDndTitle.

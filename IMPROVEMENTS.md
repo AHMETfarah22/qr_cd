@@ -1,4 +1,4 @@
-# Focus Flow - İyileştirme Planı
+# TScan - İyileştirme Planı
 
 ## ✅ TAMAMLANANLAR (Son Güncellemeyle)
 - [x] **Session History Sayfası:** Tüm geçmiş verileri günlük gruplanmış halde görüntüleyebilme.
@@ -13,17 +13,8 @@
 
 ---
 
-## 🔴 YÜKSEK ÖNCELİK (Sıradaki Adımlar)
-
-### 1. Onboarding / Tutorial
-**Yapılacaklar:**
-- [ ] İlk kullanımda uygulama rehberi ekle.
-- [ ] İzinleri (Sensör, DND) açıklayan bilgilendirme ekranları.
-
-### 2. DND İzni ve Güvenlik Kontrolü
-**Yapılacaklar:**
-- [ ] DND izni yoksa kullanıcıyı uyar.
-- [ ] Phone State izni eksikliğinde uyarı ver.
+- [x] **Onboarding / Tutorial:** İlk kullanımda uygulama rehberi ve bilgilendirme ekranları.
+- [x] **İzin Kontrolü:** DND ve Phone State izinleri için kullanıcı yönlendirmesi ve onboarding entegrasyonu.
 
 ---
 

@@ -5,7 +5,7 @@
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>CFBundleDisplayName</key>
-		<string>Focus Flow</string>
+		<string>TScan</string>
 		<key>CFBundleExecutable</key>
 		<string>$(EXECUTABLE_NAME)</string>
 		<key>CFBundleIdentifier</key>
@@ -13,7 +13,7 @@
 		<key>CFBundleInfoDictionaryVersion</key>
 		<string>6.0</string>
 		<key>CFBundleName</key>
-		<string>focus_flow</string>
+		<string>tscan</string>
 		<key>CFBundlePackageType</key>
 		<string>APPL</string>
 		<key>CFBundleShortVersionString</key>
@@ -45,6 +45,12 @@
 		<true/>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true/>
+		<key>NSMotionUsageDescription</key>
+		<string>Uygulama, telefonun masadan kaldırılıp kaldırılmadığını algılamak için hareket sensörlerini kullanır.</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>Uygulama, profil resmi seçebilmeniz için galerinize erişim sağlar.</string>
+		<key>NSCameraUsageDescription</key>
+		<string>Uygulama, profil fotoğrafı çekebilmeniz için kameraya erişim sağlar.</string>
 		<key>UIStatusBarHidden</key>
 		<false/>
 	</dict>

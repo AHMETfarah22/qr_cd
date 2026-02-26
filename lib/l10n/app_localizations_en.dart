@@ -471,7 +471,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notifBreakEndBody => 'You are ready for a new focus session.';
 
   @override
-  String get onboardingWelcome => 'Welcome to Focus Flow';
+  String get onboardingWelcome => 'Welcome to TScan';
 
   @override
   String get onboardingWelcomeDesc =>
@@ -482,7 +482,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingSensorDesc =>
-      'Focus Flow uses the accelerometer to detect if your phone is face down. This helps you stay focused!';
+      'TScan uses the accelerometer to detect if your phone is face down. This helps you stay focused!';
 
   @override
   String get onboardingDndTitle => 'Do Not Disturb';
