@@ -45,7 +45,7 @@ class _PdfUploadScreenState extends State<PdfUploadScreen>
   Future<bool> _showApiKeyPromptDialog() async {
     final controller = TextEditingController();
     final formKey = GlobalKey<FormState>();
-    
+
     final result = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
@@ -57,7 +57,7 @@ class _PdfUploadScreenState extends State<PdfUploadScreen>
             const Icon(Icons.key_rounded, color: Colors.amber),
             const SizedBox(width: 10),
             Text(
-              'API Anahtarı Gerekli',
+              AppLocalizations.of(context)!.apiKeyDialogTitle,
               style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
             ),
           ],
@@ -69,7 +69,7 @@ class _PdfUploadScreenState extends State<PdfUploadScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Sistem varsayılan bir yapay zeka anahtarı kullanmaktadır. Eğer kendi özel anahtarınızı (Google Gemini API veya OpenRouter) kullanmak isterseniz aşağıya girebilirsiniz.\n\nTamamen ücretsiz bir Gemini anahtarı almak için Google AI Studio sitesini ziyaret edebilirsiniz.',
+                AppLocalizations.of(context)!.apiKeyDialogBody,
                 style: GoogleFonts.poppins(color: Colors.white70, fontSize: 13),
               ),
               const SizedBox(height: 16),
@@ -77,7 +77,7 @@ class _PdfUploadScreenState extends State<PdfUploadScreen>
                 controller: controller,
                 style: const TextStyle(color: Colors.white, fontSize: 14),
                 decoration: InputDecoration(
-                  hintText: 'sk-or-v1-...',
+                  hintText: 'AIza... / AQ....',
                   hintStyle: const TextStyle(color: Colors.white38),
                   filled: true,
                   fillColor: Colors.black26,
@@ -88,12 +88,12 @@ class _PdfUploadScreenState extends State<PdfUploadScreen>
                   contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                 ),
                 validator: (val) {
+                  final l10n = AppLocalizations.of(context)!;
                   if (val == null || val.trim().isEmpty) {
-                    return 'Lütfen anahtarınızı girin';
+                    return l10n.apiKeyRequired;
                   }
-                  final trimmed = val.trim();
-                  if (!trimmed.startsWith('sk-or-') && !trimmed.startsWith('AIzaSy') && !trimmed.startsWith('AQ.')) {
-                    return 'Geçersiz OpenRouter veya Gemini anahtarı';
+                  if (!AiService.looksLikeGeminiKey(val)) {
+                    return l10n.apiKeyInvalidFormat;
                   }
                   return null;
                 },
@@ -186,6 +186,16 @@ class _PdfUploadScreenState extends State<PdfUploadScreen>
     final l10n = AppLocalizations.of(context)!;
     final authService = Provider.of<AuthService>(context, listen: false);
     final historyService = Provider.of<PdfHistoryService>(context, listen: false);
+    final premiumService = Provider.of<PremiumService>(context, listen: false);
+
+    if (!premiumService.canUploadPdf) {
+      setState(() => _isLoading = false);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const PaywallScreen(limitReached: true)),
+      );
+      return;
+    }
 
     try {
       final hasKey = await AiService.hasApiKey();
@@ -235,8 +245,9 @@ class _PdfUploadScreenState extends State<PdfUploadScreen>
       pdfDoc.subject = analysis['subject'] as String?;
       pdfDoc.tips = analysis['tips'] as String?;
 
-      // Save to local history
+      // Save to local history and count it against the free quota
       await historyService.savePdf(pdfDoc);
+      await premiumService.recordPdfUpload();
       if (!mounted) return;
 
       // Navigate to analysis screen
@@ -268,7 +279,7 @@ class _PdfUploadScreenState extends State<PdfUploadScreen>
     final l10n = AppLocalizations.of(context)!;
     final premiumService = Provider.of<PremiumService>(context);
 
-    if (!premiumService.canUseFeature(PremiumFeature.unlimitedPdf)) {
+    if (!premiumService.canUploadPdf) {
       return Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(
@@ -286,15 +297,16 @@ class _PdfUploadScreenState extends State<PdfUploadScreen>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.stars_rounded, size: 80, color: AppColors.accent),
+                const Icon(Icons.workspace_premium_rounded, size: 80, color: Colors.amber),
                 const SizedBox(height: 24),
                 Text(
-                  l10n.premiumOzellik,
+                  l10n.freeLimitReachedTitle,
+                  textAlign: TextAlign.center,
                   style: GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  l10n.premiumCalismaAsistani,
+                  l10n.freeLimitReachedBody,
                   style: GoogleFonts.poppins(fontSize: 14, color: AppColors.textSecondary),
                   textAlign: TextAlign.center,
                 ),
@@ -306,7 +318,7 @@ class _PdfUploadScreenState extends State<PdfUploadScreen>
                     onPressed: () {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (_) => const PaywallScreen()),
+                        MaterialPageRoute(builder: (_) => const PaywallScreen(limitReached: true)),
                       );
                     },
                     style: ElevatedButton.styleFrom(
@@ -447,7 +459,7 @@ class _PdfUploadScreenState extends State<PdfUploadScreen>
                   if (historyService.history.isNotEmpty) {
                     return _buildHistoryList(context, historyService.history);
                   }
-                  
+
                   // Default: How it works
                   return Container(
                     padding: const EdgeInsets.all(20),
@@ -576,7 +588,7 @@ class _PdfUploadScreenState extends State<PdfUploadScreen>
 
   Widget _buildHistoryList(BuildContext context, List<PdfDocument> history) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

@@ -22,7 +22,7 @@ extension SessionCategoryExtension on SessionCategory {
   String getDisplayName(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     if (l10n == null) return displayName;
-    
+
     switch (this) {
       case SessionCategory.work:
         return l10n.catWork;

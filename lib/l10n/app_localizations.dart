@@ -1256,7 +1256,7 @@ abstract class AppLocalizations {
   /// No description provided for @pdfGizlilikOnayiBody.
   ///
   /// In en, this message translates to:
-  /// **'The text content of your uploaded PDF will be sent to the AI service (OpenRouter) over a secure connection for duration estimation and quiz generation. Do you consent to sending your data to the cloud?'**
+  /// **'The text content of your uploaded PDF will be sent to the AI service (Google Gemini) over a secure connection for duration estimation and quiz generation. Do you consent to sending your data to the cloud?'**
   String get pdfGizlilikOnayiBody;
 
   /// No description provided for @onayla.
@@ -1598,7 +1598,7 @@ abstract class AppLocalizations {
   /// No description provided for @apiKey401Hata.
   ///
   /// In en, this message translates to:
-  /// **'Unauthorized API key (401)! Please enter a valid OpenRouter API key. The current key was cleared.'**
+  /// **'The API key was rejected. Please enter a valid Gemini API key; the saved key was cleared.'**
   String get apiKey401Hata;
 
   /// No description provided for @navStats.
@@ -1642,6 +1642,258 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{minutes} min'**
   String minutesValue(int minutes);
+
+  /// No description provided for @aiQuestAllDocs.
+  ///
+  /// In en, this message translates to:
+  /// **'All Documents ({count})'**
+  String aiQuestAllDocs(int count);
+
+  /// No description provided for @allDocsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'ALL DOCUMENTS'**
+  String get allDocsTitle;
+
+  /// No description provided for @freePdfRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} free PDF uploads left'**
+  String freePdfRemaining(int count);
+
+  /// No description provided for @freeLimitReachedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your free uploads are used up'**
+  String get freeLimitReachedTitle;
+
+  /// No description provided for @freeLimitReachedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You have used your 2 free PDF uploads. Go Premium for unlimited PDFs and AI quizzes.'**
+  String get freeLimitReachedBody;
+
+  /// No description provided for @statsTotalStudy.
+  ///
+  /// In en, this message translates to:
+  /// **'Total study'**
+  String get statsTotalStudy;
+
+  /// No description provided for @statsThisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'This week'**
+  String get statsThisWeek;
+
+  /// No description provided for @statsWeeklyGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly goal: {hours} h'**
+  String statsWeeklyGoal(int hours);
+
+  /// No description provided for @statsStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Day streak'**
+  String get statsStreak;
+
+  /// No description provided for @statsSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Sessions done'**
+  String get statsSessions;
+
+  /// No description provided for @statsSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Success'**
+  String get statsSuccess;
+
+  /// No description provided for @statsQuizAvg.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiz average'**
+  String get statsQuizAvg;
+
+  /// No description provided for @statsDailyMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'LAST 7 DAYS (MINUTES)'**
+  String get statsDailyMinutes;
+
+  /// No description provided for @statsBySubject.
+  ///
+  /// In en, this message translates to:
+  /// **'TIME BY SUBJECT'**
+  String get statsBySubject;
+
+  /// No description provided for @hoursMinutesShort.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours}h {minutes}m'**
+  String hoursMinutesShort(int hours, int minutes);
+
+  /// No description provided for @paywallTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'TScan Premium'**
+  String get paywallTitle;
+
+  /// No description provided for @paywallSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Study smarter with unlimited PDFs and your AI study coach'**
+  String get paywallSubtitle;
+
+  /// No description provided for @planMonthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get planMonthly;
+
+  /// No description provided for @planYearly.
+  ///
+  /// In en, this message translates to:
+  /// **'Yearly'**
+  String get planYearly;
+
+  /// No description provided for @planPerMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'/ month'**
+  String get planPerMonth;
+
+  /// No description provided for @planPerYear.
+  ///
+  /// In en, this message translates to:
+  /// **'/ year'**
+  String get planPerYear;
+
+  /// No description provided for @planMonthlyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel anytime'**
+  String get planMonthlyNote;
+
+  /// No description provided for @planYearlyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Only 50 TL a month — save 83%'**
+  String get planYearlyNote;
+
+  /// No description provided for @planBestValue.
+  ///
+  /// In en, this message translates to:
+  /// **'BEST VALUE'**
+  String get planBestValue;
+
+  /// No description provided for @subscribeNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribe Now'**
+  String get subscribeNow;
+
+  /// No description provided for @premiumActiveUntil.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium is active until {date}'**
+  String premiumActiveUntil(String date);
+
+  /// No description provided for @premiumActivatedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'🎉 Premium Activated!'**
+  String get premiumActivatedTitle;
+
+  /// No description provided for @premiumActivatedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You now have unlimited access to every feature. Happy studying!'**
+  String get premiumActivatedBody;
+
+  /// No description provided for @greatBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Great!'**
+  String get greatBtn;
+
+  /// No description provided for @paywallTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'You can cancel your subscription at any time from Play Store settings.'**
+  String get paywallTerms;
+
+  /// No description provided for @benefitUnlimitedPdf.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited PDFs'**
+  String get benefitUnlimitedPdf;
+
+  /// No description provided for @benefitUnlimitedPdfDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload as many notes and books as you like.'**
+  String get benefitUnlimitedPdfDesc;
+
+  /// No description provided for @benefitAiQuiz.
+  ///
+  /// In en, this message translates to:
+  /// **'AI quiz & study time'**
+  String get benefitAiQuiz;
+
+  /// No description provided for @benefitAiQuizDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-generated quizzes and reading time for every PDF.'**
+  String get benefitAiQuizDesc;
+
+  /// No description provided for @benefitWrongAnswers.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong answer analysis'**
+  String get benefitWrongAnswers;
+
+  /// No description provided for @benefitWrongAnswersDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'See which topics to review after each quiz.'**
+  String get benefitWrongAnswersDesc;
+
+  /// No description provided for @benefitSounds.
+  ///
+  /// In en, this message translates to:
+  /// **'All focus sounds'**
+  String get benefitSounds;
+
+  /// No description provided for @benefitSoundsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Rain, forest, café and more.'**
+  String get benefitSoundsDesc;
+
+  /// No description provided for @apiKeyDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Gemini API Key'**
+  String get apiKeyDialogTitle;
+
+  /// No description provided for @apiKeyDialogBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your Google Gemini API key to use AI features. You can get a free key from Google AI Studio.'**
+  String get apiKeyDialogBody;
+
+  /// No description provided for @apiKeyRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your key'**
+  String get apiKeyRequired;
+
+  /// No description provided for @apiKeyInvalidFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'This doesn\'t look like a Gemini API key'**
+  String get apiKeyInvalidFormat;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

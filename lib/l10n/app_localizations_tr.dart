@@ -622,7 +622,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get pdfGizlilikOnayiTitle => 'KVKK ve Bulut Analiz Onayı';
 
   @override
-  String get pdfGizlilikOnayiBody => 'Yüklediğiniz PDF\'in metin içeriği, süre tahmini ve quiz üretimi amacıyla güvenli bağlantı üzerinden yapay zeka servisine (OpenRouter) gönderilir. Kişisel verilerinizin buluta gönderilmesini onaylıyor musunuz?';
+  String get pdfGizlilikOnayiBody => 'Yüklediğiniz PDF\'in metin içeriği, süre tahmini ve quiz üretimi amacıyla güvenli bağlantı üzerinden yapay zeka servisine (Google Gemini) gönderilir. Kişisel verilerinizin buluta gönderilmesini onaylıyor musunuz?';
 
   @override
   String get onayla => 'Onayla';
@@ -809,7 +809,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get gizlilikKontrol => 'Gizlilik onayı kontrol ediliyor...';
 
   @override
-  String get apiKey401Hata => 'Yetkisiz API Anahtarı (401)! Lütfen geçerli bir OpenRouter API anahtarı girin. Mevcut anahtar temizlendi.';
+  String get apiKey401Hata => 'API anahtarı reddedildi. Lütfen geçerli bir Gemini API anahtarı gir; kayıtlı anahtar temizlendi.';
 
   @override
   String get navStats => 'İstatistik';
@@ -839,4 +839,140 @@ class AppLocalizationsTr extends AppLocalizations {
   String minutesValue(int minutes) {
     return '$minutes dk';
   }
+
+  @override
+  String aiQuestAllDocs(int count) {
+    return 'Tüm Belgeler ($count)';
+  }
+
+  @override
+  String get allDocsTitle => 'TÜM BELGELER';
+
+  @override
+  String freePdfRemaining(int count) {
+    return '$count ücretsiz PDF hakkın kaldı';
+  }
+
+  @override
+  String get freeLimitReachedTitle => 'Ücretsiz hakkın doldu';
+
+  @override
+  String get freeLimitReachedBody => '2 ücretsiz PDF hakkını kullandın. Sınırsız PDF ve AI quiz için Premium\'a geç.';
+
+  @override
+  String get statsTotalStudy => 'Toplam çalışma';
+
+  @override
+  String get statsThisWeek => 'Bu hafta';
+
+  @override
+  String statsWeeklyGoal(int hours) {
+    return 'Haftalık hedef: $hours saat';
+  }
+
+  @override
+  String get statsStreak => 'Gün serisi';
+
+  @override
+  String get statsSessions => 'Biten oturum';
+
+  @override
+  String get statsSuccess => 'Başarı';
+
+  @override
+  String get statsQuizAvg => 'Quiz ortalaması';
+
+  @override
+  String get statsDailyMinutes => 'SON 7 GÜN (DAKİKA)';
+
+  @override
+  String get statsBySubject => 'DERSLERE GÖRE SÜRE';
+
+  @override
+  String hoursMinutesShort(int hours, int minutes) {
+    return '$hours sa $minutes dk';
+  }
+
+  @override
+  String get paywallTitle => 'TScan Premium';
+
+  @override
+  String get paywallSubtitle => 'Sınırsız PDF ve AI çalışma koçuyla daha akıllı çalış';
+
+  @override
+  String get planMonthly => 'Aylık';
+
+  @override
+  String get planYearly => 'Yıllık';
+
+  @override
+  String get planPerMonth => '/ ay';
+
+  @override
+  String get planPerYear => '/ yıl';
+
+  @override
+  String get planMonthlyNote => 'İstediğin zaman iptal et';
+
+  @override
+  String get planYearlyNote => 'Ayda sadece 50 TL — %83 tasarruf';
+
+  @override
+  String get planBestValue => 'EN AVANTAJLI';
+
+  @override
+  String get subscribeNow => 'Şimdi Abone Ol';
+
+  @override
+  String premiumActiveUntil(String date) {
+    return 'Premium $date tarihine kadar aktif';
+  }
+
+  @override
+  String get premiumActivatedTitle => '🎉 Premium Aktif!';
+
+  @override
+  String get premiumActivatedBody => 'Artık tüm özelliklere sınırsız erişimin var. İyi çalışmalar!';
+
+  @override
+  String get greatBtn => 'Harika!';
+
+  @override
+  String get paywallTerms => 'Aboneliğini istediğin zaman Play Store ayarlarından iptal edebilirsin.';
+
+  @override
+  String get benefitUnlimitedPdf => 'Sınırsız PDF';
+
+  @override
+  String get benefitUnlimitedPdfDesc => 'İstediğin kadar ders notu ve kitap yükle.';
+
+  @override
+  String get benefitAiQuiz => 'AI quiz ve çalışma süresi';
+
+  @override
+  String get benefitAiQuizDesc => 'Her PDF için otomatik quiz ve okuma süresi.';
+
+  @override
+  String get benefitWrongAnswers => 'Yanlış cevap analizi';
+
+  @override
+  String get benefitWrongAnswersDesc => 'Her quizden sonra tekrar etmen gereken konuları gör.';
+
+  @override
+  String get benefitSounds => 'Tüm odak sesleri';
+
+  @override
+  String get benefitSoundsDesc => 'Yağmur, orman, kafe ve daha fazlası.';
+
+  @override
+  String get apiKeyDialogTitle => 'Gemini API Anahtarı';
+
+  @override
+  String get apiKeyDialogBody => 'AI özelliklerini kullanmak için Google Gemini API anahtarını gir. Ücretsiz anahtarı Google AI Studio\'dan alabilirsin.';
+
+  @override
+  String get apiKeyRequired => 'Lütfen anahtarını gir';
+
+  @override
+  String get apiKeyInvalidFormat => 'Bu bir Gemini API anahtarına benzemiyor';
 }

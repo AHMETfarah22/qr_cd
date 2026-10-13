@@ -41,9 +41,10 @@ class PasswordHasher {
 
     for (var blockIndex = 1; blockIndex <= blockCount; blockIndex++) {
       final blockIndexBytes = ByteData(4)..setUint32(0, blockIndex, Endian.big);
-      var u = hmac
-          .convert([...saltBytes, ...blockIndexBytes.buffer.asUint8List()])
-          .bytes;
+      var u = hmac.convert([
+        ...saltBytes,
+        ...blockIndexBytes.buffer.asUint8List(),
+      ]).bytes;
       final block = List<int>.from(u);
 
       for (var iter = 1; iter < pbkdf2Iterations; iter++) {

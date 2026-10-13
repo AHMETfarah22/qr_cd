@@ -23,23 +23,23 @@ class QuizQuestion {
   bool get isAnswered => userAnswer != null;
 
   factory QuizQuestion.fromJson(Map<String, dynamic> json) => QuizQuestion(
-        id: json['id'] as int,
-        question: json['question'] as String,
-        options: Map<String, String>.from(json['options'] as Map),
-        correctAnswer: json['correctAnswer'] as String,
-        explanation: (json['explanation'] as String?) ?? '',
-        pageReference: json['pageReference'] as String?,
-      );
+    id: json['id'] as int,
+    question: json['question'] as String,
+    options: Map<String, String>.from(json['options'] as Map),
+    correctAnswer: json['correctAnswer'] as String,
+    explanation: (json['explanation'] as String?) ?? '',
+    pageReference: json['pageReference'] as String?,
+  );
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'question': question,
-        'options': options,
-        'correctAnswer': correctAnswer,
-        'explanation': explanation,
-        'pageReference': pageReference,
-        'userAnswer': userAnswer,
-      };
+    'id': id,
+    'question': question,
+    'options': options,
+    'correctAnswer': correctAnswer,
+    'explanation': explanation,
+    'pageReference': pageReference,
+    'userAnswer': userAnswer,
+  };
 }
 
 class QuizResult {
@@ -66,22 +66,22 @@ class QuizResult {
       questions.where((q) => !q.isCorrect && q.isAnswered).toList();
 
   Map<String, dynamic> toJson() => {
-        'documentId': documentId,
-        'documentName': documentName,
-        'questions': questions.map((q) => q.toJson()).toList(),
-        'completedAt': completedAt.toIso8601String(),
-        'totalTimeSeconds': totalTimeSeconds,
-      };
+    'documentId': documentId,
+    'documentName': documentName,
+    'questions': questions.map((q) => q.toJson()).toList(),
+    'completedAt': completedAt.toIso8601String(),
+    'totalTimeSeconds': totalTimeSeconds,
+  };
 
   factory QuizResult.fromJson(Map<String, dynamic> json) => QuizResult(
-        documentId: json['documentId'] as String,
-        documentName: json['documentName'] as String,
-        questions: (json['questions'] as List)
-            .map((q) => QuizQuestion.fromJson(q as Map<String, dynamic>))
-            .toList(),
-        completedAt: DateTime.parse(json['completedAt'] as String),
-        totalTimeSeconds: json['totalTimeSeconds'] as int,
-      );
+    documentId: json['documentId'] as String,
+    documentName: json['documentName'] as String,
+    questions: (json['questions'] as List)
+        .map((q) => QuizQuestion.fromJson(q as Map<String, dynamic>))
+        .toList(),
+    completedAt: DateTime.parse(json['completedAt'] as String),
+    totalTimeSeconds: json['totalTimeSeconds'] as int,
+  );
 
   String toJsonString() => jsonEncode(toJson());
 }

@@ -12,8 +12,9 @@ class Palette {
   Color get background =>
       isDark ? AppColors.background : AppColors.lightBackground;
   Color get card => isDark ? AppColors.process : Colors.white;
-  Color get cardMuted =>
-      isDark ? AppColors.process.withValues(alpha: 0.5) : AppColors.lightProcess;
+  Color get cardMuted => isDark
+      ? AppColors.process.withValues(alpha: 0.5)
+      : AppColors.lightProcess;
   Color get textPrimary => isDark ? Colors.white : AppColors.lightTextPrimary;
   Color get textSecondary =>
       isDark ? AppColors.textSecondary : AppColors.lightTextSecondary;
@@ -26,19 +27,19 @@ class Palette {
   Color get accentText => isDark ? AppColors.accent : const Color(0xFF15803D);
 
   List<BoxShadow> get softShadow => [
-        BoxShadow(
-          color: isDark
-              ? Colors.black.withValues(alpha: 0.25)
-              : const Color(0x140B5D36),
-          blurRadius: 16,
-          offset: const Offset(0, 6),
-        ),
-      ];
+    BoxShadow(
+      color: isDark
+          ? Colors.black.withValues(alpha: 0.25)
+          : const Color(0x140B5D36),
+      blurRadius: 16,
+      offset: const Offset(0, 6),
+    ),
+  ];
 
   BoxDecoration cardDecoration({double radius = 20}) => BoxDecoration(
-        color: card,
-        borderRadius: BorderRadius.circular(radius),
-        border: Border.all(color: border),
-        boxShadow: softShadow,
-      );
+    color: card,
+    borderRadius: BorderRadius.circular(radius),
+    border: Border.all(color: border),
+    boxShadow: softShadow,
+  );
 }

@@ -221,7 +221,7 @@
   "tscanOnerisi": "TScan Recommendation",
   "calismayiBaslat": "Start Study ⏱️",
   "pdfGizlilikOnayiTitle": "Privacy & Cloud Analysis Consent",
-  "pdfGizlilikOnayiBody": "The text content of your uploaded PDF will be sent to the AI service (OpenRouter) over a secure connection for duration estimation and quiz generation. Do you consent to sending your data to the cloud?",
+  "pdfGizlilikOnayiBody": "The text content of your uploaded PDF will be sent to the AI service (Google Gemini) over a secure connection for duration estimation and quiz generation. Do you consent to sending your data to the cloud?",
   "onayla": "Approve",
   "reddet": "Decline",
   "aiQuizBaslat": "Start AI Quiz",
@@ -343,7 +343,7 @@
     }
   },
   "gizlilikKontrol": "Checking privacy consent...",
-  "apiKey401Hata": "Unauthorized API key (401)! Please enter a valid OpenRouter API key. The current key was cleared.",
+  "apiKey401Hata": "The API key was rejected. Please enter a valid Gemini API key; the saved key was cleared.",
   "navStats": "Stats",
   "navHistory": "History",
   "activityIntensity": "ACTIVITY INTENSITY",
@@ -378,5 +378,85 @@
         "type": "int"
       }
     }
-  }
+  },
+  "aiQuestAllDocs": "All Documents ({count})",
+  "@aiQuestAllDocs": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "allDocsTitle": "ALL DOCUMENTS",
+  "freePdfRemaining": "{count} free PDF uploads left",
+  "@freePdfRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "freeLimitReachedTitle": "Your free uploads are used up",
+  "freeLimitReachedBody": "You have used your 2 free PDF uploads. Go Premium for unlimited PDFs and AI quizzes.",
+  "statsTotalStudy": "Total study",
+  "statsThisWeek": "This week",
+  "statsWeeklyGoal": "Weekly goal: {hours} h",
+  "@statsWeeklyGoal": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "statsStreak": "Day streak",
+  "statsSessions": "Sessions done",
+  "statsSuccess": "Success",
+  "statsQuizAvg": "Quiz average",
+  "statsDailyMinutes": "LAST 7 DAYS (MINUTES)",
+  "statsBySubject": "TIME BY SUBJECT",
+  "hoursMinutesShort": "{hours}h {minutes}m",
+  "@hoursMinutesShort": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "paywallTitle": "TScan Premium",
+  "paywallSubtitle": "Study smarter with unlimited PDFs and your AI study coach",
+  "planMonthly": "Monthly",
+  "planYearly": "Yearly",
+  "planPerMonth": "/ month",
+  "planPerYear": "/ year",
+  "planMonthlyNote": "Cancel anytime",
+  "planYearlyNote": "Only 50 TL a month — save 83%",
+  "planBestValue": "BEST VALUE",
+  "subscribeNow": "Subscribe Now",
+  "premiumActiveUntil": "Premium is active until {date}",
+  "@premiumActiveUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "premiumActivatedTitle": "🎉 Premium Activated!",
+  "premiumActivatedBody": "You now have unlimited access to every feature. Happy studying!",
+  "greatBtn": "Great!",
+  "paywallTerms": "You can cancel your subscription at any time from Play Store settings.",
+  "benefitUnlimitedPdf": "Unlimited PDFs",
+  "benefitUnlimitedPdfDesc": "Upload as many notes and books as you like.",
+  "benefitAiQuiz": "AI quiz & study time",
+  "benefitAiQuizDesc": "Auto-generated quizzes and reading time for every PDF.",
+  "benefitWrongAnswers": "Wrong answer analysis",
+  "benefitWrongAnswersDesc": "See which topics to review after each quiz.",
+  "benefitSounds": "All focus sounds",
+  "benefitSoundsDesc": "Rain, forest, café and more.",
+  "apiKeyDialogTitle": "Gemini API Key",
+  "apiKeyDialogBody": "Enter your Google Gemini API key to use AI features. You can get a free key from Google AI Studio.",
+  "apiKeyRequired": "Please enter your key",
+  "apiKeyInvalidFormat": "This doesn't look like a Gemini API key"
 }

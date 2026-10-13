@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../core/constants/app_colors.dart';
+import '../../../core/widgets/app_background.dart';
 import '../../../core/models/pdf_document.dart' as models;
 import '../../timer/screens/timer_screen.dart';
 import '../../auth/screens/account_screen.dart';
@@ -118,39 +118,38 @@ class _MainScreenState extends State<MainScreen>
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     // Back on a secondary tab returns to the home tab instead of closing the app.
     return PopScope(
       canPop: _currentIndex == 0,
       onPopInvokedWithResult: (didPop, _) {
         if (!didPop) _onTabTapped(0);
       },
-      child: Scaffold(
-        backgroundColor:
-            isDark ? AppColors.background : AppColors.lightBackground,
-        body: FadeTransition(
-          opacity: _fadeAnimation,
-          // IndexedStack keeps every tab alive, so the timer screen does not
-          // re-run its PDF setup or miss a session-complete transition while
-          // another tab is visible.
-          child: IndexedStack(
-            index: _currentIndex,
-            children: [
-              TimerScreen(
-                pdfDocument: _pdfDocument,
-                suggestedMinutes: _suggestedMinutes,
-              ),
-              const AiQuestScreen(),
-              const StatisticsChartScreen(embedded: true),
-              const SessionHistoryScreen(embedded: true),
-              const AccountScreen(),
-            ],
+      child: AppBackground(
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: FadeTransition(
+            opacity: _fadeAnimation,
+            // IndexedStack keeps every tab alive, so the timer screen does not
+            // re-run its PDF setup or miss a session-complete transition while
+            // another tab is visible.
+            child: IndexedStack(
+              index: _currentIndex,
+              children: [
+                TimerScreen(
+                  pdfDocument: _pdfDocument,
+                  suggestedMinutes: _suggestedMinutes,
+                ),
+                const AiQuestScreen(),
+                const StatisticsChartScreen(embedded: true),
+                const SessionHistoryScreen(embedded: true),
+                const AccountScreen(),
+              ],
+            ),
           ),
-        ),
-        bottomNavigationBar: CustomBottomNavBar(
-          currentIndex: _currentIndex,
-          onTap: _onTabTapped,
+          bottomNavigationBar: CustomBottomNavBar(
+            currentIndex: _currentIndex,
+            onTap: _onTabTapped,
+          ),
         ),
       ),
     );

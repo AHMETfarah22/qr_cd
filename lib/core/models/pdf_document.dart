@@ -30,32 +30,32 @@ class PdfDocument {
   });
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'fileName': fileName,
-        'filePath': filePath,
-        'extractedText': extractedText,
-        'pageCount': pageCount,
-        'wordCount': wordCount,
-        'uploadedAt': uploadedAt.toIso8601String(),
-        'estimatedMinutes': estimatedMinutes,
-        'difficulty': difficulty,
-        'subject': subject,
-        'tips': tips,
-      };
+    'id': id,
+    'fileName': fileName,
+    'filePath': filePath,
+    'extractedText': extractedText,
+    'pageCount': pageCount,
+    'wordCount': wordCount,
+    'uploadedAt': uploadedAt.toIso8601String(),
+    'estimatedMinutes': estimatedMinutes,
+    'difficulty': difficulty,
+    'subject': subject,
+    'tips': tips,
+  };
 
   factory PdfDocument.fromJson(Map<String, dynamic> json) => PdfDocument(
-        id: json['id'] as String,
-        fileName: json['fileName'] as String,
-        filePath: json['filePath'] as String,
-        extractedText: json['extractedText'] as String,
-        pageCount: json['pageCount'] as int,
-        wordCount: json['wordCount'] as int,
-        uploadedAt: DateTime.parse(json['uploadedAt'] as String),
-        estimatedMinutes: json['estimatedMinutes'] as int?,
-        difficulty: json['difficulty'] as String?,
-        subject: json['subject'] as String?,
-        tips: json['tips'] as String?,
-      );
+    id: json['id'] as String,
+    fileName: json['fileName'] as String,
+    filePath: json['filePath'] as String,
+    extractedText: json['extractedText'] as String,
+    pageCount: json['pageCount'] as int,
+    wordCount: json['wordCount'] as int,
+    uploadedAt: DateTime.parse(json['uploadedAt'] as String),
+    estimatedMinutes: json['estimatedMinutes'] as int?,
+    difficulty: json['difficulty'] as String?,
+    subject: json['subject'] as String?,
+    tips: json['tips'] as String?,
+  );
 
   String toJsonString() => jsonEncode(toJson());
 

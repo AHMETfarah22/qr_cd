@@ -21,7 +21,7 @@ class SessionHistoryScreen extends StatelessWidget {
     final p = Palette.of(context);
 
     return Scaffold(
-      backgroundColor: p.background,
+      backgroundColor: embedded ? Colors.transparent : p.background,
       appBar: AppBar(
         title: Text(
           AppLocalizations.of(context)!.historyTitle,

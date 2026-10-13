@@ -29,40 +29,45 @@ class CustomBottomNavBar extends StatelessWidget {
 
     final items = [
       _NavItem(Icons.timer_outlined, Icons.timer_rounded, l10n.navHome),
-      _NavItem(Icons.psychology_outlined, Icons.psychology_rounded, l10n.navAiQuest),
+      _NavItem(
+        Icons.psychology_outlined,
+        Icons.psychology_rounded,
+        l10n.navAiQuest,
+      ),
       _NavItem(Icons.insights_outlined, Icons.insights_rounded, l10n.navStats),
       _NavItem(Icons.history_outlined, Icons.history_rounded, l10n.navHistory),
-      _NavItem(Icons.person_outline_rounded, Icons.person_rounded, l10n.navAccount),
+      _NavItem(
+        Icons.person_outline_rounded,
+        Icons.person_rounded,
+        l10n.navAccount,
+      ),
     ];
 
-    return ColoredBox(
-      color: p.background,
-      child: SafeArea(
-        top: false,
-        minimum: const EdgeInsets.only(bottom: 8),
-        child: Container(
-          margin: const EdgeInsets.fromLTRB(12, 4, 12, 4),
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-          decoration: BoxDecoration(
-            color: p.card,
-            borderRadius: BorderRadius.circular(26),
-            border: Border.all(color: p.border),
-            boxShadow: [
-              BoxShadow(
-                color: p.isDark
-                    ? Colors.black.withValues(alpha: 0.35)
-                    : const Color(0x1F0B5D36),
-                blurRadius: 24,
-                offset: const Offset(0, 8),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              for (var i = 0; i < items.length; i++)
-                Expanded(child: _buildTab(p, i, items[i])),
-            ],
-          ),
+    return SafeArea(
+      top: false,
+      minimum: const EdgeInsets.only(bottom: 8),
+      child: Container(
+        margin: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+        decoration: BoxDecoration(
+          color: p.card,
+          borderRadius: BorderRadius.circular(26),
+          border: Border.all(color: p.border),
+          boxShadow: [
+            BoxShadow(
+              color: p.isDark
+                  ? Colors.black.withValues(alpha: 0.35)
+                  : const Color(0x1F0B5D36),
+              blurRadius: 24,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            for (var i = 0; i < items.length; i++)
+              Expanded(child: _buildTab(p, i, items[i])),
+          ],
         ),
       ),
     );

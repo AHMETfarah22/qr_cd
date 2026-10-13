@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:do_not_disturb/do_not_disturb.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/widgets/book_illustration.dart';
 import '../../../core/services/settings_service.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../core/screens/main_screen.dart';
@@ -197,6 +198,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     required String title,
     required String description,
     Widget? extra,
+    Widget? illustration,
   }) {
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -204,7 +206,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 92, color: AppColors.accent),
+            illustration ?? Icon(icon, size: 92, color: AppColors.accent),
             const SizedBox(height: 24),
             Text(
               title,
@@ -245,6 +247,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget _buildPdfAiPage(AppLocalizations l10n) {
     return _buildPageContent(
       icon: Icons.psychology_rounded,
+      illustration: const BookIllustration(width: 200),
       title: l10n.onboardingPdfTitle,
       description: l10n.onboardingPdfDesc,
       extra: Container(

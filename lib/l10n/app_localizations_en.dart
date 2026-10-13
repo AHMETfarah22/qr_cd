@@ -634,7 +634,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pdfGizlilikOnayiTitle => 'Privacy & Cloud Analysis Consent';
 
   @override
-  String get pdfGizlilikOnayiBody => 'The text content of your uploaded PDF will be sent to the AI service (OpenRouter) over a secure connection for duration estimation and quiz generation. Do you consent to sending your data to the cloud?';
+  String get pdfGizlilikOnayiBody => 'The text content of your uploaded PDF will be sent to the AI service (Google Gemini) over a secure connection for duration estimation and quiz generation. Do you consent to sending your data to the cloud?';
 
   @override
   String get onayla => 'Approve';
@@ -821,7 +821,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gizlilikKontrol => 'Checking privacy consent...';
 
   @override
-  String get apiKey401Hata => 'Unauthorized API key (401)! Please enter a valid OpenRouter API key. The current key was cleared.';
+  String get apiKey401Hata => 'The API key was rejected. Please enter a valid Gemini API key; the saved key was cleared.';
 
   @override
   String get navStats => 'Stats';
@@ -851,4 +851,140 @@ class AppLocalizationsEn extends AppLocalizations {
   String minutesValue(int minutes) {
     return '$minutes min';
   }
+
+  @override
+  String aiQuestAllDocs(int count) {
+    return 'All Documents ($count)';
+  }
+
+  @override
+  String get allDocsTitle => 'ALL DOCUMENTS';
+
+  @override
+  String freePdfRemaining(int count) {
+    return '$count free PDF uploads left';
+  }
+
+  @override
+  String get freeLimitReachedTitle => 'Your free uploads are used up';
+
+  @override
+  String get freeLimitReachedBody => 'You have used your 2 free PDF uploads. Go Premium for unlimited PDFs and AI quizzes.';
+
+  @override
+  String get statsTotalStudy => 'Total study';
+
+  @override
+  String get statsThisWeek => 'This week';
+
+  @override
+  String statsWeeklyGoal(int hours) {
+    return 'Weekly goal: $hours h';
+  }
+
+  @override
+  String get statsStreak => 'Day streak';
+
+  @override
+  String get statsSessions => 'Sessions done';
+
+  @override
+  String get statsSuccess => 'Success';
+
+  @override
+  String get statsQuizAvg => 'Quiz average';
+
+  @override
+  String get statsDailyMinutes => 'LAST 7 DAYS (MINUTES)';
+
+  @override
+  String get statsBySubject => 'TIME BY SUBJECT';
+
+  @override
+  String hoursMinutesShort(int hours, int minutes) {
+    return '${hours}h ${minutes}m';
+  }
+
+  @override
+  String get paywallTitle => 'TScan Premium';
+
+  @override
+  String get paywallSubtitle => 'Study smarter with unlimited PDFs and your AI study coach';
+
+  @override
+  String get planMonthly => 'Monthly';
+
+  @override
+  String get planYearly => 'Yearly';
+
+  @override
+  String get planPerMonth => '/ month';
+
+  @override
+  String get planPerYear => '/ year';
+
+  @override
+  String get planMonthlyNote => 'Cancel anytime';
+
+  @override
+  String get planYearlyNote => 'Only 50 TL a month — save 83%';
+
+  @override
+  String get planBestValue => 'BEST VALUE';
+
+  @override
+  String get subscribeNow => 'Subscribe Now';
+
+  @override
+  String premiumActiveUntil(String date) {
+    return 'Premium is active until $date';
+  }
+
+  @override
+  String get premiumActivatedTitle => '🎉 Premium Activated!';
+
+  @override
+  String get premiumActivatedBody => 'You now have unlimited access to every feature. Happy studying!';
+
+  @override
+  String get greatBtn => 'Great!';
+
+  @override
+  String get paywallTerms => 'You can cancel your subscription at any time from Play Store settings.';
+
+  @override
+  String get benefitUnlimitedPdf => 'Unlimited PDFs';
+
+  @override
+  String get benefitUnlimitedPdfDesc => 'Upload as many notes and books as you like.';
+
+  @override
+  String get benefitAiQuiz => 'AI quiz & study time';
+
+  @override
+  String get benefitAiQuizDesc => 'Auto-generated quizzes and reading time for every PDF.';
+
+  @override
+  String get benefitWrongAnswers => 'Wrong answer analysis';
+
+  @override
+  String get benefitWrongAnswersDesc => 'See which topics to review after each quiz.';
+
+  @override
+  String get benefitSounds => 'All focus sounds';
+
+  @override
+  String get benefitSoundsDesc => 'Rain, forest, café and more.';
+
+  @override
+  String get apiKeyDialogTitle => 'Gemini API Key';
+
+  @override
+  String get apiKeyDialogBody => 'Enter your Google Gemini API key to use AI features. You can get a free key from Google AI Studio.';
+
+  @override
+  String get apiKeyRequired => 'Please enter your key';
+
+  @override
+  String get apiKeyInvalidFormat => 'This doesn\'t look like a Gemini API key';
 }

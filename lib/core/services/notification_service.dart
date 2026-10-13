@@ -17,15 +17,16 @@ class NotificationService {
 
     final DarwinInitializationSettings initializationSettingsIOS =
         DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
-    );
+          requestAlertPermission: true,
+          requestBadgePermission: true,
+          requestSoundPermission: true,
+        );
 
-    final InitializationSettings initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsIOS,
-    );
+    final InitializationSettings initializationSettings =
+        InitializationSettings(
+          android: initializationSettingsAndroid,
+          iOS: initializationSettingsIOS,
+        );
 
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
@@ -33,7 +34,8 @@ class NotificationService {
     // iOS asks through DarwinInitializationSettings above.
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
+          AndroidFlutterLocalNotificationsPlugin
+        >()
         ?.requestNotificationsPermission();
   }
 
@@ -47,19 +49,18 @@ class NotificationService {
   }) async {
     final AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-      'tscan_channel',
-      'TScan Notifications',
-      channelDescription: 'Notifications for TScan sessions',
-      importance: Importance.max,
-      priority: Priority.high,
-      showWhen: true,
-      ongoing: ongoing,
-      playSound: playSound,
-      styleInformation: const BigTextStyleInformation(''),
-    );
+          'tscan_channel',
+          'TScan Notifications',
+          channelDescription: 'Notifications for TScan sessions',
+          importance: Importance.max,
+          priority: Priority.high,
+          showWhen: true,
+          ongoing: ongoing,
+          playSound: playSound,
+          styleInformation: const BigTextStyleInformation(''),
+        );
 
-    final NotificationDetails platformChannelSpecifics =
-        NotificationDetails(
+    final NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
       iOS: DarwinNotificationDetails(presentSound: playSound),
     );

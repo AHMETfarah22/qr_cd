@@ -19,6 +19,14 @@ class AiService {
   //   flutter run --dart-define-from-file=secrets.json
   static const String _defaultApiKey = String.fromEnvironment('GEMINI_KEY');
 
+  /// Whether [key] looks like a Google Gemini API key. Classic keys start
+  /// with "AIza"; newer Google Cloud keys start with "AQ.". OpenRouter keys
+  /// (sk-or-...) do not work with the Gemini endpoint this service calls.
+  static bool looksLikeGeminiKey(String key) {
+    final k = key.trim();
+    return k.length >= 20 && (k.startsWith('AIza') || k.startsWith('AQ.'));
+  }
+
   /// API anahtarını güvenli depoya kaydeder.
   static Future<void> saveApiKey(String key) async {
     await _storage.write(key: _apiKeyStorageKey, value: key);
@@ -322,7 +330,7 @@ SADECE aşağıdaki JSON formatında cevap ver, başka hiçbir şey yazma:
         } else if (jsonStr.contains('```')) {
           jsonStr = jsonStr.split('```')[1].split('```')[0].trim();
         }
-        
+
         // Bazen model sonundaki ']}' kısmını kesebiliyor, basit bir onarım deneyebiliriz
         if (!jsonStr.trim().endsWith('}') && !jsonStr.trim().endsWith(']')) {
            jsonStr += '}]}';

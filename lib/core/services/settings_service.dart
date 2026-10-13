@@ -2,7 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum AlarmSound { bird, siren, zen, digital, nature, silent }
+
 enum AmbientSound { none, rain, forest, cafe, whiteNoise, storm }
+
 enum ReadingSpeed { slow, normal, fast }
 
 class SettingsService extends ChangeNotifier {
@@ -49,30 +51,37 @@ class SettingsService extends ChangeNotifier {
   Future<void> _loadSettings() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      
+
       final soundIndex = prefs.getInt(_getKey('settings_alarm_sound')) ?? 0;
       if (soundIndex >= 0 && soundIndex < AlarmSound.values.length) {
         _alarmSound = AlarmSound.values[soundIndex];
       }
-      
-      _vibrationEnabled = prefs.getBool(_getKey('settings_vibration_enabled')) ?? true;
-      _preferredFocusDurationMinutes = prefs.getInt(_getKey('settings_focus_duration')) ?? 25;
+
+      _vibrationEnabled =
+          prefs.getBool(_getKey('settings_vibration_enabled')) ?? true;
+      _preferredFocusDurationMinutes =
+          prefs.getInt(_getKey('settings_focus_duration')) ?? 25;
       _isDarkMode = prefs.getBool(_getKey('settings_is_dark_mode')) ?? true;
-      
+
       final ambientIndex = prefs.getInt(_getKey('settings_ambient_sound')) ?? 0;
       if (ambientIndex >= 0 && ambientIndex < AmbientSound.values.length) {
         _ambientSound = AmbientSound.values[ambientIndex];
       }
-      
-      _isHardMode = prefs.getBool(_getKey('settings_is_hard_mode')) ?? false;
-      _isOnboardingCompleted = prefs.getBool(_getKey('settings_onboarding_completed')) ?? false;
-      _dailyFocusGoalMinutes = prefs.getInt(_getKey('settings_daily_focus_goal')) ?? 60;
 
-      final readingSpeedIndex = prefs.getInt(_getKey('settings_reading_speed')) ?? 1; // Default to normal (index 1)
-      if (readingSpeedIndex >= 0 && readingSpeedIndex < ReadingSpeed.values.length) {
+      _isHardMode = prefs.getBool(_getKey('settings_is_hard_mode')) ?? false;
+      _isOnboardingCompleted =
+          prefs.getBool(_getKey('settings_onboarding_completed')) ?? false;
+      _dailyFocusGoalMinutes =
+          prefs.getInt(_getKey('settings_daily_focus_goal')) ?? 60;
+
+      final readingSpeedIndex =
+          prefs.getInt(_getKey('settings_reading_speed')) ??
+          1; // Default to normal (index 1)
+      if (readingSpeedIndex >= 0 &&
+          readingSpeedIndex < ReadingSpeed.values.length) {
         _readingSpeed = ReadingSpeed.values[readingSpeedIndex];
       }
-      
+
       _isLoaded = true;
       notifyListeners();
     } catch (e) {

@@ -70,9 +70,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Uygulamanın AI analiz özelliklerini kullanmak için OpenRouter API anahtarınızı (sk-or-...) veya Google Gemini API anahtarınızı (AIzaSy...) girin.',
-                style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+              Text(
+                AppLocalizations.of(context)!.apiKeyDialogBody,
+                style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
               ),
               const SizedBox(height: 16),
               TextFormField(
@@ -81,7 +81,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 decoration: InputDecoration(
                   hintText: _hasApiKey
                       ? 'Anahtar Kaydedildi (Değiştirmek için yazın)'
-                      : 'sk-or-... veya AIzaSy...',
+                      : 'AIza... / AQ....',
                   hintStyle: const TextStyle(color: AppColors.textSecondary),
                   filled: true,
                   fillColor: Colors.black26,
@@ -95,14 +95,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ),
                 validator: (val) {
+                  final l10n = AppLocalizations.of(context)!;
                   if (val == null || val.trim().isEmpty) {
                     if (_hasApiKey) return null;
-                    return 'Lütfen anahtarınızı girin';
+                    return l10n.apiKeyRequired;
                   }
-                  final trimmed = val.trim();
-                  if (!trimmed.startsWith('sk-or-') &&
-                      !trimmed.startsWith('AIzaSy')) {
-                    return 'Geçersiz anahtar formatı (sk-or- veya AIzaSy ile başlamalı)';
+                  if (!AiService.looksLikeGeminiKey(val)) {
+                    return l10n.apiKeyInvalidFormat;
                   }
                   return null;
                 },
