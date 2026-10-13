@@ -4,6 +4,11 @@
 	<dict>
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
+		<key>CFBundleLocalizations</key>
+		<array>
+			<string>en</string>
+			<string>tr</string>
+		</array>
 		<key>CFBundleDisplayName</key>
 		<string>TScan</string>
 		<key>CFBundleExecutable</key>
@@ -52,6 +57,8 @@
 		<key>NSCameraUsageDescription</key>
 		<string>Uygulama, profil fotoğrafı çekebilmeniz için kameraya erişim sağlar.</string>
 		<key>UIStatusBarHidden</key>
+		<false/>
+		<key>ITSAppUsesNonExemptEncryption</key>
 		<false/>
 	</dict>
 </plist>

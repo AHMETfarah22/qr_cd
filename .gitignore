@@ -47,3 +47,7 @@ app.*.map.json
 
 # Secret API configuration files
 secrets.json
+
+# JVM heap dumps and Android Gradle build output
+*.hprof
+/android/build/

@@ -1,3 +1,4 @@
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -22,6 +23,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   bool _isDndGranted = false;
   bool _isPhoneGranted = false;
 
+  // iOS has no app-controllable Do Not Disturb or phone-state permission,
+  // so those onboarding pages are shown on Android only.
+  final bool _showAndroidPermissionPages = Platform.isAndroid;
+  int get _pageCount => _showAndroidPermissionPages ? 5 : 3;
+
   @override
   void initState() {
     super.initState();
@@ -29,6 +35,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   Future<void> _checkPermissions() async {
+    if (!_showAndroidPermissionPages) return;
     final dndStatus = await _dndPlugin.isNotificationPolicyAccessGranted();
     final phoneStatus = await Permission.phone.isGranted;
 
@@ -58,7 +65,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _onNext() {
-    if (_currentPage < 4) {
+    if (_currentPage < _pageCount - 1) {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
@@ -100,8 +107,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   _buildWelcomePage(l10n),
                   _buildPdfAiPage(l10n),
                   _buildSensorPage(l10n),
-                  _buildDndPage(l10n),
-                  _buildPhonePage(l10n),
+                  if (_showAndroidPermissionPages) ...[
+                    _buildDndPage(l10n),
+                    _buildPhonePage(l10n),
+                  ],
                 ],
               ),
             ),
@@ -278,7 +287,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         children: [
           // Indicators
           Row(
-            children: List.generate(5, (index) {
+            children: List.generate(_pageCount, (index) {
               return Container(
                 margin: const EdgeInsets.only(right: 8),
                 width: _currentPage == index ? 24 : 8,
@@ -303,7 +312,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
             child: Text(
-              _currentPage == 4 ? l10n.btnStart : l10n.btnNext,
+              _currentPage == _pageCount - 1 ? l10n.btnStart : l10n.btnNext,
               style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
           ),

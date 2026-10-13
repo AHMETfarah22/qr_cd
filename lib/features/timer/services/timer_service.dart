@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 import 'package:flutter/widgets.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'sensor_service.dart';
@@ -30,30 +31,43 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
 
   void _startPhoneStateListener() {
     _phoneStateSubscription?.cancel();
-    _phoneStateSubscription = PhoneState.stream.listen((event) {
-      if (_state == TimerState.running && event.status == PhoneStateStatus.CALL_INCOMING) {
-        debugPrint("TimerService: Phone is ringing! Failing timer...");
-        _failTimer();
-      }
-    });
+    _phoneStateSubscription = PhoneState.stream.listen(
+      (event) {
+        if (_state == TimerState.running && event.status == PhoneStateStatus.CALL_INCOMING) {
+          debugPrint("TimerService: Phone is ringing! Failing timer...");
+          _failTimer();
+        }
+      },
+      onError: (Object e) => debugPrint("TimerService: phone state unavailable: $e"),
+    );
   }
 
+  // Do Not Disturb control is Android-only; the plugin has no iOS implementation.
   Future<void> _enableDND() async {
-    bool isAllowed = await _doNotDisturb.isNotificationPolicyAccessGranted();
-    // Sadece izin varsa DND'yi aktif et
-    if (isAllowed) {
-      await _doNotDisturb.setInterruptionFilter(InterruptionFilter.none);
-      debugPrint("TimerService: DND Enabled");
+    if (!Platform.isAndroid) return;
+    try {
+      bool isAllowed = await _doNotDisturb.isNotificationPolicyAccessGranted();
+      // Sadece izin varsa DND'yi aktif et
+      if (isAllowed) {
+        await _doNotDisturb.setInterruptionFilter(InterruptionFilter.none);
+        debugPrint("TimerService: DND Enabled");
+      }
+      // İzin yoksa ayarlara GİTME - timer başarısız olmasın
+    } catch (e) {
+      debugPrint("TimerService: DND enable failed: $e");
     }
-    // İzin yoksa ayarlara GİTME - timer başarısız olmasın
   }
 
   Future<void> _disableDND() async {
-    // instance üzerinden çağırıyoruz
-    bool isAllowed = await _doNotDisturb.isNotificationPolicyAccessGranted();
-    if (isAllowed) {
-      await _doNotDisturb.setInterruptionFilter(InterruptionFilter.all);
-      debugPrint("TimerService: DND Disabled");
+    if (!Platform.isAndroid) return;
+    try {
+      bool isAllowed = await _doNotDisturb.isNotificationPolicyAccessGranted();
+      if (isAllowed) {
+        await _doNotDisturb.setInterruptionFilter(InterruptionFilter.all);
+        debugPrint("TimerService: DND Disabled");
+      }
+    } catch (e) {
+      debugPrint("TimerService: DND disable failed: $e");
     }
   }
 

@@ -28,6 +28,13 @@ class NotificationService {
     );
 
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+    // Android 13+ requires asking for notification permission at runtime;
+    // iOS asks through DarwinInitializationSettings above.
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestNotificationsPermission();
   }
 
   Future<void> showNotification({
@@ -52,7 +59,10 @@ class NotificationService {
     );
 
     final NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
+        NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS: DarwinNotificationDetails(presentSound: playSound),
+    );
 
     await flutterLocalNotificationsPlugin.show(
       id,
