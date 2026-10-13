@@ -34,37 +34,50 @@ class _CommonTextFieldState extends State<CommonTextField> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return TextField(
       controller: widget.controller,
       obscureText: _isObscured,
       keyboardType: widget.keyboardType,
-      style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
+      style: TextStyle(
+        color: Theme.of(context).textTheme.bodyLarge?.color,
+        fontSize: 15,
+      ),
       decoration: InputDecoration(
         hintText: widget.hintText,
-        hintStyle: const TextStyle(color: AppColors.textSecondary),
+        hintStyle: TextStyle(
+          color: isDark
+              ? AppColors.textSecondary
+              : AppColors.lightTextSecondary,
+        ),
         filled: true,
-        fillColor: Theme.of(context).inputDecorationTheme.fillColor,
+        fillColor: isDark ? AppColors.process : AppColors.lightProcess,
         contentPadding: const EdgeInsets.symmetric(
           vertical: 16,
           horizontal: 16,
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.process),
+          borderRadius: BorderRadius.circular(14),
+          borderSide: BorderSide(
+            color: isDark ? AppColors.cardGlow : AppColors.lightProcess,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.accent),
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: AppColors.accent, width: 1.5),
         ),
         suffixIcon: widget.showPasswordToggle
             ? IconButton(
                 icon: Icon(
                   _isObscured ? Icons.visibility : Icons.visibility_off,
-                  color: _isObscured ? AppColors.textSecondary : AppColors.accent,
+                  color: _isObscured
+                      ? AppColors.textSecondary
+                      : AppColors.accent,
                 ),
                 onPressed: () {
                   setState(() {

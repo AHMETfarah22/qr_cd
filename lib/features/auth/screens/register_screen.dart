@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import '../../../core/widgets/app_background.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/widgets/common_button.dart';
 import '../../../core/widgets/common_text_field.dart';
 import '../services/auth_service.dart';
 import '../services/statistics_service.dart';
-import '../../timer/screens/timer_screen.dart';
+import '../../core/screens/main_screen.dart';
 import '../../onboarding/screens/onboarding_screen.dart';
 import '../../../core/services/settings_service.dart';
 import '../../../l10n/app_localizations.dart';
@@ -67,16 +68,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
           backgroundColor: Colors.green,
         ),
       );
-      
+
       // Navigate to Timer Screen after successful registration
       if (mounted) {
-        await Provider.of<StatisticsService>(context, listen: false)
-            .setCurrentUser(email);
+        await Provider.of<StatisticsService>(
+          context,
+          listen: false,
+        ).setCurrentUser(email);
       }
-      
+
       if (!mounted) return;
-      
-      final settingsService = Provider.of<SettingsService>(context, listen: false);
+
+      final settingsService = Provider.of<SettingsService>(
+        context,
+        listen: false,
+      );
       if (!settingsService.isOnboardingCompleted) {
         Navigator.pushReplacement(
           context,
@@ -85,15 +91,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
       } else {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const TimerScreen()),
+          MaterialPageRoute(builder: (_) => const MainScreen()),
         );
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(result['message']),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text(result['message']), backgroundColor: Colors.red),
       );
     }
   }
@@ -101,109 +104,125 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.register),
-        centerTitle: true,
+    return AppBackground(
+      brightness: Brightness.dark,
+      child: Scaffold(
         backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: GestureDetector(
-        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            children: [
-            const SizedBox(height: 20),
-            Text(
-              l10n.createNewAccount,
-              style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+        appBar: AppBar(
+          title: Text(l10n.register),
+          centerTitle: true,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
+        body: GestureDetector(
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              children: [
+                const SizedBox(height: 20),
+                Text(
+                  l10n.createNewAccount,
+                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              l10n.startFocusingToday,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  l10n.startFocusingToday,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AppColors.textSecondary,
-                  ),
-            ),
-            const SizedBox(height: 16),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text("${l10n.nameSurname} *", style: const TextStyle(fontWeight: FontWeight.bold)),
-            ),
-            const SizedBox(height: 8),
-            CommonTextField(
-              controller: _nameController,
-              hintText: l10n.enterNameSurname,
-            ),
-            const SizedBox(height: 16),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text("${l10n.email} *", style: const TextStyle(fontWeight: FontWeight.bold)),
-            ),
-            const SizedBox(height: 8),
-            CommonTextField(
-              controller: _emailController,
-              hintText: 'eposta@ornek.com',
-              keyboardType: TextInputType.emailAddress,
-            ),
-            const SizedBox(height: 16),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text("${l10n.password} *", style: const TextStyle(fontWeight: FontWeight.bold)),
-            ),
-            const SizedBox(height: 8),
-            CommonTextField(
-              controller: _passwordController,
-              hintText: '********',
-              obscureText: true,
-              showPasswordToggle: true,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              l10n.agreeTerms,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
-            ),
-            const SizedBox(height: 24),
-            _isLoading
-                ? const CircularProgressIndicator(color: AppColors.accent)
-                : CommonButton(
-                    text: l10n.createAccount,
-                    onPressed: _handleRegister,
-                  ),
-            const SizedBox(height: 24),
-            Wrap(
-              alignment: WrapAlignment.center,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              spacing: 4,
-              children: [
-                Text(l10n.alreadyHaveAccount, style: const TextStyle(color: AppColors.textSecondary)),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    l10n.login,
-                    style: const TextStyle(
-                      color: AppColors.accent,
-                      fontWeight: FontWeight.bold,
-                    ),
                   ),
                 ),
+                const SizedBox(height: 16),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "${l10n.nameSurname} *",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                CommonTextField(
+                  controller: _nameController,
+                  hintText: l10n.enterNameSurname,
+                ),
+                const SizedBox(height: 16),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "${l10n.email} *",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                CommonTextField(
+                  controller: _emailController,
+                  hintText: 'eposta@ornek.com',
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                const SizedBox(height: 16),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "${l10n.password} *",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                CommonTextField(
+                  controller: _passwordController,
+                  hintText: '********',
+                  obscureText: true,
+                  showPasswordToggle: true,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  l10n.agreeTerms,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                _isLoading
+                    ? const CircularProgressIndicator(color: AppColors.accent)
+                    : CommonButton(
+                        text: l10n.createAccount,
+                        onPressed: _handleRegister,
+                      ),
+                const SizedBox(height: 24),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: 4,
+                  children: [
+                    Text(
+                      l10n.alreadyHaveAccount,
+                      style: const TextStyle(color: AppColors.textSecondary),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        l10n.login,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
               ],
             ),
-            const SizedBox(height: 20),
-          ],
+          ),
         ),
       ),
-    ),
     );
   }
 }

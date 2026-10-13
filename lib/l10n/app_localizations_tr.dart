@@ -459,7 +459,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get notifBreakEndBody => 'Yeni bir odaklanma seansına hazırsın.';
 
   @override
-  String get onboardingWelcome => 'TScan\'a Hoş Geldiniz';
+  String get onboardingWelcome => 'TScan\'e Hoş Geldiniz';
 
   @override
   String get onboardingWelcomeDesc =>
@@ -509,4 +509,612 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get tutorialSubtitle => 'Tanıtım ekranlarını tekrar göster';
+
+  @override
+  String get addSessionNoteTitle => 'Ne üzerine odaklandın?';
+
+  @override
+  String get sessionNoteHint => 'örn: matematik çalışmak, kodlama';
+
+  @override
+  String get sessionNoteLabel => 'Oturum Notu';
+
+  @override
+  String get saveBtn => 'Kaydet';
+
+  @override
+  String get dailyGoalSetting => 'Günlük Odaklanma Hedefi';
+
+  @override
+  String get dailyGoalSubtitle => 'Günlük hedef odaklanma süresi';
+
+  @override
+  String get dailyGoalReached => 'GÜNLÜK ODAKLANMA HEDEFİ TAMAM! 🎉';
+
+  @override
+  String get dailyGoalProgress => 'Günlük Hedef İlerlemesi';
+
+  @override
+  String dailyMinutesFocused(int minutes, int goal) {
+    return '$minutes / $goal dakika';
+  }
+
+  @override
+  String dailyGoalRemaining(Object minutes) {
+    return 'Hedefine ulaşmak için $minutes dakika kaldı!';
+  }
+
+  @override
+  String get pdfStudyTitle => 'PDF Çalışma';
+
+  @override
+  String get pdfDestekliCalisma => 'AI Destekli PDF Çalışma';
+
+  @override
+  String get pdfYukleAciklama =>
+      'Ders notlarını yükle, AI okuma süresini tahmin etsin.\nSüre bitince seni test etsin! 🚀';
+
+  @override
+  String get pdfStep1 => 'PDF Yükle';
+
+  @override
+  String get pdfStep2 => 'AI Analiz Etsin';
+
+  @override
+  String get pdfStep3 => 'Odaklan & Oku';
+
+  @override
+  String get pdfStep4 => 'Quiz ile Test Ol';
+
+  @override
+  String get pdfDosyaSec => 'PDF Dosyası Seç';
+
+  @override
+  String get sonCalisilanBelgeler => 'Son Çalışılan Belgeler';
+
+  @override
+  String get temizle => 'Temizle';
+
+  @override
+  String get tekrarCalis => 'Tekrar Çalış';
+
+  @override
+  String get sil => 'Sil';
+
+  @override
+  String get premiumOzellik => 'Premium Özellik';
+
+  @override
+  String get premiumCalismaAsistani =>
+      'AI ile süre tahmini ve sınav üretme gibi gelişmiş çalışma asistanı özelliklerini kullanabilmek için Premium üye olmalısınız.';
+
+  @override
+  String get premiumYukselt => 'Premium\'a Yükselt 🚀';
+
+  @override
+  String get pdfSeciliyor => 'PDF dosyası seçiliyor...';
+
+  @override
+  String get pdfOkunuyor => '📄 PDF okunuyor...';
+
+  @override
+  String get aiAnalizEdiyor => '🤖 AI metin analiz ediyor...';
+
+  @override
+  String get onboardingPdfTitle => 'Yapay Zeka ve PDF Modu';
+
+  @override
+  String get onboardingPdfDesc =>
+      'Ders notlarınızı yükleyin; TScan yapay zekası ideal çalışma sürenizi hesaplasın, siz odaklanırken odanızı sessize alsın ve seans bitiminde sizi akıllı testlerle sınasın!';
+
+  @override
+  String get onboardingPdfExtra => 'Akıllı Okuma & AI Quiz Modu';
+
+  @override
+  String get aiAnalizSonuclari => 'Yapay Zeka Analiz Sonuçları';
+
+  @override
+  String get dersAdi => 'Ders / Konu';
+
+  @override
+  String get zorlukDerecesi => 'Zorluk Derecesi';
+
+  @override
+  String get tahminiOkumaSuresi => 'Tahmini Okuma Süresi';
+
+  @override
+  String tahminiSureDk(int minutes) {
+    return '$minutes dakika';
+  }
+
+  @override
+  String get tscanOnerisi => 'TScan Önerisi';
+
+  @override
+  String get calismayiBaslat => 'Çalışmayı Başlat ⏱️';
+
+  @override
+  String get pdfGizlilikOnayiTitle => 'KVKK ve Bulut Analiz Onayı';
+
+  @override
+  String get pdfGizlilikOnayiBody =>
+      'Yüklediğiniz PDF\'in metin içeriği, süre tahmini ve quiz üretimi amacıyla güvenli bağlantı üzerinden yapay zeka servisine (Google Gemini) gönderilir. Kişisel verilerinizin buluta gönderilmesini onaylıyor musunuz?';
+
+  @override
+  String get onayla => 'Onayla';
+
+  @override
+  String get reddet => 'Reddet';
+
+  @override
+  String get aiQuizBaslat => 'AI Quiz Başlat';
+
+  @override
+  String get akilliSoruModu =>
+      'Seans bitti! AI soruları çözmeye hazır mısınız?';
+
+  @override
+  String get quizBasligi => 'Yapay Zeka Değerlendirme Testi';
+
+  @override
+  String soruSayisi(int current, int total) {
+    return 'Soru $current / $total';
+  }
+
+  @override
+  String get quiziBitir => 'Testi Bitir';
+
+  @override
+  String get quizSonuclari => 'Test Sonuçları';
+
+  @override
+  String basariSkoru(int score) {
+    return 'Başarı Skoru: %$score';
+  }
+
+  @override
+  String dogruSoruSayisi(int correct, int total) {
+    return 'Doğru: $correct / $total';
+  }
+
+  @override
+  String get odaklanmayaDon => 'Odaklanmaya Dön';
+
+  @override
+  String get farkliSureSec => 'Farklı süre seç';
+
+  @override
+  String get sureSec => 'Süre Seç';
+
+  @override
+  String get dakika => 'dakika';
+
+  @override
+  String get aiSorulariHazirliyor => '🤖 AI sorularını hazırlıyor...';
+
+  @override
+  String get buBirkacSaniyeSurebilir => 'Bu birkaç saniye sürebilir';
+
+  @override
+  String get quizYuklenemedi => 'Quiz yüklenemedi';
+
+  @override
+  String get tekrarDene => 'Tekrar Dene';
+
+  @override
+  String get sonrakiSoru => 'Sonraki Soru';
+
+  @override
+  String get sonuclariGor => 'Sonuçları Gör';
+
+  @override
+  String get aiYanlisAnalizi => '🤖 AI yanlışlarını analiz ediyor...';
+
+  @override
+  String get aiKocAnalizi => 'AI Koç Analizi';
+
+  @override
+  String get soruDetaylari => 'Soru Detayları';
+
+  @override
+  String get anaSayfayaDon => 'Ana Sayfaya Dön';
+
+  @override
+  String soruNo(int number) {
+    return 'Soru $number';
+  }
+
+  @override
+  String seninCevabin(String answer) {
+    return 'Senin cevabın: $answer';
+  }
+
+  @override
+  String dogruCevap(String answer) {
+    return 'Doğru cevap: $answer';
+  }
+
+  @override
+  String get muhtesemKonuyaHakimsin => 'Muhteşem! Konuya hakimsin!';
+
+  @override
+  String get iyiGidiyorsunTekrar => 'İyi gidiyorsun, biraz daha tekrar!';
+
+  @override
+  String get gelismeAlaninVar => 'Gelişme alanın var, tekrar oku';
+
+  @override
+  String get tekrarCalismalisin => 'Metin üzerinde tekrar çalışmalısın';
+
+  @override
+  String get pdfCalismasi => 'PDF Çalışması';
+
+  @override
+  String get tamamlananQuiz => 'Tamamlanan Quiz';
+
+  @override
+  String get ortalamaQuizBasarisi => 'Ortalama Quiz Başarısı';
+
+  @override
+  String get oturum => 'oturum';
+
+  @override
+  String get sinav => 'sınav';
+
+  @override
+  String get basariOrani => 'başarı oranı';
+
+  @override
+  String get okumaHizi => 'Kişisel Okuma Hızı';
+
+  @override
+  String get okumaHiziAciklama =>
+      'Premium ile AI süre tahminlerini okuma hızınıza göre uyarlayın.';
+
+  @override
+  String get hizYavas => 'Yavaş';
+
+  @override
+  String get hizNormal => 'Normal';
+
+  @override
+  String get hizHizli => 'Hızlı';
+
+  @override
+  String get navHome => 'Anasayfa';
+
+  @override
+  String get navAiQuest => 'AI Quest';
+
+  @override
+  String get navAccount => 'Hesap';
+
+  @override
+  String get aiQuestSubtitle => 'PDF yükle, AI ile quiz çöz';
+
+  @override
+  String get aiQuestUploadTitle => '📄 PDF Yükle & Çalış';
+
+  @override
+  String get aiQuestUploadDesc =>
+      'Belge yükle, AI analiz etsin ve quiz oluştursun';
+
+  @override
+  String get aiQuestNoDocs => 'Henüz belge yok';
+
+  @override
+  String get aiQuestNoDocsDesc =>
+      'İlk PDF\'ini yükleyerek AI destekli\nçalışmaya başla!';
+
+  @override
+  String get aiQuestRecentDocs => '📚 Son Çalışılan Belgeler';
+
+  @override
+  String get aiQuestClear => 'Temizle';
+
+  @override
+  String get aiQuestClearConfirm => 'Tüm belgeler geçmişten silinsin mi?';
+
+  @override
+  String aiQuestDeleteConfirm(String name) {
+    return '\"$name\" geçmişten silinsin mi?';
+  }
+
+  @override
+  String aiQuestDocMeta(int minutes, int pages) {
+    return '$minutes dk • $pages Sayfa';
+  }
+
+  @override
+  String get gizlilikKontrol => 'Gizlilik onayı kontrol ediliyor...';
+
+  @override
+  String get apiKey401Hata =>
+      'API anahtarı reddedildi. Lütfen geçerli bir Gemini API anahtarı gir; kayıtlı anahtar temizlendi.';
+
+  @override
+  String get navStats => 'İstatistik';
+
+  @override
+  String get navHistory => 'Geçmiş';
+
+  @override
+  String get activityIntensity => 'AKTİVİTE YOĞUNLUĞU';
+
+  @override
+  String timeAgoWeeks(int weeks) {
+    return '$weeks hafta önce';
+  }
+
+  @override
+  String timeAgoMonths(int months) {
+    return '$months ay önce';
+  }
+
+  @override
+  String timeAgoYears(int years) {
+    return '$years yıl önce';
+  }
+
+  @override
+  String minutesValue(int minutes) {
+    return '$minutes dk';
+  }
+
+  @override
+  String aiQuestAllDocs(int count) {
+    return 'Tüm Belgeler ($count)';
+  }
+
+  @override
+  String get allDocsTitle => 'TÜM BELGELER';
+
+  @override
+  String freePdfRemaining(int count) {
+    return '$count ücretsiz PDF hakkın kaldı';
+  }
+
+  @override
+  String get freeLimitReachedTitle => 'Ücretsiz hakkın doldu';
+
+  @override
+  String get freeLimitReachedBody =>
+      '2 ücretsiz PDF hakkını kullandın. Sınırsız PDF ve AI quiz için Premium\'a geç.';
+
+  @override
+  String get statsTotalStudy => 'Toplam çalışma';
+
+  @override
+  String get statsThisWeek => 'Bu hafta';
+
+  @override
+  String statsWeeklyGoal(int hours) {
+    return 'Haftalık hedef: $hours saat';
+  }
+
+  @override
+  String get statsStreak => 'Gün serisi';
+
+  @override
+  String get statsSessions => 'Biten oturum';
+
+  @override
+  String get statsSuccess => 'Başarı';
+
+  @override
+  String get statsQuizAvg => 'Quiz ortalaması';
+
+  @override
+  String get statsDailyMinutes => 'SON 7 GÜN (DAKİKA)';
+
+  @override
+  String get statsBySubject => 'DERSLERE GÖRE SÜRE';
+
+  @override
+  String hoursMinutesShort(int hours, int minutes) {
+    return '$hours sa $minutes dk';
+  }
+
+  @override
+  String get paywallTitle => 'TScan Premium';
+
+  @override
+  String get paywallSubtitle =>
+      'Sınırsız PDF ve AI çalışma koçuyla daha akıllı çalış';
+
+  @override
+  String get planMonthly => 'Aylık';
+
+  @override
+  String get planYearly => 'Yıllık';
+
+  @override
+  String get planPerMonth => '/ ay';
+
+  @override
+  String get planPerYear => '/ yıl';
+
+  @override
+  String get planMonthlyNote => 'İstediğin zaman iptal et';
+
+  @override
+  String get planYearlyNote => 'Ayda sadece 50 TL — %83 tasarruf';
+
+  @override
+  String get planBestValue => 'EN AVANTAJLI';
+
+  @override
+  String get subscribeNow => 'Şimdi Abone Ol';
+
+  @override
+  String premiumActiveUntil(String date) {
+    return 'Premium $date tarihine kadar aktif';
+  }
+
+  @override
+  String get premiumActivatedTitle => '🎉 Premium Aktif!';
+
+  @override
+  String get premiumActivatedBody =>
+      'Artık tüm özelliklere sınırsız erişimin var. İyi çalışmalar!';
+
+  @override
+  String get greatBtn => 'Harika!';
+
+  @override
+  String get paywallTerms =>
+      'Aboneliğini istediğin zaman Play Store ayarlarından iptal edebilirsin.';
+
+  @override
+  String get benefitUnlimitedPdf => 'Sınırsız PDF';
+
+  @override
+  String get benefitUnlimitedPdfDesc =>
+      'İstediğin kadar ders notu ve kitap yükle.';
+
+  @override
+  String get benefitAiQuiz => 'AI quiz ve çalışma süresi';
+
+  @override
+  String get benefitAiQuizDesc => 'Her PDF için otomatik quiz ve okuma süresi.';
+
+  @override
+  String get benefitWrongAnswers => 'Yanlış cevap analizi';
+
+  @override
+  String get benefitWrongAnswersDesc =>
+      'Her quizden sonra tekrar etmen gereken konuları gör.';
+
+  @override
+  String get benefitSounds => 'Tüm odak sesleri';
+
+  @override
+  String get benefitSoundsDesc => 'Yağmur, orman, kafe ve daha fazlası.';
+
+  @override
+  String get apiKeyDialogTitle => 'Gemini API Anahtarı';
+
+  @override
+  String get apiKeyDialogBody =>
+      'AI özelliklerini kullanmak için Google Gemini API anahtarını gir. Ücretsiz anahtarı Google AI Studio\'dan alabilirsin.';
+
+  @override
+  String get apiKeyRequired => 'Lütfen anahtarını gir';
+
+  @override
+  String get apiKeyInvalidFormat => 'Bu bir Gemini API anahtarına benzemiyor';
+
+  @override
+  String get flipPhoneHint => 'Telefonu yüzüstü çevirin';
+
+  @override
+  String get autoQuizTitle => '🎉 Tebrikler!';
+
+  @override
+  String get autoQuizDone => 'PDF odaklanma seansın başarıyla tamamlandı.';
+
+  @override
+  String get autoQuizStarting =>
+      'Öğrendiklerini test etmek için AI Quiz başlıyor...';
+
+  @override
+  String get aiErrMissingKey =>
+      'AI özelliklerini kullanmak için Gemini API anahtarını ekle.';
+
+  @override
+  String get aiErrBusy =>
+      'AI servisi şu an yoğun. Birkaç dakika sonra tekrar dene.';
+
+  @override
+  String get aiErrRateLimit =>
+      'AI kullanım limitine ulaşıldı. Biraz sonra tekrar dene.';
+
+  @override
+  String get aiErrNetwork =>
+      'İnternet bağlantısı yok. Bağlantını kontrol edip tekrar dene.';
+
+  @override
+  String get aiErrFileMissing => 'PDF dosyası bu cihazda bulunamadı.';
+
+  @override
+  String get aiErrBadResponse =>
+      'AI soruları hazırlayamadı. Lütfen tekrar dene.';
+
+  @override
+  String get aiErrGeneric =>
+      'AI servisinde bir sorun oldu. Lütfen tekrar dene.';
+
+  @override
+  String get enterApiKeyBtn => 'API anahtarı gir';
+
+  @override
+  String get apiKeyWhere => 'Ücretsiz anahtar: aistudio.google.com/apikey';
+
+  @override
+  String pagesWords(int pages, int words) {
+    return '$pages sayfa • $words kelime';
+  }
+
+  @override
+  String get aiErrUnavailable =>
+      'AI şu an kullanılamıyor. Lütfen daha sonra tekrar dene.';
+
+  @override
+  String get olderSessionsTitle => 'ESKİ OTURUMLAR';
+
+  @override
+  String olderSessionsBtn(int count) {
+    return 'Eski oturumlar ($count)';
+  }
+
+  @override
+  String get noRecentSessions => 'Son 7 günde oturum yok';
+
+  @override
+  String get restorePurchases => 'Satın alımları geri yükle';
+
+  @override
+  String get restoreDone => 'Satın alımlar kontrol edildi';
+
+  @override
+  String get billingUnavailable =>
+      'Mağaza bu cihazda kullanılamıyor. Abone olmak için TScan\'i Google Play\'den yükle.';
+
+  @override
+  String get billingProductMissing =>
+      'Bu abonelik şu an kullanılamıyor. Lütfen daha sonra tekrar dene.';
+
+  @override
+  String get billingFailed => 'Satın alma tamamlanamadı.';
+
+  @override
+  String get billingPending => 'Ödeme onayı bekleniyor...';
+
+  @override
+  String get accountSection => 'Hesap';
+
+  @override
+  String get menuSettings => 'Ayarlar';
+
+  @override
+  String get menuLogout => 'Çıkış yap';
+
+  @override
+  String streakDays(int count) {
+    return '$count günlük seri';
+  }
+
+  @override
+  String get dailyGoalShort => 'Günlük hedef';
+
+  @override
+  String get goalReachedShort => 'Hedef tamam 🎉';
+
+  @override
+  String minutesLeft(int minutes) {
+    return '$minutes dk kaldı';
+  }
+
+  @override
+  String get freePlan => 'Ücretsiz plan';
 }

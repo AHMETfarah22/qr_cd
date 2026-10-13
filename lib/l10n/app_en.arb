@@ -174,5 +174,362 @@
   "permissionGranted": "Permission Granted",
   "permissionDenied": "Permission Denied",
   "tutorialTitle": "App Tutorial",
-  "tutorialSubtitle": "Show onboarding guide again"
+  "tutorialSubtitle": "Show onboarding guide again",
+  "addSessionNoteTitle": "What did you focus on?",
+  "sessionNoteHint": "e.g., studying math, coding",
+  "sessionNoteLabel": "Session Note",
+  "saveBtn": "Save",
+  "dailyGoalSetting": "Daily Focus Goal",
+  "dailyGoalSubtitle": "Target minutes of focus per day",
+  "dailyGoalReached": "DAILY FOCUS GOAL REACHED! 🎉",
+  "dailyGoalProgress": "Daily Goal Progress",
+  "dailyMinutesFocused": "{minutes} / {goal} minutes",
+  "dailyGoalRemaining": "{minutes} more minutes to reach your goal!",
+  "pdfStudyTitle": "PDF Study",
+  "pdfDestekliCalisma": "AI Powered PDF Study",
+  "pdfYukleAciklama": "Upload study notes, let AI estimate reading time.\nThen it tests you when done! 🚀",
+  "pdfStep1": "Upload PDF",
+  "pdfStep2": "AI Analysis",
+  "pdfStep3": "Focus & Read",
+  "pdfStep4": "Test with Quiz",
+  "pdfDosyaSec": "Select PDF File",
+  "sonCalisilanBelgeler": "Recent Documents",
+  "temizle": "Clear",
+  "tekrarCalis": "Study Again",
+  "sil": "Delete",
+  "premiumOzellik": "Premium Feature",
+  "premiumCalismaAsistani": "You must be a Premium member to use advanced study assistant features such as AI time estimation and quiz generation.",
+  "premiumYukselt": "Upgrade to Premium 🚀",
+  "pdfSeciliyor": "Selecting PDF file...",
+  "pdfOkunuyor": "📄 Reading PDF...",
+  "aiAnalizEdiyor": "🤖 AI analyzing text...",
+  "onboardingPdfTitle": "AI & PDF Study Mode",
+  "onboardingPdfDesc": "Upload your study notes; TScan's AI will auto-calculate your study duration, keep you focused, and generate interactive quizzes right after your session!",
+  "onboardingPdfExtra": "Smart Reading & AI Quizzes",
+  "aiAnalizSonuclari": "AI Analysis Results",
+  "dersAdi": "Subject",
+  "zorlukDerecesi": "Difficulty Level",
+  "tahminiOkumaSuresi": "Estimated Reading Time",
+  "tahminiSureDk": "{minutes} minutes",
+  "@tahminiSureDk": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "tscanOnerisi": "TScan Recommendation",
+  "calismayiBaslat": "Start Study ⏱️",
+  "pdfGizlilikOnayiTitle": "Privacy & Cloud Analysis Consent",
+  "pdfGizlilikOnayiBody": "The text content of your uploaded PDF will be sent to the AI service (Google Gemini) over a secure connection for duration estimation and quiz generation. Do you consent to sending your data to the cloud?",
+  "onayla": "Approve",
+  "reddet": "Decline",
+  "aiQuizBaslat": "Start AI Quiz",
+  "akilliSoruModu": "Session ended! Ready to solve AI questions?",
+  "quizBasligi": "AI Evaluation Test",
+  "soruSayisi": "Question {current} / {total}",
+  "@soruSayisi": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "quiziBitir": "Finish Test",
+  "quizSonuclari": "Test Results",
+  "basariSkoru": "Success Score: %{score}",
+  "@basariSkoru": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "dogruSoruSayisi": "Correct: {correct} / {total}",
+  "@dogruSoruSayisi": {
+    "placeholders": {
+      "correct": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "odaklanmayaDon": "Back to Focus",
+  "farkliSureSec": "Select custom duration",
+  "sureSec": "Select Duration",
+  "dakika": "minutes",
+  "aiSorulariHazirliyor": "🤖 AI preparing questions...",
+  "buBirkacSaniyeSurebilir": "This may take a few seconds",
+  "quizYuklenemedi": "Quiz could not be loaded",
+  "tekrarDene": "Try Again",
+  "sonrakiSoru": "Next Question",
+  "sonuclariGor": "View Results",
+  "aiYanlisAnalizi": "🤖 AI analyzing wrong answers...",
+  "aiKocAnalizi": "AI Coach Analysis",
+  "soruDetaylari": "Question Details",
+  "anaSayfayaDon": "Back to Home",
+  "soruNo": "Question {number}",
+  "@soruNo": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "seninCevabin": "Your answer: {answer}",
+  "@seninCevabin": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "dogruCevap": "Correct answer: {answer}",
+  "@dogruCevap": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "muhtesemKonuyaHakimsin": "Excellent! You mastered the subject!",
+  "iyiGidiyorsunTekrar": "Doing good, practice a bit more!",
+  "gelismeAlaninVar": "Room for improvement, read again",
+  "tekrarCalismalisin": "You should study the text again",
+  "pdfCalismasi": "PDF Study",
+  "tamamlananQuiz": "Quiz Completed",
+  "ortalamaQuizBasarisi": "Average Quiz Score",
+  "oturum": "sessions",
+  "sinav": "quizzes",
+  "basariOrani": "success rate",
+  "okumaHizi": "Personalized Reading Speed",
+  "okumaHiziAciklama": "Tailor AI time estimates to your reading speed with Premium.",
+  "hizYavas": "Slow",
+  "hizNormal": "Normal",
+  "hizHizli": "Fast",
+  "navHome": "Home",
+  "navAiQuest": "AI Quest",
+  "navAccount": "Account",
+  "aiQuestSubtitle": "Upload a PDF, solve AI quizzes",
+  "aiQuestUploadTitle": "📄 Upload PDF & Study",
+  "aiQuestUploadDesc": "Upload a document, let AI analyze it and build a quiz",
+  "aiQuestNoDocs": "No documents yet",
+  "aiQuestNoDocsDesc": "Upload your first PDF to start\nAI-assisted studying!",
+  "aiQuestRecentDocs": "📚 Recently Studied Documents",
+  "aiQuestClear": "Clear",
+  "aiQuestClearConfirm": "Remove all documents from history?",
+  "aiQuestDeleteConfirm": "Remove \"{name}\" from history?",
+  "@aiQuestDeleteConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "aiQuestDocMeta": "{minutes} min • {pages} pages",
+  "@aiQuestDocMeta": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "pages": {
+        "type": "int"
+      }
+    }
+  },
+  "gizlilikKontrol": "Checking privacy consent...",
+  "apiKey401Hata": "The API key was rejected. Please enter a valid Gemini API key; the saved key was cleared.",
+  "navStats": "Stats",
+  "navHistory": "History",
+  "activityIntensity": "ACTIVITY INTENSITY",
+  "timeAgoWeeks": "{weeks} weeks ago",
+  "@timeAgoWeeks": {
+    "placeholders": {
+      "weeks": {
+        "type": "int"
+      }
+    }
+  },
+  "timeAgoMonths": "{months} months ago",
+  "@timeAgoMonths": {
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "timeAgoYears": "{years} years ago",
+  "@timeAgoYears": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      }
+    }
+  },
+  "minutesValue": "{minutes} min",
+  "@minutesValue": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "aiQuestAllDocs": "All Documents ({count})",
+  "@aiQuestAllDocs": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "allDocsTitle": "ALL DOCUMENTS",
+  "freePdfRemaining": "{count} free PDF uploads left",
+  "@freePdfRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "freeLimitReachedTitle": "Your free uploads are used up",
+  "freeLimitReachedBody": "You have used your 2 free PDF uploads. Go Premium for unlimited PDFs and AI quizzes.",
+  "statsTotalStudy": "Total study",
+  "statsThisWeek": "This week",
+  "statsWeeklyGoal": "Weekly goal: {hours} h",
+  "@statsWeeklyGoal": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "statsStreak": "Day streak",
+  "statsSessions": "Sessions done",
+  "statsSuccess": "Success",
+  "statsQuizAvg": "Quiz average",
+  "statsDailyMinutes": "LAST 7 DAYS (MINUTES)",
+  "statsBySubject": "TIME BY SUBJECT",
+  "hoursMinutesShort": "{hours}h {minutes}m",
+  "@hoursMinutesShort": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "paywallTitle": "TScan Premium",
+  "paywallSubtitle": "Study smarter with unlimited PDFs and your AI study coach",
+  "planMonthly": "Monthly",
+  "planYearly": "Yearly",
+  "planPerMonth": "/ month",
+  "planPerYear": "/ year",
+  "planMonthlyNote": "Cancel anytime",
+  "planYearlyNote": "Only 50 TL a month — save 83%",
+  "planBestValue": "BEST VALUE",
+  "subscribeNow": "Subscribe Now",
+  "premiumActiveUntil": "Premium is active until {date}",
+  "@premiumActiveUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "premiumActivatedTitle": "🎉 Premium Activated!",
+  "premiumActivatedBody": "You now have unlimited access to every feature. Happy studying!",
+  "greatBtn": "Great!",
+  "paywallTerms": "You can cancel your subscription at any time from Play Store settings.",
+  "benefitUnlimitedPdf": "Unlimited PDFs",
+  "benefitUnlimitedPdfDesc": "Upload as many notes and books as you like.",
+  "benefitAiQuiz": "AI quiz & study time",
+  "benefitAiQuizDesc": "Auto-generated quizzes and reading time for every PDF.",
+  "benefitWrongAnswers": "Wrong answer analysis",
+  "benefitWrongAnswersDesc": "See which topics to review after each quiz.",
+  "benefitSounds": "All focus sounds",
+  "benefitSoundsDesc": "Rain, forest, café and more.",
+  "apiKeyDialogTitle": "Gemini API Key",
+  "apiKeyDialogBody": "Enter your Google Gemini API key to use AI features. You can get a free key from Google AI Studio.",
+  "apiKeyRequired": "Please enter your key",
+  "apiKeyInvalidFormat": "This doesn't look like a Gemini API key",
+  "flipPhoneHint": "Turn your phone face down",
+  "autoQuizTitle": "🎉 Well done!",
+  "autoQuizDone": "Your PDF focus session is complete.",
+  "autoQuizStarting": "The AI quiz is starting so you can test what you learned...",
+  "aiErrMissingKey": "Add your Gemini API key to use AI features.",
+  "aiErrBusy": "The AI service is busy right now. Please try again in a few minutes.",
+  "aiErrRateLimit": "The AI usage limit was reached. Please try again later.",
+  "aiErrNetwork": "No internet connection. Check your connection and try again.",
+  "aiErrFileMissing": "The PDF file could not be found on this device.",
+  "aiErrBadResponse": "The AI couldn't prepare the questions. Please try again.",
+  "aiErrGeneric": "Something went wrong with the AI service. Please try again.",
+  "enterApiKeyBtn": "Enter API key",
+  "apiKeyWhere": "Get a free key at aistudio.google.com/apikey",
+  "pagesWords": "{pages} pages • {words} words",
+  "@pagesWords": {
+    "placeholders": {
+      "pages": {
+        "type": "int"
+      },
+      "words": {
+        "type": "int"
+      }
+    }
+  },
+  "aiErrUnavailable": "AI is temporarily unavailable. Please try again later.",
+  "@dailyMinutesFocused": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "olderSessionsTitle": "OLDER SESSIONS",
+  "olderSessionsBtn": "Older sessions ({count})",
+  "@olderSessionsBtn": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noRecentSessions": "No sessions in the last 7 days",
+  "restorePurchases": "Restore purchases",
+  "restoreDone": "Purchases checked",
+  "billingUnavailable": "The store isn't available on this device. Install TScan from Google Play to subscribe.",
+  "billingProductMissing": "This subscription isn't available right now. Please try again later.",
+  "billingFailed": "The purchase could not be completed.",
+  "billingPending": "Waiting for payment confirmation...",
+  "accountSection": "Account",
+  "menuSettings": "Settings",
+  "menuLogout": "Log out",
+  "streakDays": "{count}-day streak",
+  "@streakDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dailyGoalShort": "Daily goal",
+  "goalReachedShort": "Goal reached 🎉",
+  "minutesLeft": "{minutes} min left",
+  "@minutesLeft": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "freePlan": "Free plan"
 }

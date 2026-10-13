@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'core/theme/app_theme.dart';
 import 'core/services/settings_service.dart';
+import 'core/services/billing_service.dart';
+import 'core/services/premium_service.dart';
 import 'features/auth/screens/login_screen.dart';
 import 'features/auth/services/auth_service.dart';
 import 'features/auth/services/statistics_service.dart';
 import 'features/timer/services/audio_service.dart';
 import 'features/timer/services/sensor_service.dart';
 import 'features/timer/services/timer_service.dart';
-import 'features/timer/screens/timer_screen.dart';
+import 'features/core/screens/main_screen.dart';
 import 'features/onboarding/screens/onboarding_screen.dart';
+
+import 'features/pdf_study/services/pdf_history_service.dart';
 
 import 'package:intl/date_symbol_data_local.dart';
 import 'core/services/notification_service.dart';
@@ -22,12 +26,18 @@ void main() async {
   await initializeDateFormatting('en_US', null);
   final notificationService = NotificationService();
   await notificationService.init();
-  
+
   runApp(
     MultiProvider(
       providers: [
         Provider<NotificationService>.value(value: notificationService),
         ChangeNotifierProvider(create: (_) => AuthService()),
+        ChangeNotifierProvider(create: (_) => PremiumService()),
+        // Not lazy: re-checks owned subscriptions with the store at startup.
+        ChangeNotifierProvider(
+          lazy: false,
+          create: (context) => BillingService(context.read<PremiumService>()),
+        ),
         ChangeNotifierProxyProvider<AuthService, SettingsService>(
           create: (context) {
             final authService = context.read<AuthService>();
@@ -36,7 +46,8 @@ void main() async {
             return settingsService;
           },
           update: (context, authService, previousSettingsService) {
-            final settingsService = previousSettingsService ?? SettingsService();
+            final settingsService =
+                previousSettingsService ?? SettingsService();
             settingsService.setCurrentUser(authService.userEmail);
             return settingsService;
           },
@@ -56,6 +67,20 @@ void main() async {
             return statsService;
           },
         ),
+        ChangeNotifierProxyProvider<AuthService, PdfHistoryService>(
+          create: (context) {
+            final authService = context.read<AuthService>();
+            final historyService = PdfHistoryService();
+            historyService.setCurrentUser(authService.userEmail);
+            return historyService;
+          },
+          update: (context, authService, previousHistoryService) {
+            final historyService =
+                previousHistoryService ?? PdfHistoryService();
+            historyService.setCurrentUser(authService.userEmail);
+            return historyService;
+          },
+        ),
         Provider(
           create: (_) => SensorService(),
           dispose: (_, service) => service.dispose(),
@@ -65,19 +90,37 @@ void main() async {
           update: (context, settings, previous) =>
               previous ?? AudioService(settings),
         ),
-        ChangeNotifierProxyProvider5<SensorService, AudioService, SettingsService, StatisticsService, NotificationService, TimerService>(
+        ChangeNotifierProxyProvider5<
+          SensorService,
+          AudioService,
+          SettingsService,
+          StatisticsService,
+          NotificationService,
+          TimerService
+        >(
           create: (context) => TimerService(
             context.read<SensorService>(),
             context.read<AudioService>(),
             context.read<SettingsService>(),
             context.read<NotificationService>(),
           ),
-          update: (context, sensor, audio, settings, stats, notification, previous) {
-            final service = previous ?? TimerService(sensor, audio, settings, notification);
-            // Sync timer service state (level) with persisted statistics
-            service.updateDependencies(stats);
-            return service;
-          },
+          update:
+              (
+                context,
+                sensor,
+                audio,
+                settings,
+                stats,
+                notification,
+                previous,
+              ) {
+                final service =
+                    previous ??
+                    TimerService(sensor, audio, settings, notification);
+                // Sync timer service state (level) with persisted statistics
+                service.updateDependencies(stats);
+                return service;
+              },
         ),
       ],
       child: const TScanApp(),
@@ -95,17 +138,15 @@ class TScanApp extends StatelessWidget {
         return MaterialApp(
           title: 'TScan',
           debugShowCheckedModeBanner: false,
-          theme: settingsService.isDarkMode ? AppTheme.darkTheme : AppTheme.lightTheme,
+          // Always dark: white text over the animated hourglass background.
+          theme: AppTheme.darkTheme,
           localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          supportedLocales: const [
-            Locale('en'),
-            Locale('tr'),
-          ],
+          supportedLocales: const [Locale('en'), Locale('tr')],
           home: Consumer<AuthService>(
             builder: (context, authService, _) {
               // Auto-login logic
@@ -114,7 +155,7 @@ class TScanApp extends StatelessWidget {
                 if (!settingsService.isOnboardingCompleted) {
                   return const OnboardingScreen();
                 }
-                return const TimerScreen();
+                return const MainScreen();
               }
               return const LoginScreen();
             },

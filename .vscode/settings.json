@@ -6,5 +6,5 @@
         "*.h": "cpp",
         "*.cc": "cpp"
     },
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "automatic"
 }

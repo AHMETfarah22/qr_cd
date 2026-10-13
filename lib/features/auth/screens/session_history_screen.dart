@@ -2,35 +2,71 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/palette.dart';
+import '../../../core/widgets/glass.dart';
+import '../../core/screens/main_screen.dart';
 import '../../../core/models/session_category.dart';
 import '../services/statistics_service.dart';
+import 'package:tscan/l10n/app_localizations.dart';
 
 class SessionHistoryScreen extends StatelessWidget {
-  const SessionHistoryScreen({super.key});
+  /// True when shown as a bottom-navigation tab (no back button).
+  final bool embedded;
+
+  /// True for the "older sessions" page reached from the tab's button.
+  final bool olderOnly;
+
+  const SessionHistoryScreen({
+    super.key,
+    this.embedded = false,
+    this.olderOnly = false,
+  });
+
+  /// The tab lists only this many recent days; the rest sit behind a button.
+  static const int recentDays = 7;
 
   @override
   Widget build(BuildContext context) {
     final statsService = Provider.of<StatisticsService>(context);
     final sessions = statsService.sessionHistory;
+    final p = Palette.of(context);
+    final l10n = AppLocalizations.of(context)!;
+
+    final now = DateTime.now();
+    final cutoff = DateTime(
+      now.year,
+      now.month,
+      now.day,
+    ).subtract(const Duration(days: recentDays - 1));
+    bool isRecent(Map<String, dynamic> s) =>
+        !(s['date'] as DateTime).isBefore(cutoff);
+    final recent = sessions.where(isRecent).toList();
+    final older = sessions.where((s) => !isRecent(s)).toList();
+    final shown = olderOnly ? older : recent;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: embedded ? Colors.transparent : p.background,
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context)!.historyTitle,
-          style: const TextStyle(
+          olderOnly ? l10n.olderSessionsTitle : l10n.historyTitle,
+          style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
             letterSpacing: 2.0,
+            color: p.textPrimary,
           ),
         ),
         centerTitle: true,
         backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded, color: AppColors.accent),
-          onPressed: () => Navigator.pop(context),
-        ),
+        automaticallyImplyLeading: false,
+        leading: embedded
+            ? null
+            : IconButton(
+                icon: Icon(Icons.arrow_back_rounded, color: p.accentText),
+                onPressed: () => Navigator.pop(context),
+              ),
       ),
       body: sessions.isEmpty
           ? Center(
@@ -40,13 +76,13 @@ class SessionHistoryScreen extends StatelessWidget {
                   Icon(
                     Icons.history_rounded,
                     size: 80,
-                    color: AppColors.textSecondary.withValues(alpha: 0.5),
+                    color: p.textSecondary.withValues(alpha: 0.5),
                   ),
                   const SizedBox(height: 16),
                   Text(
                     AppLocalizations.of(context)!.noHistoryYet,
-                    style: const TextStyle(
-                      color: AppColors.textSecondary,
+                    style: TextStyle(
+                      color: p.textSecondary,
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
                     ),
@@ -54,18 +90,20 @@ class SessionHistoryScreen extends StatelessWidget {
                   const SizedBox(height: 8),
                   Text(
                     AppLocalizations.of(context)!.startFocusNow,
-                    style: const TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 14,
-                    ),
+                    style: TextStyle(color: p.textSecondary, fontSize: 14),
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton(
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => embedded
+                        ? MainScreen.switchTab(context, 0)
+                        : Navigator.pop(context),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.accent,
-                      foregroundColor: Colors.black,
-                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                      backgroundColor: AppColors.accentDeep,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 12,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
@@ -75,216 +113,236 @@ class SessionHistoryScreen extends StatelessWidget {
                 ],
               ),
             )
-            : Column(
-                children: [
-                  _buildWeeklySummary(statsService),
-                  Expanded(
-                    child: _buildSessionList(sessions),
+          : Column(
+              children: [
+                if (!olderOnly) _buildWeeklySummary(context, statsService),
+                Expanded(
+                  child: _buildSessionList(
+                    context,
+                    shown,
+                    footer: !olderOnly && older.isNotEmpty
+                        ? _buildOlderButton(context, older.length)
+                        : null,
                   ),
-                ],
-              ),
+                ),
+              ],
+            ),
     );
   }
 
+  /// One session as a compact row; a day's rows share one GlassGroup.
   Widget _buildSessionCard({
     required int duration,
     required bool completed,
     required DateTime date,
     required SessionCategory category,
+    required String note,
     required BuildContext context,
   }) {
-    final dateFormat = DateFormat('dd MMM yyyy, HH:mm', 'tr_TR');
-    final timeAgo = _getTimeAgo(date);
-    
+    final l10n = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context).toString();
+    final statusColor = completed ? Colors.greenAccent : Colors.redAccent;
+
     final hours = duration ~/ 60;
     final minutes = duration % 60;
-    String durationText;
-    String durationText;
-    if (hours > 0) {
-      durationText = '${hours}${AppLocalizations.of(context)!.hoursShort} ${minutes}${AppLocalizations.of(context)!.minutesShort}';
-    } else {
-      durationText = AppLocalizations.of(context)!.mins(minutes);
-    }
+    final durationText = hours > 0
+        ? l10n.hoursMinutesShort(hours, minutes)
+        : l10n.minutesValue(minutes);
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: completed
-              ? [
-                  Colors.green.withValues(alpha: 0.15),
-                  Colors.green.withValues(alpha: 0.05),
-                ]
-              : [
-                  Colors.red.withValues(alpha: 0.15),
-                  Colors.red.withValues(alpha: 0.05),
-                ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: completed
-              ? Colors.green.withValues(alpha: 0.3)
-              : Colors.red.withValues(alpha: 0.3),
-          width: 1.5,
-        ),
-      ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Icon
           Container(
-            padding: const EdgeInsets.all(12),
+            width: 36,
+            height: 36,
             decoration: BoxDecoration(
-              color: completed
-                  ? Colors.green.withValues(alpha: 0.2)
-                  : Colors.red.withValues(alpha: 0.2),
-              shape: BoxShape.circle,
+              color: category.color.withValues(alpha: 0.18),
+              borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(
-              completed ? Icons.check_circle : Icons.cancel,
-              color: completed ? Colors.green : Colors.red,
-              size: 28,
-            ),
+            child: Icon(category.icon, color: category.color, size: 19),
           ),
-          const SizedBox(width: 16),
-          // Info
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      completed ? AppLocalizations.of(context)!.successLabel : AppLocalizations.of(context)!.failedLabel,
-                      style: TextStyle(
-                        color: completed ? Colors.green : Colors.red,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-                    Text(
-                      timeAgo,
-                      style: const TextStyle(
-                        color: AppColors.textSecondary,
-                        fontSize: 11,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 6),
                 Text(
                   durationText,
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Icon(
-                      category.icon,
-                      size: 14,
-                      color: category.color,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      category.displayName,
-                      style: TextStyle(
-                        color: category.color,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const Spacer(),
-                    Text(
-                      dateFormat.format(date),
-                      style: const TextStyle(
-                        color: AppColors.textSecondary,
-                        fontSize: 11,
-                      ),
-                    ),
-                  ],
+                const SizedBox(height: 2),
+                Text(
+                  '${category.getDisplayName(context)} · ${DateFormat.Hm(locale).format(date)}',
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.65),
+                    fontSize: 12.5,
+                  ),
                 ),
+                if (note.isNotEmpty) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    note,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.75),
+                      fontSize: 12,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ],
               ],
             ),
+          ),
+          const SizedBox(width: 8),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                completed ? Icons.check_circle_rounded : Icons.cancel_rounded,
+                color: statusColor,
+                size: 16,
+              ),
+              const SizedBox(width: 4),
+              Text(
+                completed ? l10n.successLabel : l10n.failedLabel,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 
-  Widget _buildSessionList(List<Map<String, dynamic>> sessions) {
-    // Group sessions by date
-    final groupedSessions = <String, List<Map<String, dynamic>>>{};
-    
+  Widget _buildOlderButton(BuildContext context, int count) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: SizedBox(
+        width: double.infinity,
+        child: OutlinedButton.icon(
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const SessionHistoryScreen(olderOnly: true),
+            ),
+          ),
+          icon: const Icon(Icons.history_rounded),
+          label: Text(AppLocalizations.of(context)!.olderSessionsBtn(count)),
+          style: OutlinedButton.styleFrom(
+            foregroundColor: Colors.white,
+            side: const BorderSide(color: AppColors.glassBorder),
+            backgroundColor: AppColors.glass,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSessionList(
+    BuildContext context,
+    List<Map<String, dynamic>> sessions, {
+    Widget? footer,
+  }) {
+    final p = Palette.of(context);
+    // Group sessions by calendar day
+    final groupedSessions = <DateTime, List<Map<String, dynamic>>>{};
+
     for (var session in sessions) {
       final date = session['date'] as DateTime;
-      final dateKey = DateFormat('dd MMM yyyy', 'tr_TR').format(date);
-      if (!groupedSessions.containsKey(dateKey)) {
-        groupedSessions[dateKey] = [];
-      }
-      groupedSessions[dateKey]!.add(session);
+      final dateKey = DateTime(date.year, date.month, date.day);
+      groupedSessions.putIfAbsent(dateKey, () => []).add(session);
+    }
+
+    if (groupedSessions.isEmpty) {
+      return ListView(
+        padding: const EdgeInsets.fromLTRB(16, 24, 16, 24),
+        children: [
+          Center(
+            child: Text(
+              AppLocalizations.of(context)!.noRecentSessions,
+              style: TextStyle(color: p.textSecondary, fontSize: 15),
+            ),
+          ),
+          const SizedBox(height: 16),
+          ?footer,
+        ],
+      );
     }
 
     return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      itemCount: groupedSessions.length,
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+      itemCount: groupedSessions.length + (footer == null ? 0 : 1),
       itemBuilder: (context, index) {
+        if (index == groupedSessions.length) return footer!;
         final dateKey = groupedSessions.keys.elementAt(index);
         final daySessions = groupedSessions[dateKey]!;
-        
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 4.0),
+              padding: const EdgeInsets.symmetric(
+                vertical: 12.0,
+                horizontal: 4.0,
+              ),
               child: Text(
                 _getDateLabel(dateKey, context),
-                style: const TextStyle(
-                  color: AppColors.accent,
+                style: TextStyle(
+                  color: p.textPrimary,
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.0,
                 ),
               ),
             ),
-            ...daySessions.map((session) {
-              final duration = session['duration'] as int;
-              final completed = session['completed'] as bool;
-              final date = session['date'] as DateTime;
-              final category = session['category'] as SessionCategory;
-
-              return _buildSessionCard(
-                duration: duration,
-                completed: completed,
-                date: date,
-                category: category,
-                context: context,
-              );
-            }),
+            GlassGroup(
+              children: [
+                for (final session in daySessions)
+                  _buildSessionCard(
+                    duration: session['duration'] as int,
+                    completed: session['completed'] as bool,
+                    date: session['date'] as DateTime,
+                    category: session['category'] as SessionCategory,
+                    note: session['note'] as String? ?? '',
+                    context: context,
+                  ),
+              ],
+            ),
+            const SizedBox(height: 4),
           ],
         );
       },
     );
   }
 
-  String _getDateLabel(String dateKey, BuildContext context) {
+  String _getDateLabel(DateTime day, BuildContext context) {
     final now = DateTime.now();
-    final today = DateFormat('dd MMM yyyy', 'tr_TR').format(now);
-    final yesterday = DateFormat('dd MMM yyyy', 'tr_TR').format(now.subtract(const Duration(days: 1)));
-    
-    if (dateKey == today) return AppLocalizations.of(context)!.today;
-    if (dateKey == yesterday) return AppLocalizations.of(context)!.yesterday;
-    return dateKey.toUpperCase();
+    final today = DateTime(now.year, now.month, now.day);
+    final daysAgo = today.difference(day).inDays;
+
+    if (daysAgo == 0) return AppLocalizations.of(context)!.today;
+    if (daysAgo == 1) return AppLocalizations.of(context)!.yesterday;
+    final locale = Localizations.localeOf(context).toString();
+    return DateFormat('dd MMM yyyy', locale).format(day).toUpperCase();
   }
 
-  Widget _buildWeeklySummary(StatisticsService stats) {
+  Widget _buildWeeklySummary(BuildContext context, StatisticsService stats) {
     final weeklyMinutes = stats.weeklyTotalMinutes;
     final hours = weeklyMinutes ~/ 60;
     final minutes = weeklyMinutes % 60;
@@ -294,10 +352,14 @@ class SessionHistoryScreen extends StatelessWidget {
       margin: const EdgeInsets.fromLTRB(16, 16, 16, 8),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: hasCertificate ? Colors.blue.withValues(alpha: 0.1) : Colors.red.withValues(alpha: 0.05),
+        color: hasCertificate
+            ? Colors.blue.withValues(alpha: 0.1)
+            : Colors.red.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: hasCertificate ? Colors.blue.withValues(alpha: 0.3) : Colors.red.withValues(alpha: 0.2),
+          color: hasCertificate
+              ? Colors.blue.withValues(alpha: 0.3)
+              : Colors.red.withValues(alpha: 0.2),
           width: 1.5,
         ),
       ),
@@ -306,7 +368,9 @@ class SessionHistoryScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: hasCertificate ? Colors.blue.withValues(alpha: 0.2) : Colors.red.withValues(alpha: 0.1),
+              color: hasCertificate
+                  ? Colors.blue.withValues(alpha: 0.2)
+                  : Colors.red.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -321,7 +385,9 @@ class SessionHistoryScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  hasCertificate ? AppLocalizations.of(context)!.weeklyGoalSuccess : AppLocalizations.of(context)!.weeklyGoalFailed,
+                  hasCertificate
+                      ? AppLocalizations.of(context)!.weeklyGoalSuccess
+                      : AppLocalizations.of(context)!.weeklyGoalFailed,
                   style: TextStyle(
                     color: hasCertificate ? Colors.blue : Colors.red,
                     fontSize: 14,
@@ -331,9 +397,11 @@ class SessionHistoryScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  AppLocalizations.of(context)!.weeklyMinutesNote(hours, minutes),
-                  style: const TextStyle(
-                    color: AppColors.textSecondary,
+                  AppLocalizations.of(
+                    context,
+                  )!.weeklyMinutesNote(hours, minutes),
+                  style: TextStyle(
+                    color: Palette.of(context).textSecondary,
                     fontSize: 12,
                   ),
                 ),
@@ -341,7 +409,9 @@ class SessionHistoryScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 4.0),
                     child: Text(
-                      AppLocalizations.of(context)!.moreMinutesRequired(300 - weeklyMinutes),
+                      AppLocalizations.of(
+                        context,
+                      )!.moreMinutesRequired(300 - weeklyMinutes),
                       style: const TextStyle(
                         color: Colors.redAccent,
                         fontSize: 11,
@@ -355,30 +425,5 @@ class SessionHistoryScreen extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String _getTimeAgo(DateTime date, BuildContext context) {
-    final now = DateTime.now();
-    final difference = now.difference(date);
-    final l10n = AppLocalizations.of(context)!;
-
-    if (difference.inMinutes < 1) {
-      return l10n.timeAgoJustNow;
-    } else if (difference.inMinutes < 60) {
-      return l10n.timeAgoMinutes(difference.inMinutes);
-    } else if (difference.inHours < 24) {
-      return l10n.timeAgoHours(difference.inHours);
-    } else if (difference.inDays < 7) {
-      return l10n.timeAgoDays(difference.inDays);
-    } else if (difference.inDays < 30) {
-      final weeks = (difference.inDays / 7).floor();
-      return '$weeks hafta önce'; // TODO: Localize these as well if needed
-    } else if (difference.inDays < 365) {
-      final months = (difference.inDays / 30).floor();
-      return '$months ay önce';
-    } else {
-      final years = (difference.inDays / 365).floor();
-      return '$years yıl önce';
-    }
   }
 }

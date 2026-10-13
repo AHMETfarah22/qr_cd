@@ -1021,6 +1021,1074 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Show onboarding guide again'**
   String get tutorialSubtitle;
+
+  /// No description provided for @addSessionNoteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What did you focus on?'**
+  String get addSessionNoteTitle;
+
+  /// No description provided for @sessionNoteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., studying math, coding'**
+  String get sessionNoteHint;
+
+  /// No description provided for @sessionNoteLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Session Note'**
+  String get sessionNoteLabel;
+
+  /// No description provided for @saveBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get saveBtn;
+
+  /// No description provided for @dailyGoalSetting.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Focus Goal'**
+  String get dailyGoalSetting;
+
+  /// No description provided for @dailyGoalSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Target minutes of focus per day'**
+  String get dailyGoalSubtitle;
+
+  /// No description provided for @dailyGoalReached.
+  ///
+  /// In en, this message translates to:
+  /// **'DAILY FOCUS GOAL REACHED! 🎉'**
+  String get dailyGoalReached;
+
+  /// No description provided for @dailyGoalProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Goal Progress'**
+  String get dailyGoalProgress;
+
+  /// No description provided for @dailyMinutesFocused.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} / {goal} minutes'**
+  String dailyMinutesFocused(int minutes, int goal);
+
+  /// No description provided for @dailyGoalRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} more minutes to reach your goal!'**
+  String dailyGoalRemaining(Object minutes);
+
+  /// No description provided for @pdfStudyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF Study'**
+  String get pdfStudyTitle;
+
+  /// No description provided for @pdfDestekliCalisma.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Powered PDF Study'**
+  String get pdfDestekliCalisma;
+
+  /// No description provided for @pdfYukleAciklama.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload study notes, let AI estimate reading time.\nThen it tests you when done! 🚀'**
+  String get pdfYukleAciklama;
+
+  /// No description provided for @pdfStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload PDF'**
+  String get pdfStep1;
+
+  /// No description provided for @pdfStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Analysis'**
+  String get pdfStep2;
+
+  /// No description provided for @pdfStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus & Read'**
+  String get pdfStep3;
+
+  /// No description provided for @pdfStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Test with Quiz'**
+  String get pdfStep4;
+
+  /// No description provided for @pdfDosyaSec.
+  ///
+  /// In en, this message translates to:
+  /// **'Select PDF File'**
+  String get pdfDosyaSec;
+
+  /// No description provided for @sonCalisilanBelgeler.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Documents'**
+  String get sonCalisilanBelgeler;
+
+  /// No description provided for @temizle.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get temizle;
+
+  /// No description provided for @tekrarCalis.
+  ///
+  /// In en, this message translates to:
+  /// **'Study Again'**
+  String get tekrarCalis;
+
+  /// No description provided for @sil.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get sil;
+
+  /// No description provided for @premiumOzellik.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium Feature'**
+  String get premiumOzellik;
+
+  /// No description provided for @premiumCalismaAsistani.
+  ///
+  /// In en, this message translates to:
+  /// **'You must be a Premium member to use advanced study assistant features such as AI time estimation and quiz generation.'**
+  String get premiumCalismaAsistani;
+
+  /// No description provided for @premiumYukselt.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade to Premium 🚀'**
+  String get premiumYukselt;
+
+  /// No description provided for @pdfSeciliyor.
+  ///
+  /// In en, this message translates to:
+  /// **'Selecting PDF file...'**
+  String get pdfSeciliyor;
+
+  /// No description provided for @pdfOkunuyor.
+  ///
+  /// In en, this message translates to:
+  /// **'📄 Reading PDF...'**
+  String get pdfOkunuyor;
+
+  /// No description provided for @aiAnalizEdiyor.
+  ///
+  /// In en, this message translates to:
+  /// **'🤖 AI analyzing text...'**
+  String get aiAnalizEdiyor;
+
+  /// No description provided for @onboardingPdfTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'AI & PDF Study Mode'**
+  String get onboardingPdfTitle;
+
+  /// No description provided for @onboardingPdfDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload your study notes; TScan\'s AI will auto-calculate your study duration, keep you focused, and generate interactive quizzes right after your session!'**
+  String get onboardingPdfDesc;
+
+  /// No description provided for @onboardingPdfExtra.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Reading & AI Quizzes'**
+  String get onboardingPdfExtra;
+
+  /// No description provided for @aiAnalizSonuclari.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Analysis Results'**
+  String get aiAnalizSonuclari;
+
+  /// No description provided for @dersAdi.
+  ///
+  /// In en, this message translates to:
+  /// **'Subject'**
+  String get dersAdi;
+
+  /// No description provided for @zorlukDerecesi.
+  ///
+  /// In en, this message translates to:
+  /// **'Difficulty Level'**
+  String get zorlukDerecesi;
+
+  /// No description provided for @tahminiOkumaSuresi.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated Reading Time'**
+  String get tahminiOkumaSuresi;
+
+  /// No description provided for @tahminiSureDk.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} minutes'**
+  String tahminiSureDk(int minutes);
+
+  /// No description provided for @tscanOnerisi.
+  ///
+  /// In en, this message translates to:
+  /// **'TScan Recommendation'**
+  String get tscanOnerisi;
+
+  /// No description provided for @calismayiBaslat.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Study ⏱️'**
+  String get calismayiBaslat;
+
+  /// No description provided for @pdfGizlilikOnayiTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy & Cloud Analysis Consent'**
+  String get pdfGizlilikOnayiTitle;
+
+  /// No description provided for @pdfGizlilikOnayiBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The text content of your uploaded PDF will be sent to the AI service (Google Gemini) over a secure connection for duration estimation and quiz generation. Do you consent to sending your data to the cloud?'**
+  String get pdfGizlilikOnayiBody;
+
+  /// No description provided for @onayla.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve'**
+  String get onayla;
+
+  /// No description provided for @reddet.
+  ///
+  /// In en, this message translates to:
+  /// **'Decline'**
+  String get reddet;
+
+  /// No description provided for @aiQuizBaslat.
+  ///
+  /// In en, this message translates to:
+  /// **'Start AI Quiz'**
+  String get aiQuizBaslat;
+
+  /// No description provided for @akilliSoruModu.
+  ///
+  /// In en, this message translates to:
+  /// **'Session ended! Ready to solve AI questions?'**
+  String get akilliSoruModu;
+
+  /// No description provided for @quizBasligi.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Evaluation Test'**
+  String get quizBasligi;
+
+  /// No description provided for @soruSayisi.
+  ///
+  /// In en, this message translates to:
+  /// **'Question {current} / {total}'**
+  String soruSayisi(int current, int total);
+
+  /// No description provided for @quiziBitir.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish Test'**
+  String get quiziBitir;
+
+  /// No description provided for @quizSonuclari.
+  ///
+  /// In en, this message translates to:
+  /// **'Test Results'**
+  String get quizSonuclari;
+
+  /// No description provided for @basariSkoru.
+  ///
+  /// In en, this message translates to:
+  /// **'Success Score: %{score}'**
+  String basariSkoru(int score);
+
+  /// No description provided for @dogruSoruSayisi.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct: {correct} / {total}'**
+  String dogruSoruSayisi(int correct, int total);
+
+  /// No description provided for @odaklanmayaDon.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Focus'**
+  String get odaklanmayaDon;
+
+  /// No description provided for @farkliSureSec.
+  ///
+  /// In en, this message translates to:
+  /// **'Select custom duration'**
+  String get farkliSureSec;
+
+  /// No description provided for @sureSec.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Duration'**
+  String get sureSec;
+
+  /// No description provided for @dakika.
+  ///
+  /// In en, this message translates to:
+  /// **'minutes'**
+  String get dakika;
+
+  /// No description provided for @aiSorulariHazirliyor.
+  ///
+  /// In en, this message translates to:
+  /// **'🤖 AI preparing questions...'**
+  String get aiSorulariHazirliyor;
+
+  /// No description provided for @buBirkacSaniyeSurebilir.
+  ///
+  /// In en, this message translates to:
+  /// **'This may take a few seconds'**
+  String get buBirkacSaniyeSurebilir;
+
+  /// No description provided for @quizYuklenemedi.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiz could not be loaded'**
+  String get quizYuklenemedi;
+
+  /// No description provided for @tekrarDene.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get tekrarDene;
+
+  /// No description provided for @sonrakiSoru.
+  ///
+  /// In en, this message translates to:
+  /// **'Next Question'**
+  String get sonrakiSoru;
+
+  /// No description provided for @sonuclariGor.
+  ///
+  /// In en, this message translates to:
+  /// **'View Results'**
+  String get sonuclariGor;
+
+  /// No description provided for @aiYanlisAnalizi.
+  ///
+  /// In en, this message translates to:
+  /// **'🤖 AI analyzing wrong answers...'**
+  String get aiYanlisAnalizi;
+
+  /// No description provided for @aiKocAnalizi.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Coach Analysis'**
+  String get aiKocAnalizi;
+
+  /// No description provided for @soruDetaylari.
+  ///
+  /// In en, this message translates to:
+  /// **'Question Details'**
+  String get soruDetaylari;
+
+  /// No description provided for @anaSayfayaDon.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Home'**
+  String get anaSayfayaDon;
+
+  /// No description provided for @soruNo.
+  ///
+  /// In en, this message translates to:
+  /// **'Question {number}'**
+  String soruNo(int number);
+
+  /// No description provided for @seninCevabin.
+  ///
+  /// In en, this message translates to:
+  /// **'Your answer: {answer}'**
+  String seninCevabin(String answer);
+
+  /// No description provided for @dogruCevap.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct answer: {answer}'**
+  String dogruCevap(String answer);
+
+  /// No description provided for @muhtesemKonuyaHakimsin.
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent! You mastered the subject!'**
+  String get muhtesemKonuyaHakimsin;
+
+  /// No description provided for @iyiGidiyorsunTekrar.
+  ///
+  /// In en, this message translates to:
+  /// **'Doing good, practice a bit more!'**
+  String get iyiGidiyorsunTekrar;
+
+  /// No description provided for @gelismeAlaninVar.
+  ///
+  /// In en, this message translates to:
+  /// **'Room for improvement, read again'**
+  String get gelismeAlaninVar;
+
+  /// No description provided for @tekrarCalismalisin.
+  ///
+  /// In en, this message translates to:
+  /// **'You should study the text again'**
+  String get tekrarCalismalisin;
+
+  /// No description provided for @pdfCalismasi.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF Study'**
+  String get pdfCalismasi;
+
+  /// No description provided for @tamamlananQuiz.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiz Completed'**
+  String get tamamlananQuiz;
+
+  /// No description provided for @ortalamaQuizBasarisi.
+  ///
+  /// In en, this message translates to:
+  /// **'Average Quiz Score'**
+  String get ortalamaQuizBasarisi;
+
+  /// No description provided for @oturum.
+  ///
+  /// In en, this message translates to:
+  /// **'sessions'**
+  String get oturum;
+
+  /// No description provided for @sinav.
+  ///
+  /// In en, this message translates to:
+  /// **'quizzes'**
+  String get sinav;
+
+  /// No description provided for @basariOrani.
+  ///
+  /// In en, this message translates to:
+  /// **'success rate'**
+  String get basariOrani;
+
+  /// No description provided for @okumaHizi.
+  ///
+  /// In en, this message translates to:
+  /// **'Personalized Reading Speed'**
+  String get okumaHizi;
+
+  /// No description provided for @okumaHiziAciklama.
+  ///
+  /// In en, this message translates to:
+  /// **'Tailor AI time estimates to your reading speed with Premium.'**
+  String get okumaHiziAciklama;
+
+  /// No description provided for @hizYavas.
+  ///
+  /// In en, this message translates to:
+  /// **'Slow'**
+  String get hizYavas;
+
+  /// No description provided for @hizNormal.
+  ///
+  /// In en, this message translates to:
+  /// **'Normal'**
+  String get hizNormal;
+
+  /// No description provided for @hizHizli.
+  ///
+  /// In en, this message translates to:
+  /// **'Fast'**
+  String get hizHizli;
+
+  /// No description provided for @navHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get navHome;
+
+  /// No description provided for @navAiQuest.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Quest'**
+  String get navAiQuest;
+
+  /// No description provided for @navAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get navAccount;
+
+  /// No description provided for @aiQuestSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload a PDF, solve AI quizzes'**
+  String get aiQuestSubtitle;
+
+  /// No description provided for @aiQuestUploadTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'📄 Upload PDF & Study'**
+  String get aiQuestUploadTitle;
+
+  /// No description provided for @aiQuestUploadDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload a document, let AI analyze it and build a quiz'**
+  String get aiQuestUploadDesc;
+
+  /// No description provided for @aiQuestNoDocs.
+  ///
+  /// In en, this message translates to:
+  /// **'No documents yet'**
+  String get aiQuestNoDocs;
+
+  /// No description provided for @aiQuestNoDocsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload your first PDF to start\nAI-assisted studying!'**
+  String get aiQuestNoDocsDesc;
+
+  /// No description provided for @aiQuestRecentDocs.
+  ///
+  /// In en, this message translates to:
+  /// **'📚 Recently Studied Documents'**
+  String get aiQuestRecentDocs;
+
+  /// No description provided for @aiQuestClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get aiQuestClear;
+
+  /// No description provided for @aiQuestClearConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove all documents from history?'**
+  String get aiQuestClearConfirm;
+
+  /// No description provided for @aiQuestDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove \"{name}\" from history?'**
+  String aiQuestDeleteConfirm(String name);
+
+  /// No description provided for @aiQuestDocMeta.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min • {pages} pages'**
+  String aiQuestDocMeta(int minutes, int pages);
+
+  /// No description provided for @gizlilikKontrol.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking privacy consent...'**
+  String get gizlilikKontrol;
+
+  /// No description provided for @apiKey401Hata.
+  ///
+  /// In en, this message translates to:
+  /// **'The API key was rejected. Please enter a valid Gemini API key; the saved key was cleared.'**
+  String get apiKey401Hata;
+
+  /// No description provided for @navStats.
+  ///
+  /// In en, this message translates to:
+  /// **'Stats'**
+  String get navStats;
+
+  /// No description provided for @navHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get navHistory;
+
+  /// No description provided for @activityIntensity.
+  ///
+  /// In en, this message translates to:
+  /// **'ACTIVITY INTENSITY'**
+  String get activityIntensity;
+
+  /// No description provided for @timeAgoWeeks.
+  ///
+  /// In en, this message translates to:
+  /// **'{weeks} weeks ago'**
+  String timeAgoWeeks(int weeks);
+
+  /// No description provided for @timeAgoMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'{months} months ago'**
+  String timeAgoMonths(int months);
+
+  /// No description provided for @timeAgoYears.
+  ///
+  /// In en, this message translates to:
+  /// **'{years} years ago'**
+  String timeAgoYears(int years);
+
+  /// No description provided for @minutesValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String minutesValue(int minutes);
+
+  /// No description provided for @aiQuestAllDocs.
+  ///
+  /// In en, this message translates to:
+  /// **'All Documents ({count})'**
+  String aiQuestAllDocs(int count);
+
+  /// No description provided for @allDocsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'ALL DOCUMENTS'**
+  String get allDocsTitle;
+
+  /// No description provided for @freePdfRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} free PDF uploads left'**
+  String freePdfRemaining(int count);
+
+  /// No description provided for @freeLimitReachedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your free uploads are used up'**
+  String get freeLimitReachedTitle;
+
+  /// No description provided for @freeLimitReachedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You have used your 2 free PDF uploads. Go Premium for unlimited PDFs and AI quizzes.'**
+  String get freeLimitReachedBody;
+
+  /// No description provided for @statsTotalStudy.
+  ///
+  /// In en, this message translates to:
+  /// **'Total study'**
+  String get statsTotalStudy;
+
+  /// No description provided for @statsThisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'This week'**
+  String get statsThisWeek;
+
+  /// No description provided for @statsWeeklyGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly goal: {hours} h'**
+  String statsWeeklyGoal(int hours);
+
+  /// No description provided for @statsStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Day streak'**
+  String get statsStreak;
+
+  /// No description provided for @statsSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Sessions done'**
+  String get statsSessions;
+
+  /// No description provided for @statsSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Success'**
+  String get statsSuccess;
+
+  /// No description provided for @statsQuizAvg.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiz average'**
+  String get statsQuizAvg;
+
+  /// No description provided for @statsDailyMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'LAST 7 DAYS (MINUTES)'**
+  String get statsDailyMinutes;
+
+  /// No description provided for @statsBySubject.
+  ///
+  /// In en, this message translates to:
+  /// **'TIME BY SUBJECT'**
+  String get statsBySubject;
+
+  /// No description provided for @hoursMinutesShort.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours}h {minutes}m'**
+  String hoursMinutesShort(int hours, int minutes);
+
+  /// No description provided for @paywallTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'TScan Premium'**
+  String get paywallTitle;
+
+  /// No description provided for @paywallSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Study smarter with unlimited PDFs and your AI study coach'**
+  String get paywallSubtitle;
+
+  /// No description provided for @planMonthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get planMonthly;
+
+  /// No description provided for @planYearly.
+  ///
+  /// In en, this message translates to:
+  /// **'Yearly'**
+  String get planYearly;
+
+  /// No description provided for @planPerMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'/ month'**
+  String get planPerMonth;
+
+  /// No description provided for @planPerYear.
+  ///
+  /// In en, this message translates to:
+  /// **'/ year'**
+  String get planPerYear;
+
+  /// No description provided for @planMonthlyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel anytime'**
+  String get planMonthlyNote;
+
+  /// No description provided for @planYearlyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Only 50 TL a month — save 83%'**
+  String get planYearlyNote;
+
+  /// No description provided for @planBestValue.
+  ///
+  /// In en, this message translates to:
+  /// **'BEST VALUE'**
+  String get planBestValue;
+
+  /// No description provided for @subscribeNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribe Now'**
+  String get subscribeNow;
+
+  /// No description provided for @premiumActiveUntil.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium is active until {date}'**
+  String premiumActiveUntil(String date);
+
+  /// No description provided for @premiumActivatedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'🎉 Premium Activated!'**
+  String get premiumActivatedTitle;
+
+  /// No description provided for @premiumActivatedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You now have unlimited access to every feature. Happy studying!'**
+  String get premiumActivatedBody;
+
+  /// No description provided for @greatBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Great!'**
+  String get greatBtn;
+
+  /// No description provided for @paywallTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'You can cancel your subscription at any time from Play Store settings.'**
+  String get paywallTerms;
+
+  /// No description provided for @benefitUnlimitedPdf.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited PDFs'**
+  String get benefitUnlimitedPdf;
+
+  /// No description provided for @benefitUnlimitedPdfDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload as many notes and books as you like.'**
+  String get benefitUnlimitedPdfDesc;
+
+  /// No description provided for @benefitAiQuiz.
+  ///
+  /// In en, this message translates to:
+  /// **'AI quiz & study time'**
+  String get benefitAiQuiz;
+
+  /// No description provided for @benefitAiQuizDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-generated quizzes and reading time for every PDF.'**
+  String get benefitAiQuizDesc;
+
+  /// No description provided for @benefitWrongAnswers.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong answer analysis'**
+  String get benefitWrongAnswers;
+
+  /// No description provided for @benefitWrongAnswersDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'See which topics to review after each quiz.'**
+  String get benefitWrongAnswersDesc;
+
+  /// No description provided for @benefitSounds.
+  ///
+  /// In en, this message translates to:
+  /// **'All focus sounds'**
+  String get benefitSounds;
+
+  /// No description provided for @benefitSoundsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Rain, forest, café and more.'**
+  String get benefitSoundsDesc;
+
+  /// No description provided for @apiKeyDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Gemini API Key'**
+  String get apiKeyDialogTitle;
+
+  /// No description provided for @apiKeyDialogBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your Google Gemini API key to use AI features. You can get a free key from Google AI Studio.'**
+  String get apiKeyDialogBody;
+
+  /// No description provided for @apiKeyRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your key'**
+  String get apiKeyRequired;
+
+  /// No description provided for @apiKeyInvalidFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'This doesn\'t look like a Gemini API key'**
+  String get apiKeyInvalidFormat;
+
+  /// No description provided for @flipPhoneHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn your phone face down'**
+  String get flipPhoneHint;
+
+  /// No description provided for @autoQuizTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'🎉 Well done!'**
+  String get autoQuizTitle;
+
+  /// No description provided for @autoQuizDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Your PDF focus session is complete.'**
+  String get autoQuizDone;
+
+  /// No description provided for @autoQuizStarting.
+  ///
+  /// In en, this message translates to:
+  /// **'The AI quiz is starting so you can test what you learned...'**
+  String get autoQuizStarting;
+
+  /// No description provided for @aiErrMissingKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your Gemini API key to use AI features.'**
+  String get aiErrMissingKey;
+
+  /// No description provided for @aiErrBusy.
+  ///
+  /// In en, this message translates to:
+  /// **'The AI service is busy right now. Please try again in a few minutes.'**
+  String get aiErrBusy;
+
+  /// No description provided for @aiErrRateLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'The AI usage limit was reached. Please try again later.'**
+  String get aiErrRateLimit;
+
+  /// No description provided for @aiErrNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection. Check your connection and try again.'**
+  String get aiErrNetwork;
+
+  /// No description provided for @aiErrFileMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'The PDF file could not be found on this device.'**
+  String get aiErrFileMissing;
+
+  /// No description provided for @aiErrBadResponse.
+  ///
+  /// In en, this message translates to:
+  /// **'The AI couldn\'t prepare the questions. Please try again.'**
+  String get aiErrBadResponse;
+
+  /// No description provided for @aiErrGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong with the AI service. Please try again.'**
+  String get aiErrGeneric;
+
+  /// No description provided for @enterApiKeyBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter API key'**
+  String get enterApiKeyBtn;
+
+  /// No description provided for @apiKeyWhere.
+  ///
+  /// In en, this message translates to:
+  /// **'Get a free key at aistudio.google.com/apikey'**
+  String get apiKeyWhere;
+
+  /// No description provided for @pagesWords.
+  ///
+  /// In en, this message translates to:
+  /// **'{pages} pages • {words} words'**
+  String pagesWords(int pages, int words);
+
+  /// No description provided for @aiErrUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'AI is temporarily unavailable. Please try again later.'**
+  String get aiErrUnavailable;
+
+  /// No description provided for @olderSessionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'OLDER SESSIONS'**
+  String get olderSessionsTitle;
+
+  /// No description provided for @olderSessionsBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Older sessions ({count})'**
+  String olderSessionsBtn(int count);
+
+  /// No description provided for @noRecentSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'No sessions in the last 7 days'**
+  String get noRecentSessions;
+
+  /// No description provided for @restorePurchases.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore purchases'**
+  String get restorePurchases;
+
+  /// No description provided for @restoreDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchases checked'**
+  String get restoreDone;
+
+  /// No description provided for @billingUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'The store isn\'t available on this device. Install TScan from Google Play to subscribe.'**
+  String get billingUnavailable;
+
+  /// No description provided for @billingProductMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'This subscription isn\'t available right now. Please try again later.'**
+  String get billingProductMissing;
+
+  /// No description provided for @billingFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The purchase could not be completed.'**
+  String get billingFailed;
+
+  /// No description provided for @billingPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for payment confirmation...'**
+  String get billingPending;
+
+  /// No description provided for @accountSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get accountSection;
+
+  /// No description provided for @menuSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get menuSettings;
+
+  /// No description provided for @menuLogout.
+  ///
+  /// In en, this message translates to:
+  /// **'Log out'**
+  String get menuLogout;
+
+  /// No description provided for @streakDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}-day streak'**
+  String streakDays(int count);
+
+  /// No description provided for @dailyGoalShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily goal'**
+  String get dailyGoalShort;
+
+  /// No description provided for @goalReachedShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal reached 🎉'**
+  String get goalReachedShort;
+
+  /// No description provided for @minutesLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min left'**
+  String minutesLeft(int minutes);
+
+  /// No description provided for @freePlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Free plan'**
+  String get freePlan;
 }
 
 class _AppLocalizationsDelegate
