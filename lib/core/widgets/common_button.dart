@@ -5,11 +5,7 @@ class CommonButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
 
-  const CommonButton({
-    super.key,
-    required this.text,
-    required this.onPressed,
-  });
+  const CommonButton({super.key, required this.text, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -22,16 +18,17 @@ class CommonButton extends StatelessWidget {
           foregroundColor: Colors.black,
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(14),
           ),
-          elevation: 5,
-          shadowColor: AppColors.accent.withValues(alpha: 0.4),
+          elevation: 0,
+          shadowColor: Colors.transparent,
         ),
         child: Text(
           text,
           style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+            fontSize: 17,
+            fontWeight: FontWeight.w800,
+            letterSpacing: 0.2,
           ),
         ),
       ),

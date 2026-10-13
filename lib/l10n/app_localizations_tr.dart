@@ -75,15 +75,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get cancel => 'VAZGEÇ';
 
   @override
-  String get statusIdleLvl1 =>
-      '30 saniyelik testi tamamla ve\ngerçek odaklanmaya başla!';
+  String get statusIdleLvl1 => '30 saniyelik testi tamamla ve\ngerçek odaklanmaya başla!';
 
   @override
   String get statusIdle => 'Süreyi ayarla, kategori seç ve odaklan!';
 
   @override
-  String get statusRunning =>
-      'Derin odaklanma başlıyor...\nTelefonu ters çevir!';
+  String get statusRunning => 'Derin odaklanma başlıyor...\nTelefonu ters çevir!';
 
   @override
   String get statusPaused => 'Duraklatıldı';
@@ -92,8 +90,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get statusFailure => 'ODAK BOZULDU!\nTelefonu kaldırdın.';
 
   @override
-  String get statusSuccessFirst =>
-      'TEBRİKLER! İlk aşama tamam.\n1 saatlik odaklanma açıldı!';
+  String get statusSuccessFirst => 'TEBRİKLER! İlk aşama tamam.\n1 saatlik odaklanma açıldı!';
 
   @override
   String get statusSuccess => 'Tebrikler! Oturum tamamlandı.';
@@ -156,8 +153,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get dontHaveAccount => 'Hesabınız yok mu? ';
 
   @override
-  String get forgotPasswordDialog =>
-      'Şifrenizi unuttuğunuz için yeni bir hesap oluşturmanız gerekecek. Emin misiniz?';
+  String get forgotPasswordDialog => 'Şifrenizi unuttuğunuz için yeni bir hesap oluşturmanız gerekecek. Emin misiniz?';
 
   @override
   String get yes => 'Evet';
@@ -181,8 +177,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get enterNameSurname => 'Adınızı ve soyadınızı girin';
 
   @override
-  String get agreeTerms =>
-      'Kayıt olarak Kullanım Koşulları\'nı ve Gizlilik Politikası\'nı kabul etmiş olursunuz.';
+  String get agreeTerms => 'Kayıt olarak Kullanım Koşulları\'nı ve Gizlilik Politikası\'nı kabul etmiş olursunuz.';
 
   @override
   String get alreadyHaveAccount => 'Zaten bir hesabınız var mı? ';
@@ -232,8 +227,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get logoutConfirm => 'Çıkış yapmak istediğinizden emin misiniz?';
 
   @override
-  String get deleteAccountConfirm =>
-      'Hesabınızı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.';
+  String get deleteAccountConfirm => 'Hesabınızı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.';
 
   @override
   String get delete => 'SİL';
@@ -303,8 +297,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get updatePasswordSubtitle => 'Hesap şifrenizi güncelleyin';
 
   @override
-  String get passwordSecureNote =>
-      'Not: Şifreniz güvenli bir şekilde saklanır.';
+  String get passwordSecureNote => 'Not: Şifreniz güvenli bir şekilde saklanır.';
 
   @override
   String get sectionDataManagement => 'VERİ YÖNETİMİ';
@@ -449,8 +442,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get notifSuccessTitle => 'Tebrikler!';
 
   @override
-  String get notifSuccessBody =>
-      'Odaklanma oturumu başarıyla tamamlandı. Harikasın!';
+  String get notifSuccessBody => 'Odaklanma oturumu başarıyla tamamlandı. Harikasın!';
 
   @override
   String get notifBreakEndTitle => 'Mola Bitti!';
@@ -459,32 +451,28 @@ class AppLocalizationsTr extends AppLocalizations {
   String get notifBreakEndBody => 'Yeni bir odaklanma seansına hazırsın.';
 
   @override
-  String get onboardingWelcome => 'TScan\'a Hoş Geldiniz';
+  String get onboardingWelcome => 'TScan\'e Hoş Geldiniz';
 
   @override
-  String get onboardingWelcomeDesc =>
-      'En iyi deneyim için odaklanma ortamınızı ayarlayalım.';
+  String get onboardingWelcomeDesc => 'En iyi deneyim için odaklanma ortamınızı ayarlayalım.';
 
   @override
   String get onboardingSensorTitle => 'Sensör Erişimi';
 
   @override
-  String get onboardingSensorDesc =>
-      'TScan, telefonunuzun ters çevrildiğini algılamak için ivmeölçeri kullanır. Bu odaklanmanıza yardımcı olur!';
+  String get onboardingSensorDesc => 'TScan, telefonunuzun ters çevrildiğini algılamak için ivmeölçeri kullanır. Bu odaklanmanıza yardımcı olur!';
 
   @override
   String get onboardingDndTitle => 'Rahatsız Etme';
 
   @override
-  String get onboardingDndDesc =>
-      'Dikkat dağıtıcı bildirimleri engellemek için Rahatsız Etme modunu yönetme iznine ihtiyacımız var.';
+  String get onboardingDndDesc => 'Dikkat dağıtıcı bildirimleri engellemek için Rahatsız Etme modunu yönetme iznine ihtiyacımız var.';
 
   @override
   String get onboardingPhoneTitle => 'Arama Algılama';
 
   @override
-  String get onboardingPhoneDesc =>
-      'Odaklanma sırasında bir arama gelirse, karar vermeniz için otomatik olarak duraklatacağız.';
+  String get onboardingPhoneDesc => 'Odaklanma sırasında bir arama gelirse, karar vermeniz için otomatik olarak duraklatacağız.';
 
   @override
   String get btnGrant => 'İzin Ver';
@@ -509,4 +497,317 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get tutorialSubtitle => 'Tanıtım ekranlarını tekrar göster';
+
+  @override
+  String get addSessionNoteTitle => 'Ne üzerine odaklandın?';
+
+  @override
+  String get sessionNoteHint => 'örn: matematik çalışmak, kodlama';
+
+  @override
+  String get sessionNoteLabel => 'Oturum Notu';
+
+  @override
+  String get saveBtn => 'Kaydet';
+
+  @override
+  String get dailyGoalSetting => 'Günlük Odaklanma Hedefi';
+
+  @override
+  String get dailyGoalSubtitle => 'Günlük hedef odaklanma süresi';
+
+  @override
+  String get dailyGoalReached => 'GÜNLÜK ODAKLANMA HEDEFİ TAMAM! 🎉';
+
+  @override
+  String get dailyGoalProgress => 'Günlük Hedef İlerlemesi';
+
+  @override
+  String dailyMinutesFocused(Object goal, Object minutes) {
+    return '$minutes / $goal dakika';
+  }
+
+  @override
+  String dailyGoalRemaining(Object minutes) {
+    return 'Hedefine ulaşmak için $minutes dakika kaldı!';
+  }
+
+  @override
+  String get pdfStudyTitle => 'PDF Çalışma';
+
+  @override
+  String get pdfDestekliCalisma => 'AI Destekli PDF Çalışma';
+
+  @override
+  String get pdfYukleAciklama => 'Ders notlarını yükle, AI okuma süresini tahmin etsin.\nSüre bitince seni test etsin! 🚀';
+
+  @override
+  String get pdfStep1 => 'PDF Yükle';
+
+  @override
+  String get pdfStep2 => 'AI Analiz Etsin';
+
+  @override
+  String get pdfStep3 => 'Odaklan & Oku';
+
+  @override
+  String get pdfStep4 => 'Quiz ile Test Ol';
+
+  @override
+  String get pdfDosyaSec => 'PDF Dosyası Seç';
+
+  @override
+  String get sonCalisilanBelgeler => 'Son Çalışılan Belgeler';
+
+  @override
+  String get temizle => 'Temizle';
+
+  @override
+  String get tekrarCalis => 'Tekrar Çalış';
+
+  @override
+  String get sil => 'Sil';
+
+  @override
+  String get premiumOzellik => 'Premium Özellik';
+
+  @override
+  String get premiumCalismaAsistani => 'AI ile süre tahmini ve sınav üretme gibi gelişmiş çalışma asistanı özelliklerini kullanabilmek için Premium üye olmalısınız.';
+
+  @override
+  String get premiumYukselt => 'Premium\'a Yükselt 🚀';
+
+  @override
+  String get pdfSeciliyor => 'PDF dosyası seçiliyor...';
+
+  @override
+  String get pdfOkunuyor => '📄 PDF okunuyor...';
+
+  @override
+  String get aiAnalizEdiyor => '🤖 AI metin analiz ediyor...';
+
+  @override
+  String get onboardingPdfTitle => 'Yapay Zeka ve PDF Modu';
+
+  @override
+  String get onboardingPdfDesc => 'Ders notlarınızı yükleyin; TScan yapay zekası ideal çalışma sürenizi hesaplasın, siz odaklanırken odanızı sessize alsın ve seans bitiminde sizi akıllı testlerle sınasın!';
+
+  @override
+  String get onboardingPdfExtra => 'Akıllı Okuma & AI Quiz Modu';
+
+  @override
+  String get aiAnalizSonuclari => 'Yapay Zeka Analiz Sonuçları';
+
+  @override
+  String get dersAdi => 'Ders / Konu';
+
+  @override
+  String get zorlukDerecesi => 'Zorluk Derecesi';
+
+  @override
+  String get tahminiOkumaSuresi => 'Tahmini Okuma Süresi';
+
+  @override
+  String tahminiSureDk(int minutes) {
+    return '$minutes dakika';
+  }
+
+  @override
+  String get tscanOnerisi => 'TScan Önerisi';
+
+  @override
+  String get calismayiBaslat => 'Çalışmayı Başlat ⏱️';
+
+  @override
+  String get pdfGizlilikOnayiTitle => 'KVKK ve Bulut Analiz Onayı';
+
+  @override
+  String get pdfGizlilikOnayiBody => 'Yüklediğiniz PDF\'in metin içeriği, süre tahmini ve quiz üretimi amacıyla güvenli bağlantı üzerinden yapay zeka servisine (OpenRouter) gönderilir. Kişisel verilerinizin buluta gönderilmesini onaylıyor musunuz?';
+
+  @override
+  String get onayla => 'Onayla';
+
+  @override
+  String get reddet => 'Reddet';
+
+  @override
+  String get aiQuizBaslat => 'AI Quiz Başlat';
+
+  @override
+  String get akilliSoruModu => 'Seans bitti! AI soruları çözmeye hazır mısınız?';
+
+  @override
+  String get quizBasligi => 'Yapay Zeka Değerlendirme Testi';
+
+  @override
+  String soruSayisi(int current, int total) {
+    return 'Soru $current / $total';
+  }
+
+  @override
+  String get quiziBitir => 'Testi Bitir';
+
+  @override
+  String get quizSonuclari => 'Test Sonuçları';
+
+  @override
+  String basariSkoru(int score) {
+    return 'Başarı Skoru: %$score';
+  }
+
+  @override
+  String dogruSoruSayisi(int correct, int total) {
+    return 'Doğru: $correct / $total';
+  }
+
+  @override
+  String get odaklanmayaDon => 'Odaklanmaya Dön';
+
+  @override
+  String get farkliSureSec => 'Farklı süre seç';
+
+  @override
+  String get sureSec => 'Süre Seç';
+
+  @override
+  String get dakika => 'dakika';
+
+  @override
+  String get aiSorulariHazirliyor => '🤖 AI sorularını hazırlıyor...';
+
+  @override
+  String get buBirkacSaniyeSurebilir => 'Bu birkaç saniye sürebilir';
+
+  @override
+  String get quizYuklenemedi => 'Quiz yüklenemedi';
+
+  @override
+  String get tekrarDene => 'Tekrar Dene';
+
+  @override
+  String get sonrakiSoru => 'Sonraki Soru';
+
+  @override
+  String get sonuclariGor => 'Sonuçları Gör';
+
+  @override
+  String get aiYanlisAnalizi => '🤖 AI yanlışlarını analiz ediyor...';
+
+  @override
+  String get aiKocAnalizi => 'AI Koç Analizi';
+
+  @override
+  String get soruDetaylari => 'Soru Detayları';
+
+  @override
+  String get anaSayfayaDon => 'Ana Sayfaya Dön';
+
+  @override
+  String soruNo(int number) {
+    return 'Soru $number';
+  }
+
+  @override
+  String seninCevabin(String answer) {
+    return 'Senin cevabın: $answer';
+  }
+
+  @override
+  String dogruCevap(String answer) {
+    return 'Doğru cevap: $answer';
+  }
+
+  @override
+  String get muhtesemKonuyaHakimsin => 'Muhteşem! Konuya hakimsin!';
+
+  @override
+  String get iyiGidiyorsunTekrar => 'İyi gidiyorsun, biraz daha tekrar!';
+
+  @override
+  String get gelismeAlaninVar => 'Gelişme alanın var, tekrar oku';
+
+  @override
+  String get tekrarCalismalisin => 'Metin üzerinde tekrar çalışmalısın';
+
+  @override
+  String get pdfCalismasi => 'PDF Çalışması';
+
+  @override
+  String get tamamlananQuiz => 'Tamamlanan Quiz';
+
+  @override
+  String get ortalamaQuizBasarisi => 'Ortalama Quiz Başarısı';
+
+  @override
+  String get oturum => 'oturum';
+
+  @override
+  String get sinav => 'sınav';
+
+  @override
+  String get basariOrani => 'başarı oranı';
+
+  @override
+  String get okumaHizi => 'Kişisel Okuma Hızı';
+
+  @override
+  String get okumaHiziAciklama => 'Premium ile AI süre tahminlerini okuma hızınıza göre uyarlayın.';
+
+  @override
+  String get hizYavas => 'Yavaş';
+
+  @override
+  String get hizNormal => 'Normal';
+
+  @override
+  String get hizHizli => 'Hızlı';
+
+  @override
+  String get navHome => 'Anasayfa';
+
+  @override
+  String get navAiQuest => 'AI Quest';
+
+  @override
+  String get navAccount => 'Hesap';
+
+  @override
+  String get aiQuestSubtitle => 'PDF yükle, AI ile quiz çöz';
+
+  @override
+  String get aiQuestUploadTitle => '📄 PDF Yükle & Çalış';
+
+  @override
+  String get aiQuestUploadDesc => 'Belge yükle, AI analiz etsin ve quiz oluştursun';
+
+  @override
+  String get aiQuestNoDocs => 'Henüz belge yok';
+
+  @override
+  String get aiQuestNoDocsDesc => 'İlk PDF\'ini yükleyerek AI destekli\nçalışmaya başla!';
+
+  @override
+  String get aiQuestRecentDocs => '📚 Son Çalışılan Belgeler';
+
+  @override
+  String get aiQuestClear => 'Temizle';
+
+  @override
+  String get aiQuestClearConfirm => 'Tüm belgeler geçmişten silinsin mi?';
+
+  @override
+  String aiQuestDeleteConfirm(String name) {
+    return '\"$name\" geçmişten silinsin mi?';
+  }
+
+  @override
+  String aiQuestDocMeta(int minutes, int pages) {
+    return '$minutes dk • $pages Sayfa';
+  }
+
+  @override
+  String get gizlilikKontrol => 'Gizlilik onayı kontrol ediliyor...';
+
+  @override
+  String get apiKey401Hata => 'Yetkisiz API Anahtarı (401)! Lütfen geçerli bir OpenRouter API anahtarı girin. Mevcut anahtar temizlendi.';
 }

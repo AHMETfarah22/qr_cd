@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/models/session_category.dart';
 import '../services/statistics_service.dart';
+import 'package:tscan/l10n/app_localizations.dart';
 
 class SessionHistoryScreen extends StatelessWidget {
   const SessionHistoryScreen({super.key});
@@ -77,7 +78,7 @@ class SessionHistoryScreen extends StatelessWidget {
             )
             : Column(
                 children: [
-                  _buildWeeklySummary(statsService),
+                  _buildWeeklySummary(context, statsService),
                   Expanded(
                     child: _buildSessionList(sessions),
                   ),
@@ -91,17 +92,17 @@ class SessionHistoryScreen extends StatelessWidget {
     required bool completed,
     required DateTime date,
     required SessionCategory category,
+    required String note,
     required BuildContext context,
   }) {
     final dateFormat = DateFormat('dd MMM yyyy, HH:mm', 'tr_TR');
-    final timeAgo = _getTimeAgo(date);
+    final timeAgo = _getTimeAgo(date, context);
     
     final hours = duration ~/ 60;
     final minutes = duration % 60;
     String durationText;
-    String durationText;
     if (hours > 0) {
-      durationText = '${hours}${AppLocalizations.of(context)!.hoursShort} ${minutes}${AppLocalizations.of(context)!.minutesShort}';
+      durationText = '$hours${AppLocalizations.of(context)!.hoursShort} $minutes${AppLocalizations.of(context)!.minutesShort}';
     } else {
       durationText = AppLocalizations.of(context)!.mins(minutes);
     }
@@ -211,6 +212,39 @@ class SessionHistoryScreen extends StatelessWidget {
                     ),
                   ],
                 ),
+                if (note.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.05),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Icon(
+                          Icons.note_alt_outlined,
+                          size: 14,
+                          color: AppColors.accent,
+                        ),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            note,
+                            style: const TextStyle(
+                              color: AppColors.textSecondary,
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ],
             ),
           ),
@@ -259,12 +293,14 @@ class SessionHistoryScreen extends StatelessWidget {
               final completed = session['completed'] as bool;
               final date = session['date'] as DateTime;
               final category = session['category'] as SessionCategory;
+              final note = session['note'] as String? ?? '';
 
               return _buildSessionCard(
                 duration: duration,
                 completed: completed,
                 date: date,
                 category: category,
+                note: note,
                 context: context,
               );
             }),
@@ -284,7 +320,7 @@ class SessionHistoryScreen extends StatelessWidget {
     return dateKey.toUpperCase();
   }
 
-  Widget _buildWeeklySummary(StatisticsService stats) {
+  Widget _buildWeeklySummary(BuildContext context, StatisticsService stats) {
     final weeklyMinutes = stats.weeklyTotalMinutes;
     final hours = weeklyMinutes ~/ 60;
     final minutes = weeklyMinutes % 60;

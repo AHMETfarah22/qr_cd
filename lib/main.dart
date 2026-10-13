@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'core/theme/app_theme.dart';
 import 'core/services/settings_service.dart';
+import 'core/services/premium_service.dart';
 import 'features/auth/screens/login_screen.dart';
 import 'features/auth/services/auth_service.dart';
 import 'features/auth/services/statistics_service.dart';
 import 'features/timer/services/audio_service.dart';
 import 'features/timer/services/sensor_service.dart';
 import 'features/timer/services/timer_service.dart';
-import 'features/timer/screens/timer_screen.dart';
+import 'features/core/screens/main_screen.dart';
 import 'features/onboarding/screens/onboarding_screen.dart';
+
+import 'features/pdf_study/services/pdf_history_service.dart';
 
 import 'package:intl/date_symbol_data_local.dart';
 import 'core/services/notification_service.dart';
@@ -28,6 +31,7 @@ void main() async {
       providers: [
         Provider<NotificationService>.value(value: notificationService),
         ChangeNotifierProvider(create: (_) => AuthService()),
+        ChangeNotifierProvider(create: (_) => PremiumService()),
         ChangeNotifierProxyProvider<AuthService, SettingsService>(
           create: (context) {
             final authService = context.read<AuthService>();
@@ -54,6 +58,19 @@ void main() async {
             final statsService = previousStatsService ?? StatisticsService();
             statsService.setCurrentUser(authService.userEmail);
             return statsService;
+          },
+        ),
+        ChangeNotifierProxyProvider<AuthService, PdfHistoryService>(
+          create: (context) {
+            final authService = context.read<AuthService>();
+            final historyService = PdfHistoryService();
+            historyService.setCurrentUser(authService.userEmail);
+            return historyService;
+          },
+          update: (context, authService, previousHistoryService) {
+            final historyService = previousHistoryService ?? PdfHistoryService();
+            historyService.setCurrentUser(authService.userEmail);
+            return historyService;
           },
         ),
         Provider(
@@ -114,7 +131,7 @@ class TScanApp extends StatelessWidget {
                 if (!settingsService.isOnboardingCompleted) {
                   return const OnboardingScreen();
                 }
-                return const TimerScreen();
+                return const MainScreen();
               }
               return const LoginScreen();
             },

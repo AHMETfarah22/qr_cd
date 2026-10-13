@@ -5,6 +5,7 @@ import '../../../core/services/settings_service.dart';
 
 class AudioService extends ChangeNotifier {
   final AudioPlayer _player = AudioPlayer();
+  final AudioPlayer _ambientPlayer = AudioPlayer();
   final SettingsService _settingsService;
   bool _isMuted = false;
 
@@ -16,8 +17,10 @@ class AudioService extends ChangeNotifier {
     _isMuted = !_isMuted;
     if (_isMuted) {
       _player.setVolume(0.0);
+      _ambientPlayer.setVolume(0.0);
     } else {
       _player.setVolume(1.0);
+      _ambientPlayer.setVolume(1.0);
     }
     notifyListeners();
   }
@@ -84,12 +87,54 @@ class AudioService extends ChangeNotifier {
     } catch (e) {
       debugPrint("AudioService Start Vibration Error: $e");
     }
-    debugPrint("AudioService: Play Start Sound (Vibration only for now)");
+    
+    // Start ambient sound if selected
+    await playAmbientSound();
+    
+    debugPrint("AudioService: Play Start Sound and Ambient");
+  }
+
+  Future<void> playAmbientSound([AmbientSound? sound]) async {
+    final targetSound = sound ?? _settingsService.ambientSound;
+    if (targetSound == AmbientSound.none) return;
+    
+    try {
+      final soundAsset = _getAmbientAsset(targetSound);
+      await _ambientPlayer.stop();
+      await _ambientPlayer.setVolume(_isMuted ? 0.0 : 0.5); // Lower volume for background
+      await _ambientPlayer.setReleaseMode(ReleaseMode.loop);
+      await _ambientPlayer.play(AssetSource(soundAsset));
+    } catch (e) {
+      debugPrint("AudioService Ambient Sound Error: $e");
+    }
+  }
+
+  Future<void> stopAmbientSound() async {
+    await _ambientPlayer.stop();
+  }
+
+  /// Maps ambient modes to bundled assets (replace with dedicated files under assets/sounds/ when available).
+  String _getAmbientAsset(AmbientSound sound) {
+    switch (sound) {
+      case AmbientSound.rain:
+        return 'sounds/zen.mp3';
+      case AmbientSound.forest:
+        return 'sounds/nature.mp3';
+      case AmbientSound.cafe:
+        return 'sounds/zen.mp3';
+      case AmbientSound.whiteNoise:
+        return 'sounds/digital.mp3';
+      case AmbientSound.storm:
+        return 'sounds/sesm.mp3';
+      case AmbientSound.none:
+        return '';
+    }
   }
 
   Future<void> stopAlarm() async {
     try {
       await _player.stop();
+      await _ambientPlayer.stop();
       Vibration.cancel();
     } catch (e) {
       debugPrint("AudioService Stop Error: $e");
@@ -99,6 +144,7 @@ class AudioService extends ChangeNotifier {
   @override
   void dispose() {
     _player.dispose();
+    _ambientPlayer.dispose();
     super.dispose();
   }
 }

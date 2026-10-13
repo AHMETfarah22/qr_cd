@@ -62,8 +62,7 @@ import 'app_localizations_tr.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale)
-    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -71,8 +70,7 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate =
-      _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -84,18 +82,17 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
-      <LocalizationsDelegate<dynamic>>[
-        delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ];
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
+    delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+  ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
-    Locale('tr'),
+    Locale('tr')
   ];
 
   /// No description provided for @focusTimer.
@@ -1021,10 +1018,591 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Show onboarding guide again'**
   String get tutorialSubtitle;
+
+  /// No description provided for @addSessionNoteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What did you focus on?'**
+  String get addSessionNoteTitle;
+
+  /// No description provided for @sessionNoteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., studying math, coding'**
+  String get sessionNoteHint;
+
+  /// No description provided for @sessionNoteLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Session Note'**
+  String get sessionNoteLabel;
+
+  /// No description provided for @saveBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get saveBtn;
+
+  /// No description provided for @dailyGoalSetting.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Focus Goal'**
+  String get dailyGoalSetting;
+
+  /// No description provided for @dailyGoalSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Target minutes of focus per day'**
+  String get dailyGoalSubtitle;
+
+  /// No description provided for @dailyGoalReached.
+  ///
+  /// In en, this message translates to:
+  /// **'DAILY FOCUS GOAL REACHED! 🎉'**
+  String get dailyGoalReached;
+
+  /// No description provided for @dailyGoalProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Goal Progress'**
+  String get dailyGoalProgress;
+
+  /// No description provided for @dailyMinutesFocused.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} / {goal} minutes'**
+  String dailyMinutesFocused(Object goal, Object minutes);
+
+  /// No description provided for @dailyGoalRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} more minutes to reach your goal!'**
+  String dailyGoalRemaining(Object minutes);
+
+  /// No description provided for @pdfStudyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF Study'**
+  String get pdfStudyTitle;
+
+  /// No description provided for @pdfDestekliCalisma.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Powered PDF Study'**
+  String get pdfDestekliCalisma;
+
+  /// No description provided for @pdfYukleAciklama.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload study notes, let AI estimate reading time.\nThen it tests you when done! 🚀'**
+  String get pdfYukleAciklama;
+
+  /// No description provided for @pdfStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload PDF'**
+  String get pdfStep1;
+
+  /// No description provided for @pdfStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Analysis'**
+  String get pdfStep2;
+
+  /// No description provided for @pdfStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus & Read'**
+  String get pdfStep3;
+
+  /// No description provided for @pdfStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Test with Quiz'**
+  String get pdfStep4;
+
+  /// No description provided for @pdfDosyaSec.
+  ///
+  /// In en, this message translates to:
+  /// **'Select PDF File'**
+  String get pdfDosyaSec;
+
+  /// No description provided for @sonCalisilanBelgeler.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Documents'**
+  String get sonCalisilanBelgeler;
+
+  /// No description provided for @temizle.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get temizle;
+
+  /// No description provided for @tekrarCalis.
+  ///
+  /// In en, this message translates to:
+  /// **'Study Again'**
+  String get tekrarCalis;
+
+  /// No description provided for @sil.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get sil;
+
+  /// No description provided for @premiumOzellik.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium Feature'**
+  String get premiumOzellik;
+
+  /// No description provided for @premiumCalismaAsistani.
+  ///
+  /// In en, this message translates to:
+  /// **'You must be a Premium member to use advanced study assistant features such as AI time estimation and quiz generation.'**
+  String get premiumCalismaAsistani;
+
+  /// No description provided for @premiumYukselt.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade to Premium 🚀'**
+  String get premiumYukselt;
+
+  /// No description provided for @pdfSeciliyor.
+  ///
+  /// In en, this message translates to:
+  /// **'Selecting PDF file...'**
+  String get pdfSeciliyor;
+
+  /// No description provided for @pdfOkunuyor.
+  ///
+  /// In en, this message translates to:
+  /// **'📄 Reading PDF...'**
+  String get pdfOkunuyor;
+
+  /// No description provided for @aiAnalizEdiyor.
+  ///
+  /// In en, this message translates to:
+  /// **'🤖 AI analyzing text...'**
+  String get aiAnalizEdiyor;
+
+  /// No description provided for @onboardingPdfTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'AI & PDF Study Mode'**
+  String get onboardingPdfTitle;
+
+  /// No description provided for @onboardingPdfDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload your study notes; TScan\'s AI will auto-calculate your study duration, keep you focused, and generate interactive quizzes right after your session!'**
+  String get onboardingPdfDesc;
+
+  /// No description provided for @onboardingPdfExtra.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Reading & AI Quizzes'**
+  String get onboardingPdfExtra;
+
+  /// No description provided for @aiAnalizSonuclari.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Analysis Results'**
+  String get aiAnalizSonuclari;
+
+  /// No description provided for @dersAdi.
+  ///
+  /// In en, this message translates to:
+  /// **'Subject'**
+  String get dersAdi;
+
+  /// No description provided for @zorlukDerecesi.
+  ///
+  /// In en, this message translates to:
+  /// **'Difficulty Level'**
+  String get zorlukDerecesi;
+
+  /// No description provided for @tahminiOkumaSuresi.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated Reading Time'**
+  String get tahminiOkumaSuresi;
+
+  /// No description provided for @tahminiSureDk.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} minutes'**
+  String tahminiSureDk(int minutes);
+
+  /// No description provided for @tscanOnerisi.
+  ///
+  /// In en, this message translates to:
+  /// **'TScan Recommendation'**
+  String get tscanOnerisi;
+
+  /// No description provided for @calismayiBaslat.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Study ⏱️'**
+  String get calismayiBaslat;
+
+  /// No description provided for @pdfGizlilikOnayiTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy & Cloud Analysis Consent'**
+  String get pdfGizlilikOnayiTitle;
+
+  /// No description provided for @pdfGizlilikOnayiBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The text content of your uploaded PDF will be sent to the AI service (OpenRouter) over a secure connection for duration estimation and quiz generation. Do you consent to sending your data to the cloud?'**
+  String get pdfGizlilikOnayiBody;
+
+  /// No description provided for @onayla.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve'**
+  String get onayla;
+
+  /// No description provided for @reddet.
+  ///
+  /// In en, this message translates to:
+  /// **'Decline'**
+  String get reddet;
+
+  /// No description provided for @aiQuizBaslat.
+  ///
+  /// In en, this message translates to:
+  /// **'Start AI Quiz'**
+  String get aiQuizBaslat;
+
+  /// No description provided for @akilliSoruModu.
+  ///
+  /// In en, this message translates to:
+  /// **'Session ended! Ready to solve AI questions?'**
+  String get akilliSoruModu;
+
+  /// No description provided for @quizBasligi.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Evaluation Test'**
+  String get quizBasligi;
+
+  /// No description provided for @soruSayisi.
+  ///
+  /// In en, this message translates to:
+  /// **'Question {current} / {total}'**
+  String soruSayisi(int current, int total);
+
+  /// No description provided for @quiziBitir.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish Test'**
+  String get quiziBitir;
+
+  /// No description provided for @quizSonuclari.
+  ///
+  /// In en, this message translates to:
+  /// **'Test Results'**
+  String get quizSonuclari;
+
+  /// No description provided for @basariSkoru.
+  ///
+  /// In en, this message translates to:
+  /// **'Success Score: %{score}'**
+  String basariSkoru(int score);
+
+  /// No description provided for @dogruSoruSayisi.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct: {correct} / {total}'**
+  String dogruSoruSayisi(int correct, int total);
+
+  /// No description provided for @odaklanmayaDon.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Focus'**
+  String get odaklanmayaDon;
+
+  /// No description provided for @farkliSureSec.
+  ///
+  /// In en, this message translates to:
+  /// **'Select custom duration'**
+  String get farkliSureSec;
+
+  /// No description provided for @sureSec.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Duration'**
+  String get sureSec;
+
+  /// No description provided for @dakika.
+  ///
+  /// In en, this message translates to:
+  /// **'minutes'**
+  String get dakika;
+
+  /// No description provided for @aiSorulariHazirliyor.
+  ///
+  /// In en, this message translates to:
+  /// **'🤖 AI preparing questions...'**
+  String get aiSorulariHazirliyor;
+
+  /// No description provided for @buBirkacSaniyeSurebilir.
+  ///
+  /// In en, this message translates to:
+  /// **'This may take a few seconds'**
+  String get buBirkacSaniyeSurebilir;
+
+  /// No description provided for @quizYuklenemedi.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiz could not be loaded'**
+  String get quizYuklenemedi;
+
+  /// No description provided for @tekrarDene.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get tekrarDene;
+
+  /// No description provided for @sonrakiSoru.
+  ///
+  /// In en, this message translates to:
+  /// **'Next Question'**
+  String get sonrakiSoru;
+
+  /// No description provided for @sonuclariGor.
+  ///
+  /// In en, this message translates to:
+  /// **'View Results'**
+  String get sonuclariGor;
+
+  /// No description provided for @aiYanlisAnalizi.
+  ///
+  /// In en, this message translates to:
+  /// **'🤖 AI analyzing wrong answers...'**
+  String get aiYanlisAnalizi;
+
+  /// No description provided for @aiKocAnalizi.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Coach Analysis'**
+  String get aiKocAnalizi;
+
+  /// No description provided for @soruDetaylari.
+  ///
+  /// In en, this message translates to:
+  /// **'Question Details'**
+  String get soruDetaylari;
+
+  /// No description provided for @anaSayfayaDon.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Home'**
+  String get anaSayfayaDon;
+
+  /// No description provided for @soruNo.
+  ///
+  /// In en, this message translates to:
+  /// **'Question {number}'**
+  String soruNo(int number);
+
+  /// No description provided for @seninCevabin.
+  ///
+  /// In en, this message translates to:
+  /// **'Your answer: {answer}'**
+  String seninCevabin(String answer);
+
+  /// No description provided for @dogruCevap.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct answer: {answer}'**
+  String dogruCevap(String answer);
+
+  /// No description provided for @muhtesemKonuyaHakimsin.
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent! You mastered the subject!'**
+  String get muhtesemKonuyaHakimsin;
+
+  /// No description provided for @iyiGidiyorsunTekrar.
+  ///
+  /// In en, this message translates to:
+  /// **'Doing good, practice a bit more!'**
+  String get iyiGidiyorsunTekrar;
+
+  /// No description provided for @gelismeAlaninVar.
+  ///
+  /// In en, this message translates to:
+  /// **'Room for improvement, read again'**
+  String get gelismeAlaninVar;
+
+  /// No description provided for @tekrarCalismalisin.
+  ///
+  /// In en, this message translates to:
+  /// **'You should study the text again'**
+  String get tekrarCalismalisin;
+
+  /// No description provided for @pdfCalismasi.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF Study'**
+  String get pdfCalismasi;
+
+  /// No description provided for @tamamlananQuiz.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiz Completed'**
+  String get tamamlananQuiz;
+
+  /// No description provided for @ortalamaQuizBasarisi.
+  ///
+  /// In en, this message translates to:
+  /// **'Average Quiz Score'**
+  String get ortalamaQuizBasarisi;
+
+  /// No description provided for @oturum.
+  ///
+  /// In en, this message translates to:
+  /// **'sessions'**
+  String get oturum;
+
+  /// No description provided for @sinav.
+  ///
+  /// In en, this message translates to:
+  /// **'quizzes'**
+  String get sinav;
+
+  /// No description provided for @basariOrani.
+  ///
+  /// In en, this message translates to:
+  /// **'success rate'**
+  String get basariOrani;
+
+  /// No description provided for @okumaHizi.
+  ///
+  /// In en, this message translates to:
+  /// **'Personalized Reading Speed'**
+  String get okumaHizi;
+
+  /// No description provided for @okumaHiziAciklama.
+  ///
+  /// In en, this message translates to:
+  /// **'Tailor AI time estimates to your reading speed with Premium.'**
+  String get okumaHiziAciklama;
+
+  /// No description provided for @hizYavas.
+  ///
+  /// In en, this message translates to:
+  /// **'Slow'**
+  String get hizYavas;
+
+  /// No description provided for @hizNormal.
+  ///
+  /// In en, this message translates to:
+  /// **'Normal'**
+  String get hizNormal;
+
+  /// No description provided for @hizHizli.
+  ///
+  /// In en, this message translates to:
+  /// **'Fast'**
+  String get hizHizli;
+
+  /// No description provided for @navHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get navHome;
+
+  /// No description provided for @navAiQuest.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Quest'**
+  String get navAiQuest;
+
+  /// No description provided for @navAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get navAccount;
+
+  /// No description provided for @aiQuestSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload a PDF, solve AI quizzes'**
+  String get aiQuestSubtitle;
+
+  /// No description provided for @aiQuestUploadTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'📄 Upload PDF & Study'**
+  String get aiQuestUploadTitle;
+
+  /// No description provided for @aiQuestUploadDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload a document, let AI analyze it and build a quiz'**
+  String get aiQuestUploadDesc;
+
+  /// No description provided for @aiQuestNoDocs.
+  ///
+  /// In en, this message translates to:
+  /// **'No documents yet'**
+  String get aiQuestNoDocs;
+
+  /// No description provided for @aiQuestNoDocsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload your first PDF to start\nAI-assisted studying!'**
+  String get aiQuestNoDocsDesc;
+
+  /// No description provided for @aiQuestRecentDocs.
+  ///
+  /// In en, this message translates to:
+  /// **'📚 Recently Studied Documents'**
+  String get aiQuestRecentDocs;
+
+  /// No description provided for @aiQuestClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get aiQuestClear;
+
+  /// No description provided for @aiQuestClearConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove all documents from history?'**
+  String get aiQuestClearConfirm;
+
+  /// No description provided for @aiQuestDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove \"{name}\" from history?'**
+  String aiQuestDeleteConfirm(String name);
+
+  /// No description provided for @aiQuestDocMeta.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min • {pages} pages'**
+  String aiQuestDocMeta(int minutes, int pages);
+
+  /// No description provided for @gizlilikKontrol.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking privacy consent...'**
+  String get gizlilikKontrol;
+
+  /// No description provided for @apiKey401Hata.
+  ///
+  /// In en, this message translates to:
+  /// **'Unauthorized API key (401)! Please enter a valid OpenRouter API key. The current key was cleared.'**
+  String get apiKey401Hata;
 }
 
-class _AppLocalizationsDelegate
-    extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -1033,26 +1611,25 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['en', 'tr'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['en', 'tr'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
+
+
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en':
-      return AppLocalizationsEn();
-    case 'tr':
-      return AppLocalizationsTr();
+    case 'en': return AppLocalizationsEn();
+    case 'tr': return AppLocalizationsTr();
   }
 
   throw FlutterError(
     'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
     'an issue with the localizations generation tool. Please file an issue '
     'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.',
+    'that was used.'
   );
 }

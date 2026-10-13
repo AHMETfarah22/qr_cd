@@ -1,51 +1,143 @@
-
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/models/session_category.dart';
-import '../../auth/screens/account_screen.dart';
-
+import '../../../core/models/pdf_document.dart' as models;
+import '../../auth/services/statistics_service.dart';
+import '../../pdf_study/screens/quiz_screen.dart';
+import '../../../core/services/premium_service.dart';
 import '../services/timer_service.dart';
 import '../services/audio_service.dart';
 import '../../../l10n/app_localizations.dart';
+import 'package:confetti/confetti.dart';
+import 'dart:math';
 
 class TimerScreen extends StatefulWidget {
-  const TimerScreen({super.key});
+  final models.PdfDocument? pdfDocument;
+  final int? suggestedMinutes;
+
+  const TimerScreen({super.key, this.pdfDocument, this.suggestedMinutes});
 
   @override
   State<TimerScreen> createState() => _TimerScreenState();
 }
 
-class _TimerScreenState extends State<TimerScreen> {
+class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin {
+  late ConfettiController _confettiController;
+  late AnimationController _shakeController;
+  late AnimationController _pulseController;
+  late Animation<double> _pulseScaleAnimation;
+  late Animation<double> _pulseOpacityAnimation;
+  final _noteController = TextEditingController();
+  TimerState? _previousState;
 
-  
+  @override
+  void initState() {
+    super.initState();
+    _confettiController = ConfettiController(duration: const Duration(seconds: 3));
+    _shakeController = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+    _pulseController = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    )..repeat(reverse: true);
+    // Scale: 1.0 → 1.12 for the glow ring
+    _pulseScaleAnimation = Tween<double>(begin: 1.0, end: 1.12).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
+    // Opacity: 0.6 → 1.0 for the hint text fade
+    _pulseOpacityAnimation = Tween<double>(begin: 0.55, end: 1.0).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
+    if (widget.suggestedMinutes != null || widget.pdfDocument != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final timerService = Provider.of<TimerService>(context, listen: false);
+        if (widget.suggestedMinutes != null) {
+          timerService.setPdfDuration(widget.suggestedMinutes!);
+        }
+        if (widget.pdfDocument != null) {
+          timerService.pdfName = widget.pdfDocument!.fileName;
+          timerService.setCategory(SessionCategory.study);
+        }
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _confettiController.dispose();
+    _shakeController.dispose();
+    _pulseController.dispose();
+    _noteController.dispose();
+    super.dispose();
+  }
+
+  void _startAutomaticQuizFlow() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => _AutoQuizDialog(pdfDocument: widget.pdfDocument!),
+    );
+  }
+
+  void _handleStateChange(TimerState newState) {
+    if (_previousState == newState) return;
+
+    if (newState == TimerState.success) {
+      _confettiController.play();
+      if (widget.pdfDocument != null) {
+        final stats = Provider.of<StatisticsService>(context, listen: false);
+        final timerService = Provider.of<TimerService>(context, listen: false);
+        stats.completePdfSession((timerService.totalTimeSeconds / 60).ceil());
+
+        Future.delayed(const Duration(milliseconds: 800), () {
+          if (mounted) _startAutomaticQuizFlow();
+        });
+      }
+    } else if (newState == TimerState.failure) {
+      _shakeController.forward(from: 0.0);
+    } else if (newState == TimerState.idle) {
+      _noteController.clear();
+    }
+
+    _previousState = newState;
+  }
+
+  Widget _buildShakeWidget(Widget child) {
+    return AnimatedBuilder(
+      animation: _shakeController,
+      builder: (context, _) {
+        final double offset = sin(_shakeController.value * pi * 10.0) * 8.0;
+        return Transform.translate(
+          offset: Offset(offset, 0),
+          child: child,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    TimerService timerService;
-    try {
-      timerService = Provider.of<TimerService>(context);
-    } catch (e) {
-      return const Scaffold(body: Center(child: Text("Error: TimerService not found")));
-    }
+    final timerService = Provider.of<TimerService>(context);
+    final audioService = Provider.of<AudioService>(context);
+    final premiumService = Provider.of<PremiumService>(context);
+    final l10n = AppLocalizations.of(context)!;
     
     int totalSeconds = timerService.currentTimeSeconds;
     int hours = totalSeconds ~/ 3600;
     int minutes = (totalSeconds % 3600) ~/ 60;
     int seconds = totalSeconds % 60;
 
-    String timerString;
-    if (hours > 0) {
-      timerString = '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
-    } else {
-      timerString = '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
-    }
+    String timerString = hours > 0 
+        ? '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}'
+        : '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
 
-    final audioService = Provider.of<AudioService>(context);
-    final l10n = AppLocalizations.of(context)!;
-    
-    // Update TimerService with localized notification strings
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      _handleStateChange(timerService.state);
       timerService.updateLocalization({
         'successTitle': l10n.notifSuccessTitle,
         'successBody': l10n.notifSuccessBody,
@@ -53,560 +145,555 @@ class _TimerScreenState extends State<TimerScreen> {
         'breakEndBody': l10n.notifBreakEndBody,
       });
     });
-    
+
+    final mq = MediaQuery.of(context);
+    final screenHeight = mq.size.height;
+    final screenWidth = mq.size.width;
+    // Small screens: height < 700 OR width < 380 (narrow phones)
+    final isSmallScreen = screenHeight < 700 || screenWidth < 380;
+    // Reduced radius so ring doesn't dominate the whole screen
+    final double timerRadius = isSmallScreen ? 90.0 : 108.0;
+    // The bottom nav bar lives in MainScreen's Scaffold.bottomNavigationBar,
+    // which already removes its height from this screen's layout.
+    final double bottomPad = mq.padding.bottom + 24;
+
     return Scaffold(
-      backgroundColor: timerService.state == TimerState.failure 
-          ? AppColors.error.withValues(alpha: 0.1)
-          : AppColors.background,
-      appBar: AppBar(
-        title: Column(
-          children: [
-            Text(
-              l10n.focusTimer,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 2.0,
-              ),
-            ),
-            if (timerService.level > 1)
-              Text(
-                l10n.level(timerService.level),
-                style: const TextStyle(
-                  fontSize: 10,
-                  color: AppColors.accent,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.5,
-                ),
-              ),
-          ],
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        
-        // Profile Button (Left)
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppColors.process.withValues(alpha: 0.2),
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: AppColors.accent.withValues(alpha: 0.3),
-                width: 1.5,
-              ),
-            ),
-            child: IconButton(
-              icon: const Icon(Icons.person_rounded, size: 20, color: AppColors.accent),
-              tooltip: l10n.accountInfo,
-              onPressed: () {
-                if (timerService.state == TimerState.running) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(l10n.cannotGoToAccount),
-                      duration: const Duration(seconds: 2),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                } else {
-                  audioService.stopAlarm();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const AccountScreen()),
-                  );
-                }
-              },
-              padding: EdgeInsets.zero,
-            ),
-          ),
-        ),
-      ),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 16),
-              
-              // Main Timer Circle
-              Stack(
-                alignment: Alignment.center,
+      backgroundColor: Colors.transparent,
+      body: Stack(
+        children: [
+          _buildShakeWidget(
+            SingleChildScrollView(
+              // `physics` ensures it bounces naturally on both iOS & Android
+              physics: const BouncingScrollPhysics(),
+              padding: EdgeInsets.fromLTRB(24.0, mq.padding.top + 8, 24.0, bottomPad),
+              child: Column(
+                // No mainAxisAlignment: center — doesn't work inside ScrollView
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  CircularPercentIndicator(
-                    radius: 130.0,
-                    lineWidth: 8.0,
-                    percent: timerService.progress.clamp(0.0, 1.0),
-                    circularStrokeCap: CircularStrokeCap.round,
-                    backgroundColor: AppColors.process.withValues(alpha: 0.1),
-                    progressColor: timerService.state == TimerState.failure 
-                        ? AppColors.error 
-                        : AppColors.accent,
-                    animation: false,
-                    widgetIndicator: RotatedBox(
-                      quarterTurns: 1,
-                      child: Icon(
-                        Icons.circle, 
-                        size: 14, 
-                        color: timerService.state == TimerState.failure 
-                            ? AppColors.error 
-                            : AppColors.accent,
-                      ),
+                  SizedBox(height: isSmallScreen ? 8 : 20),
+                  // ── Title ──────────────────────────────────────────────
+                  Text(
+                    l10n.focusTimer,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 2.0,
                     ),
                   ),
-                  
-                  // Inner Glow Effect
-                  Container(
-                    width: 220,
-                    height: 220,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: (timerService.state == TimerState.failure 
-                              ? AppColors.error 
-                              : AppColors.accent).withValues(alpha: 0.15),
-                          blurRadius: 40,
-                          spreadRadius: 5,
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // Timer Text & Status
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        timerString,
-                        style: TextStyle(
-                          fontSize: hours > 0 ? 56 : 72,
-                          fontWeight: FontWeight.w200,
-                          color: Colors.white,
-                          letterSpacing: 2.0,
-                          fontFeatures: const [FontFeature.tabularFigures()],
-                          shadows: [
-                            Shadow(
-                              color: (timerService.state == TimerState.failure 
-                                  ? AppColors.error 
-                                  : AppColors.accent).withValues(alpha: 0.5),
-                              blurRadius: 20,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: (timerService.state == TimerState.failure 
-                              ? AppColors.error 
-                              : AppColors.accent).withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: (timerService.state == TimerState.failure 
-                                ? AppColors.error 
-                                : AppColors.accent).withValues(alpha: 0.3),
-                            width: 1,
-                          ),
-                        ),
-                        child: Builder(
-                          builder: (context) {
-                            String statusText;
-                            Color statusColor;
-                            
-                            switch (timerService.state) {
-                              case TimerState.idle:
-                                statusText = l10n.ready;
-                                statusColor = AppColors.accent;
-                                break;
-                              case TimerState.running:
-                                statusText = l10n.focus;
-                                statusColor = AppColors.accent;
-                                break;
-                              case TimerState.paused:
-                                statusText = l10n.paused;
-                                statusColor = Colors.orange;
-                                break;
-                              case TimerState.failure:
-                                statusText = l10n.failed;
-                                statusColor = AppColors.error;
-                                break;
-                              case TimerState.success:
-                                statusText = l10n.success;
-                                statusColor = Colors.green;
-                                break;
-                              case TimerState.breakTime:
-                                statusText = l10n.breakLabel;
-                                statusColor = Colors.blue;
-                                break;
-                            }
-                            
-                            return Text(
-                              statusText,
-                              style: TextStyle(
-                                color: statusColor,
-                                fontSize: 12,
-                                letterSpacing: 1.5,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              
-              const SizedBox(height: 32),
-              
-              // Conditional UI based on state
-              if (timerService.state == TimerState.idle) ...[
-                if (timerService.level == 1)
-                  Column(
-                    children: [
-                      Text(
-                        l10n.secondsFocusTest,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        l10n.beginnerLevel,
-                        style: TextStyle(
-                          color: AppColors.accent.withValues(alpha: 0.7),
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  )
-                else
-                  Column(
-                    children: [
-                      Text(
-                        l10n.minuteFocus(timerService.totalTimeSeconds ~/ 60),
-                        style: const TextStyle(
-                          color: AppColors.accent,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Slider(
-                        value: (timerService.totalTimeSeconds ~/ 60).toDouble().clamp(5.0, 120.0),
-                        min: 5,
-                        max: 120,
-                        divisions: 23,
-                        activeColor: AppColors.accent,
-                        inactiveColor: AppColors.process,
-                        onChanged: (value) {
-                          timerService.setDuration(value.toInt());
-                        },
-                      ),
-                    ],
-                  ),
-                
-                const SizedBox(height: 24),
-                
-                // Category Selector
-                Text(
-                  l10n.selectCategory,
-                  style: const TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.5,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Wrap(
-                  spacing: 10,
-                  runSpacing: 10,
-                  alignment: WrapAlignment.center,
-                  children: SessionCategory.values.map((category) {
-                    final isSelected = timerService.currentCategory == category;
-                    return GestureDetector(
-                      onTap: () => timerService.setCategory(category),
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                        decoration: BoxDecoration(
-                          color: isSelected 
-                              ? category.color.withValues(alpha: 0.2)
-                              : AppColors.process.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: isSelected 
-                                ? category.color
-                                : AppColors.process.withValues(alpha: 0.3),
-                            width: isSelected ? 1.5 : 1,
-                          ),
-                          boxShadow: isSelected ? [
-                            BoxShadow(
-                              color: category.color.withValues(alpha: 0.2),
-                              blurRadius: 8,
-                              spreadRadius: 1,
-                            )
-                          ] : [],
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              category.icon,
-                              size: 14,
-                              color: isSelected ? category.color : AppColors.textSecondary,
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              category.getDisplayName(context),
-                              style: TextStyle(
-                                color: isSelected ? category.color : AppColors.textSecondary,
-                                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ),
-                const SizedBox(height: 12),
-              ],
-              
-              // Action Buttons - Moved HIGHER up
-              if (timerService.state == TimerState.idle)
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.accent.withValues(alpha: 0.4),
-                        blurRadius: 20,
-                        spreadRadius: 2,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      timerService.startTimer();
-                      audioService.playStartSound(); 
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.accent,
-                      foregroundColor: Colors.black,
-                      padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      elevation: 0,
-                    ),
-                    child: Text(
-                      l10n.start,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 2.0,
-                      ),
-                    ),
-                  ),
-                ),
-
-
-
-              if (timerService.state == TimerState.success)
-                Column(
-                  children: [
-                    const Icon(
-                      Icons.check_circle_outline_rounded,
-                      color: AppColors.accent,
-                      size: 60,
-                    ),
-                    const SizedBox(height: 16),
+                  if (timerService.level > 1) ...[
+                    const SizedBox(height: 4),
                     Text(
-                      l10n.breakTimeTitle,
+                      l10n.level(timerService.level),
                       style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
+                        fontSize: 12,
+                        color: AppColors.accent,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 1.5,
                       ),
                     ),
-                    const SizedBox(height: 24),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                  ],
+                  SizedBox(height: isSmallScreen ? 20 : 36),
+                  // ── Timer Ring ─────────────────────────────────────────
+                  Center(
+                    child: Stack(
+                      alignment: Alignment.center,
                       children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            timerService.startBreak(15);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.process.withValues(alpha: 0.3),
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              side: BorderSide(color: AppColors.accent.withValues(alpha: 0.5)),
-                            ),
+                        // Glow ring — only when running
+                        if (timerService.state == TimerState.running)
+                          AnimatedBuilder(
+                            animation: _pulseScaleAnimation,
+                            builder: (context, _) {
+                              return Transform.scale(
+                                scale: _pulseScaleAnimation.value,
+                                child: Container(
+                                  width: timerRadius * 2 + 12,
+                                  height: timerRadius * 2 + 12,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: AppColors.accent.withValues(alpha: 0.15),
+                                        blurRadius: 40,
+                                        spreadRadius: 10,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
                           ),
-                          child: Text(l10n.minBreak(15)),
+                        // Progress ring
+                        CircularPercentIndicator(
+                          radius: timerRadius,
+                          lineWidth: isSmallScreen ? 7.0 : 9.0,
+                          percent: timerService.progress.clamp(0.0, 1.0),
+                          circularStrokeCap: CircularStrokeCap.round,
+                          backgroundColor: AppColors.process.withValues(alpha: 0.3),
+                          progressColor: timerService.state == TimerState.failure
+                              ? AppColors.error
+                              : AppColors.accent,
                         ),
-                        const SizedBox(width: 16),
-                        ElevatedButton(
-                          onPressed: () {
-                            timerService.startBreak(30);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.process.withValues(alpha: 0.3),
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              side: BorderSide(color: AppColors.accent.withValues(alpha: 0.5)),
+                        // Time text + badge
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              timerString,
+                              style: TextStyle(
+                                fontSize: hours > 0
+                                    ? (isSmallScreen ? 36 : 44)
+                                    : (isSmallScreen ? 48 : 58),
+                                fontWeight: FontWeight.w200,
+                                color: Colors.white,
+                                fontFeatures: const [FontFeature.tabularFigures()],
+                              ),
                             ),
-                          ),
-                          child: Text(l10n.minBreak(30)),
+                            const SizedBox(height: 8),
+                            _buildStatusBadge(timerService, l10n),
+                          ],
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
-                    TextButton(
-                      onPressed: () {
-                        timerService.resetTimer();
-                      },
-                      child: Text(
-                        l10n.dontTakeBreak,
-                        style: const TextStyle(color: AppColors.textSecondary),
-                      ),
+                  ),
+                  SizedBox(height: isSmallScreen ? 24 : 36),
+                  // ── State-specific UI ──────────────────────────────────
+                  if (timerService.state == TimerState.idle)
+                    _buildIdleUI(timerService, l10n, audioService, premiumService),
+                  if (timerService.state == TimerState.success)
+                    _buildSuccessUI(timerService, l10n),
+                  if (timerService.state != TimerState.idle &&
+                      timerService.state != TimerState.success)
+                    _buildActiveUI(timerService, l10n, audioService),
+                  const SizedBox(height: 20),
+                  // ── Status hint ────────────────────────────────────────
+                  Text(
+                    _getStatusMessage(timerService, l10n),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 12,
+                      fontStyle: FontStyle.italic,
                     ),
-                  ],
-                ),
-
-               if (timerService.state != TimerState.idle && timerService.state != TimerState.success)
-                Column(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.red.withValues(alpha: 0.3),
-                            blurRadius: 20,
-                            spreadRadius: 1,
-                            offset: const Offset(0, 5),
-                          ),
-                        ],
-                      ),
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: () {
-                            // Always stop alarm first when user interacts
-                            audioService.stopAlarm();
-
-                            if (timerService.state == TimerState.breakTime) {
-                               timerService.resetTimer();
-                            } else {
-                               // Calculate elapsed minutes
-                               final elapsedSeconds = timerService.totalTimeSeconds - timerService.currentTimeSeconds;
-                               final durationCompleted = (elapsedSeconds / 60).ceil();
-                               timerService.cancelTimer(durationCompleted > 0 ? durationCompleted : 1);
-                            }
-                          },
-                          borderRadius: BorderRadius.circular(30),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  const Color(0xFFFF5252),
-                                  const Color(0xFFE53935),
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(30),
-                              border: Border.all(
-                                color: Colors.white.withValues(alpha: 0.2),
-                                width: 1,
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.close_rounded,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  timerService.state == TimerState.breakTime ? l10n.endBreak : l10n.cancel, 
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    letterSpacing: 1.5,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-
-              const SizedBox(height: 24),
-              
-              // Status Message (Moved to Bottom)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Text(
-                  _getStatusMessage(timerService, l10n),
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: AppColors.textSecondary.withValues(alpha: 0.6),
-                        fontSize: 12,
-                        fontStyle: FontStyle.italic,
-                        height: 1.5,
-                      ),
-                ),
+                  ),
+                ],
               ),
-
-              const SizedBox(height: 32),
-            ],
+            ),
           ),
+          // Confetti always on top
+          Align(
+            alignment: Alignment.topCenter,
+            child: ConfettiWidget(
+              confettiController: _confettiController,
+              blastDirectionality: BlastDirectionality.explosive,
+              shouldLoop: false,
+              colors: const [
+                AppColors.accent, Colors.white, Colors.green, Colors.yellow, Colors.pink
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatusBadge(TimerService timerService, AppLocalizations l10n) {
+    String text;
+    Color color;
+    switch (timerService.state) {
+      case TimerState.idle: text = l10n.ready; color = AppColors.accent; break;
+      case TimerState.running: text = l10n.focus; color = AppColors.accent; break;
+      case TimerState.paused: text = l10n.paused; color = Colors.orange; break;
+      case TimerState.failure: text = l10n.failed; color = AppColors.error; break;
+      case TimerState.success: text = l10n.success; color = Colors.green; break;
+      case TimerState.breakTime: text = l10n.breakLabel; color = Colors.blue; break;
+    }
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.15),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: color.withValues(alpha: 0.5), width: 1.5),
+            boxShadow: [
+              BoxShadow(
+                color: color.withValues(alpha: 0.1),
+                blurRadius: 10,
+                spreadRadius: 1,
+              )
+            ]
+          ),
+          child: Text(text, style: TextStyle(color: color, fontSize: 13, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
         ),
       ),
     );
   }
 
+  Widget _buildIdleUI(TimerService timerService, AppLocalizations l10n, AudioService audioService, PremiumService premiumService) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        if (timerService.level > 1)
+          Slider(
+            value: (timerService.totalTimeSeconds ~/ 60).toDouble().clamp(5.0, 120.0),
+            min: 5, max: 120, divisions: 23,
+            label: '${timerService.totalTimeSeconds ~/ 60} dk',
+            onChanged: (v) => timerService.setDuration(v.toInt()),
+          ),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 8, runSpacing: 8, alignment: WrapAlignment.center,
+          children: SessionCategory.values
+              .map((cat) => _buildCategoryChip(cat, timerService, l10n))
+              .toList(),
+        ),
+        const SizedBox(height: 24),
+        SizedBox(
+          width: double.infinity,
+          height: 54,
+          child: ElevatedButton(
+            onPressed: () {
+              timerService.startTimer();
+              audioService.playStartSound();
+            },
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(27),
+              ),
+              elevation: 0,
+              shadowColor: Colors.transparent,
+              backgroundColor: AppColors.accent,
+              foregroundColor: AppColors.background,
+            ),
+            child: Text(
+              l10n.start,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+                letterSpacing: 1.5,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCategoryChip(SessionCategory cat, TimerService timerService, AppLocalizations l10n) {
+    final isSelected = timerService.currentCategory == cat;
+    return GestureDetector(
+      onTap: () => timerService.setCategory(cat),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        decoration: BoxDecoration(
+          color: isSelected ? cat.color.withValues(alpha: 0.2) : AppColors.process.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: isSelected ? cat.color : Colors.transparent),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(cat.icon, size: 14, color: isSelected ? cat.color : AppColors.textSecondary),
+            const SizedBox(width: 8),
+            Text(cat.getDisplayName(context), style: TextStyle(color: isSelected ? cat.color : AppColors.textSecondary)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSuccessUI(TimerService timerService, AppLocalizations l10n) {
+    return Column(
+      children: [
+        const Icon(Icons.check_circle_outline_rounded, color: AppColors.accent, size: 60),
+        const SizedBox(height: 16),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColors.process.withValues(alpha: 0.15),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: AppColors.accent.withValues(alpha: 0.2), width: 1.5),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                l10n.addSessionNoteTitle,
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _noteController,
+                      maxLength: 60,
+                      style: const TextStyle(color: Colors.white, fontSize: 13),
+                      decoration: InputDecoration(
+                        hintText: l10n.sessionNoteHint,
+                        hintStyle: TextStyle(color: AppColors.textSecondary.withValues(alpha: 0.5), fontSize: 12),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: AppColors.textSecondary.withValues(alpha: 0.2)),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: AppColors.textSecondary.withValues(alpha: 0.2)),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(color: AppColors.accent),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                        counterText: "",
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      final stats = Provider.of<StatisticsService>(context, listen: false);
+                      stats.updateLastSessionNote(_noteController.text);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('${l10n.saveBtn}!'),
+                          backgroundColor: Colors.green,
+                          duration: const Duration(seconds: 1),
+                        ),
+                      );
+                      FocusScope.of(context).unfocus();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      minimumSize: Size.zero,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(l10n.saveBtn, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        // PDF Quiz Button
+        if (widget.pdfDocument != null) ...[          const SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            height: 48,
+            child: ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => QuizScreen(
+                      documentId: widget.pdfDocument!.id,
+                      documentName: widget.pdfDocument!.fileName,
+                      documentText: widget.pdfDocument!.extractedText,
+                      filePath: widget.pdfDocument!.filePath,
+                    ),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.quiz_rounded, size: 20),
+              label: const Text('🤖 AI Quiz Başlat', style: TextStyle(fontWeight: FontWeight.bold)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.deepPurple,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+              ),
+            ),
+          ),
+        ],
+        const SizedBox(height: 24),
+        Text(l10n.breakTimeTitle, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(onPressed: () => timerService.startBreak(15), child: Text(l10n.minBreak(15))),
+            const SizedBox(width: 16),
+            ElevatedButton(onPressed: () => timerService.startBreak(30), child: Text(l10n.minBreak(30))),
+          ],
+        ),
+        TextButton(onPressed: () => timerService.resetTimer(), child: Text(l10n.dontTakeBreak)),
+      ],
+    );
+  }
+
+  Widget _buildActiveUI(TimerService timerService, AppLocalizations l10n, AudioService audioService) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        // "Flip your phone" hint — only shown when actively running
+        if (timerService.state == TimerState.running) ...[
+          Center(
+            child: AnimatedBuilder(
+              animation: _pulseOpacityAnimation,
+              builder: (context, child) {
+                return Opacity(
+                  opacity: _pulseOpacityAnimation.value,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: AppColors.accent.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(
+                        color: AppColors.accent.withValues(alpha: 0.25),
+                        width: 1,
+                      ),
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.screen_lock_rotation_rounded, color: AppColors.accent, size: 20),
+                        SizedBox(width: 8),
+                        Text(
+                          "Telefonu yüzüstü çevirin",
+                          style: TextStyle(
+                            color: AppColors.accent,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.3,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 24),
+        ],
+        // Cancel / End break button
+        Center(
+          child: OutlinedButton.icon(
+            onPressed: () {
+              audioService.stopAlarm();
+              if (timerService.state == TimerState.breakTime) {
+                timerService.resetTimer();
+              } else {
+                final elapsed = timerService.totalTimeSeconds - timerService.currentTimeSeconds;
+                timerService.cancelTimer((elapsed / 60).ceil().clamp(1, 120));
+              }
+            },
+            style: OutlinedButton.styleFrom(
+              foregroundColor: AppColors.error,
+              side: const BorderSide(color: AppColors.error, width: 1.5),
+              padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 14),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+            ),
+            icon: const Icon(Icons.close_rounded, size: 20),
+            label: Text(
+              timerService.state == TimerState.breakTime ? l10n.endBreak : l10n.cancel,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   String _getStatusMessage(TimerService timerService, AppLocalizations l10n) {
     switch (timerService.state) {
-      case TimerState.idle:
-        return timerService.level == 1 
-            ? l10n.statusIdleLvl1 
-            : l10n.statusIdle;
-      case TimerState.running:
-        return l10n.statusRunning;
-      case TimerState.paused:
-        return l10n.statusPaused;
-      case TimerState.failure:
-        return l10n.statusFailure;
-      case TimerState.success:
-        return timerService.completedSessions == 1 
-            ? l10n.statusSuccessFirst
-            : l10n.statusSuccess;
-      case TimerState.breakTime:
-        return l10n.statusBreak;
+      case TimerState.idle: return timerService.level == 1 ? l10n.statusIdleLvl1 : l10n.statusIdle;
+      case TimerState.running: return l10n.statusRunning;
+      case TimerState.paused: return l10n.statusPaused;
+      case TimerState.failure: return l10n.statusFailure;
+      case TimerState.success: return timerService.completedSessions == 1 ? l10n.statusSuccessFirst : l10n.statusSuccess;
+      case TimerState.breakTime: return l10n.statusBreak;
     }
+  }
+}
+
+class _AutoQuizDialog extends StatefulWidget {
+  final models.PdfDocument pdfDocument;
+
+  const _AutoQuizDialog({required this.pdfDocument});
+
+  @override
+  State<_AutoQuizDialog> createState() => _AutoQuizDialogState();
+}
+
+class _AutoQuizDialogState extends State<_AutoQuizDialog> {
+  int _countdown = 3;
+
+  @override
+  void initState() {
+    super.initState();
+    _startCountdown();
+  }
+
+  void _startCountdown() async {
+    await Future.delayed(const Duration(seconds: 1));
+    if (!mounted) return;
+    setState(() => _countdown = 2);
+    await Future.delayed(const Duration(seconds: 1));
+    if (!mounted) return;
+    setState(() => _countdown = 1);
+    await Future.delayed(const Duration(seconds: 1));
+    if (!mounted) return;
+    Navigator.pop(context);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => QuizScreen(
+          documentId: widget.pdfDocument.id,
+          documentName: widget.pdfDocument.fileName,
+          documentText: widget.pdfDocument.extractedText,
+          filePath: widget.pdfDocument.filePath,
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: const Color(0xFF1E1E2C),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      title: const Center(
+        child: Text('🎉 Tebrikler!', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.psychology_rounded, size: 64, color: AppColors.accent),
+          const SizedBox(height: 16),
+          const Text(
+            'PDF odaklanma seansın başarıyla tamamlandı.',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.white70, fontSize: 14),
+          ),
+          const SizedBox(height: 12),
+          const Text(
+            'Öğrendiklerini test etmek için AI Quiz başlıyor...',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+          ),
+          const SizedBox(height: 24),
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              const SizedBox(
+                width: 50,
+                height: 50,
+                child: CircularProgressIndicator(color: AppColors.accent),
+              ),
+              Text(
+                '$_countdown',
+                style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }

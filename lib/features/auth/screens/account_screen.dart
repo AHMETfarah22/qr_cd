@@ -4,6 +4,7 @@ import '../../../core/constants/app_colors.dart';
 import '../services/auth_service.dart';
 import '../services/statistics_service.dart';
 import '../../settings/screens/settings_screen.dart';
+import '../../../core/services/settings_service.dart';
 import 'login_screen.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -21,43 +22,23 @@ class AccountScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: Text(
-          l10n.accountInfoTitle,
-          style: const TextStyle(
-            fontSize: 14, // Slightly smaller
-            fontWeight: FontWeight.bold,
-            letterSpacing: 2.0,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.accent, size: 20),
-            onPressed: () => Navigator.pop(context),
-          ),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: IconButton(
-              icon: const Icon(Icons.settings_outlined, color: AppColors.accent, size: 24),
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const SettingsScreen()),
-              ),
-            ),
-          ),
-        ],
-      ),
+      backgroundColor: Colors.transparent,
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
         child: Column(
           children: [
+            // Settings button row at top
+            Align(
+              alignment: Alignment.centerRight,
+              child: IconButton(
+                icon: const Icon(Icons.settings_outlined, color: AppColors.accent, size: 24),
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                ),
+              ),
+            ),
+
             const SizedBox(height: 10),
             
             // Profile Section (New Design)
@@ -169,6 +150,11 @@ class AccountScreen extends StatelessWidget {
                     // Streak Card (Prominent)
                     _buildStreakCard(statsService, context),
                     
+                    const SizedBox(height: 12),
+
+                    // Daily Goal progress card
+                    _buildDailyGoalCard(statsService, context),
+                    
                     const SizedBox(height: 16),
 
                     Row(
@@ -221,6 +207,41 @@ class AccountScreen extends StatelessWidget {
                           ),
                         ),
                       ],
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildStatCard(
+                            icon: Icons.picture_as_pdf_rounded,
+                            title: l10n.pdfCalismasi,
+                            value: '${statsService.totalPdfSessions}',
+                            subtitle: l10n.oturum,
+                            color: Colors.deepPurpleAccent,
+                            context: context,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _buildStatCard(
+                            icon: Icons.quiz_rounded,
+                            title: l10n.tamamlananQuiz,
+                            value: '${statsService.totalQuizzesTaken}',
+                            subtitle: l10n.sinav,
+                            color: Colors.tealAccent,
+                            context: context,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    _buildStatCard(
+                      icon: Icons.percent_rounded,
+                      title: l10n.ortalamaQuizBasarisi,
+                      value: '${statsService.averageQuizScore.toStringAsFixed(1)}%',
+                      subtitle: l10n.basariOrani,
+                      color: Colors.pinkAccent,
+                      context: context,
                     ),
                     
                     const SizedBox(height: 32),
@@ -567,7 +588,8 @@ class AccountScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
-          Row(
+          Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               Text(
                 title,
@@ -721,6 +743,94 @@ class AccountScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildDailyGoalCard(StatisticsService stats, BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final settings = Provider.of<SettingsService>(context, listen: false);
+    final dailyGoal = settings.dailyFocusGoalMinutes;
+    final dailyMinutes = stats.dailyFocusMinutes;
+    final progress = (dailyMinutes / dailyGoal).clamp(0.0, 1.0);
+    final isGoalReached = dailyMinutes >= dailyGoal;
+    
+    final mainColor = isGoalReached ? Colors.tealAccent : AppColors.accent;
+    
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppColors.process.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: mainColor.withValues(alpha: 0.2),
+          width: 1.5,
+        ),
+      ),
+      child: Row(
+        children: [
+          // Circular Progress Indicator
+          SizedBox(
+            width: 80,
+            height: 80,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                CircularProgressIndicator(
+                  value: progress,
+                  strokeWidth: 8,
+                  backgroundColor: AppColors.background,
+                  valueColor: AlwaysStoppedAnimation<Color>(mainColor),
+                ),
+                Text(
+                  '${(progress * 100).toStringAsFixed(0)}%',
+                  style: TextStyle(
+                    color: mainColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 20),
+          // Details
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.dailyGoalProgress,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  l10n.dailyMinutesFocused(dailyMinutes, dailyGoal),
+                  style: TextStyle(
+                    color: mainColor,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  isGoalReached 
+                      ? l10n.dailyGoalReached 
+                      : l10n.dailyGoalRemaining(dailyGoal - dailyMinutes),
+                  style: TextStyle(
+                    color: isGoalReached ? Colors.tealAccent : AppColors.textSecondary,
+                    fontSize: 12,
+                    fontWeight: isGoalReached ? FontWeight.bold : FontWeight.normal,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildBadgeItem(String badgeName, AppLocalizations l10n) {
     IconData icon;
     Color color;
@@ -740,6 +850,21 @@ class AccountScreen extends StatelessWidget {
         badgeName = l10n.badgeMaster;
         icon = Icons.workspace_premium_rounded;
         color = Colors.purpleAccent;
+        break;
+      case 'Akademisyen':
+        badgeName = l10n.localeName == 'tr' ? 'Akademisyen' : 'Scholar';
+        icon = Icons.school_rounded;
+        color = Colors.deepPurpleAccent;
+        break;
+      case 'Dahi':
+        badgeName = l10n.localeName == 'tr' ? 'Dahi' : 'Genius';
+        icon = Icons.psychology_rounded;
+        color = Colors.pinkAccent;
+        break;
+      case 'Bilgin':
+        badgeName = l10n.localeName == 'tr' ? 'Bilgin' : 'Sage';
+        icon = Icons.auto_stories_rounded;
+        color = Colors.tealAccent;
         break;
       default:
         icon = Icons.military_tech_rounded;

@@ -4,6 +4,7 @@ import 'package:fl_chart/fl_chart.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/models/session_category.dart';
 import '../services/statistics_service.dart';
+import 'package:tscan/l10n/app_localizations.dart';
 
 class StatisticsChartScreen extends StatelessWidget {
   const StatisticsChartScreen({super.key});
@@ -11,12 +12,13 @@ class StatisticsChartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final statsService = Provider.of<StatisticsService>(context);
+    final l10n = AppLocalizations.of(context)!;
     
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context)!.statisticsTitle,
+          l10n.statisticsTitle,
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -36,31 +38,40 @@ class StatisticsChartScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Success Rate Circular Chart
-            _buildSectionHeader(AppLocalizations.of(context)!.successRate.toUpperCase()),
+            // Success Rate
+            _buildSectionHeader(l10n.successRate.toUpperCase()),
             const SizedBox(height: 16),
-            _buildSuccessRateChart(statsService),
+            _buildSuccessRateChart(context, statsService),
             
             const SizedBox(height: 32),
             
-            // Category Distribution Pie Chart
-            _buildSectionHeader(AppLocalizations.of(context)!.categoryDistribution),
+            // Category Distribution
+            _buildSectionHeader(l10n.categoryDistribution),
             const SizedBox(height: 16),
-            _buildCategoryPieChart(statsService),
+            _buildCategoryPieChart(context, statsService),
             
             const SizedBox(height: 32),
             
-            // Weekly Activity Bar Chart
-            _buildSectionHeader(AppLocalizations.of(context)!.weeklyActivity),
+            // Weekly Activity
+            _buildSectionHeader(l10n.weeklyActivity),
             const SizedBox(height: 16),
-            _buildWeeklyActivityChart(statsService),
+            _buildWeeklyActivityChart(context, statsService),
+            
+            const SizedBox(height: 32),
+            
+            // Contribution Heatmap
+            _buildSectionHeader('AKTİVİTE YOĞUNLUĞU'),
+            const SizedBox(height: 16),
+            _buildContributionHeatmap(context, statsService),
             
             const SizedBox(height: 32),
             
             // Time Distribution
-            _buildSectionHeader(AppLocalizations.of(context)!.timeDistribution),
+            _buildSectionHeader(l10n.timeDistribution),
             const SizedBox(height: 16),
-            _buildTimeDistribution(statsService),
+            _buildTimeDistribution(context, statsService),
+            
+            const SizedBox(height: 32),
           ],
         ),
       ),
@@ -82,7 +93,7 @@ class StatisticsChartScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSuccessRateChart(StatisticsService stats) {
+  Widget _buildSuccessRateChart(BuildContext context, StatisticsService stats) {
     final successRate = stats.totalSessions > 0 
         ? (stats.completedSessions / stats.totalSessions * 100)
         : 0.0;
@@ -106,7 +117,6 @@ class StatisticsChartScreen extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Circular Progress
           SizedBox(
             width: 120,
             height: 120,
@@ -153,7 +163,7 @@ class StatisticsChartScreen extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      AppLocalizations.of(context)!.successRate.split(' ').first, // Just "Success" or localized
+                      AppLocalizations.of(context)!.successLabel,
                       style: const TextStyle(
                         color: AppColors.textSecondary,
                         fontSize: 12,
@@ -165,11 +175,13 @@ class StatisticsChartScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 24),
-          // Stats
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                _buildStatRow(
+                  icon: Icons.check_circle_rounded,
+                  color: Colors.green,
                   label: AppLocalizations.of(context)!.successfulSessions,
                   value: '${stats.completedSessions}',
                 ),
@@ -245,10 +257,8 @@ class StatisticsChartScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryPieChart(StatisticsService stats) {
-    // Calculate category distribution from session history
+  Widget _buildCategoryPieChart(BuildContext context, StatisticsService stats) {
     Map<SessionCategory, int> categoryCount = {};
-    
     for (var session in stats.sessionHistory) {
       final category = session['category'] as SessionCategory;
       categoryCount[category] = (categoryCount[category] ?? 0) + 1;
@@ -263,19 +273,9 @@ class StatisticsChartScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            AppColors.process.withValues(alpha: 0.6),
-            AppColors.process.withValues(alpha: 0.3),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: AppColors.process.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: AppColors.accent.withValues(alpha: 0.3),
-          width: 1.5,
-        ),
+        border: Border.all(color: AppColors.accent.withValues(alpha: 0.1)),
       ),
       child: Column(
         children: [
@@ -314,19 +314,13 @@ class StatisticsChartScreen extends StatelessWidget {
                   Container(
                     width: 12,
                     height: 12,
-                    decoration: BoxDecoration(
-                      color: entry.key.color,
-                      shape: BoxShape.circle,
-                    ),
+                    decoration: BoxDecoration(color: entry.key.color, shape: BoxShape.circle),
                   ),
                   const SizedBox(width: 6),
-                    Text(
-                      '${entry.key.getDisplayName(context)} (${entry.value})',
-                      style: const TextStyle(
-                        color: AppColors.textSecondary,
-                        fontSize: 12,
-                      ),
-                    ),
+                  Text(
+                    '${entry.key.getDisplayName(context)} (${entry.value})',
+                    style: const TextStyle(color: AppColors.textSecondary, fontSize: 12),
+                  ),
                 ],
               );
             }).toList(),
@@ -336,28 +330,21 @@ class StatisticsChartScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildWeeklyActivityChart(StatisticsService stats) {
-    // Get last 7 days activity
+  Widget _buildWeeklyActivityChart(BuildContext context, StatisticsService stats) {
     final now = DateTime.now();
     Map<int, int> weeklyData = {};
-    
-    for (int i = 6; i >= 0; i--) {
+    for (int i = 0; i < 7; i++) {
       weeklyData[i] = 0;
     }
     
     for (var session in stats.sessionHistory) {
       final sessionDate = session['date'] as DateTime;
-      
-      // Normalize dates to midnight for accurate day comparison
       final today = DateTime(now.year, now.month, now.day);
       final sDate = DateTime(sessionDate.year, sessionDate.month, sessionDate.day);
-      
       final daysDiff = today.difference(sDate).inDays;
       
-      if (daysDiff >= 0 && daysDiff < 7) {
-        if (session['completed'] == true) {
-          weeklyData[6 - daysDiff] = (weeklyData[6 - daysDiff] ?? 0) + 1;
-        }
+      if (daysDiff >= 0 && daysDiff < 7 && session['completed'] == true) {
+        weeklyData[6 - daysDiff] = (weeklyData[6 - daysDiff] ?? 0) + 1;
       }
     }
 
@@ -365,21 +352,11 @@ class StatisticsChartScreen extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(20),
-      height: 280,
+      height: 250,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            AppColors.process.withValues(alpha: 0.6),
-            AppColors.process.withValues(alpha: 0.3),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: AppColors.process.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: AppColors.accent.withValues(alpha: 0.3),
-          width: 1.5,
-        ),
+        border: Border.all(color: AppColors.accent.withValues(alpha: 0.1)),
       ),
       child: BarChart(
         BarChartData(
@@ -390,19 +367,9 @@ class StatisticsChartScreen extends StatelessWidget {
               barRods: [
                 BarChartRodData(
                   toY: entry.value.toDouble(),
-                  gradient: LinearGradient(
-                    colors: [
-                      AppColors.accent,
-                      AppColors.accent.withValues(alpha: 0.6),
-                    ],
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                  ),
-                  width: 24,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(6),
-                    topRight: Radius.circular(6),
-                  ),
+                  color: AppColors.accent,
+                  width: 20,
+                  borderRadius: BorderRadius.circular(4),
                 ),
               ],
             );
@@ -411,16 +378,8 @@ class StatisticsChartScreen extends StatelessWidget {
             leftTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
-                reservedSize: 32,
-                getTitlesWidget: (value, meta) {
-                  return Text(
-                    value.toInt().toString(),
-                    style: const TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 10,
-                    ),
-                  );
-                },
+                reservedSize: 30,
+                getTitlesWidget: (v, m) => Text(v.toInt().toString(), style: const TextStyle(color: AppColors.textSecondary, fontSize: 10)),
               ),
             ),
             bottomTitles: AxisTitles(
@@ -431,13 +390,7 @@ class StatisticsChartScreen extends StatelessWidget {
                   final dayNames = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'];
                   return Padding(
                     padding: const EdgeInsets.only(top: 8.0),
-                    child: Text(
-                      dayNames[date.weekday - 1],
-                      style: const TextStyle(
-                        color: AppColors.textSecondary,
-                        fontSize: 10,
-                      ),
-                    ),
+                    child: Text(dayNames[date.weekday - 1], style: const TextStyle(color: AppColors.textSecondary, fontSize: 10)),
                   );
                 },
               ),
@@ -445,122 +398,55 @@ class StatisticsChartScreen extends StatelessWidget {
             topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
             rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
           ),
-          gridData: FlGridData(
-            show: true,
-            drawVerticalLine: false,
-            horizontalInterval: 1,
-            getDrawingHorizontalLine: (value) {
-              return FlLine(
-                color: AppColors.textSecondary.withValues(alpha: 0.1),
-                strokeWidth: 1,
-              );
-            },
-          ),
+          gridData: const FlGridData(show: false),
           borderData: FlBorderData(show: false),
         ),
       ),
     );
   }
 
-  Widget _buildTimeDistribution(StatisticsService stats) {
-    // Calculate time spent per category
+  Widget _buildTimeDistribution(BuildContext context, StatisticsService stats) {
     Map<SessionCategory, int> categoryTime = {};
-    
     for (var session in stats.sessionHistory) {
       if (session['completed'] == true) {
         final category = session['category'] as SessionCategory;
-        final duration = session['duration'] as int;
-        categoryTime[category] = (categoryTime[category] ?? 0) + duration;
+        categoryTime[category] = (categoryTime[category] ?? 0) + (session['duration'] as int);
       }
     }
 
-    if (categoryTime.isEmpty) {
-      return _buildEmptyState(AppLocalizations.of(context)!.noDataYet);
-    }
+    if (categoryTime.isEmpty) return _buildEmptyState(AppLocalizations.of(context)!.noDataYet);
 
     final totalTime = categoryTime.values.reduce((a, b) => a + b);
 
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            AppColors.process.withValues(alpha: 0.6),
-            AppColors.process.withValues(alpha: 0.3),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: AppColors.process.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: AppColors.accent.withValues(alpha: 0.3),
-          width: 1.5,
-        ),
+        border: Border.all(color: AppColors.accent.withValues(alpha: 0.1)),
       ),
       child: Column(
         children: categoryTime.entries.map((entry) {
-          final percentage = (entry.value / totalTime);
-          final hours = entry.value ~/ 60;
-          final minutes = entry.value % 60;
-          
+          final percentage = entry.value / totalTime;
           return Padding(
-            padding: const EdgeInsets.only(bottom: 16),
+            padding: const EdgeInsets.only(bottom: 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        Icon(entry.key.icon, color: entry.key.color, size: 18),
-                        const SizedBox(width: 8),
-                        Text(
-                          entry.key.getDisplayName(context),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      hours > 0 ? '${hours}${AppLocalizations.of(context)!.hoursShort} ${minutes}${AppLocalizations.of(context)!.minutesShort}' : '${minutes} ${AppLocalizations.of(context)!.minutesShort}',
-                      style: TextStyle(
-                        color: entry.key.color,
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    Text(entry.key.getDisplayName(context), style: const TextStyle(color: Colors.white, fontSize: 13)),
+                    Text('${entry.value} dk', style: TextStyle(color: entry.key.color, fontWeight: FontWeight.bold, fontSize: 13)),
                   ],
                 ),
-                const SizedBox(height: 8),
-                Stack(
-                  children: [
-                    Container(
-                      height: 8,
-                      decoration: BoxDecoration(
-                        color: AppColors.process,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    ),
-                    FractionallySizedBox(
-                      widthFactor: percentage,
-                      child: Container(
-                        height: 8,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              entry.key.color,
-                              entry.key.color.withValues(alpha: 0.7),
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                      ),
-                    ),
-                  ],
+                const SizedBox(height: 6),
+                LinearProgressIndicator(
+                  value: percentage,
+                  backgroundColor: AppColors.process,
+                  color: entry.key.color,
+                  minHeight: 6,
+                  borderRadius: BorderRadius.circular(3),
                 ),
               ],
             ),
@@ -570,41 +456,66 @@ class StatisticsChartScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildContributionHeatmap(BuildContext context, StatisticsService stats) {
+    final now = DateTime.now();
+    final ninetyDaysAgo = DateTime(now.year, now.month, now.day).subtract(const Duration(days: 89));
+    Map<String, int> dailyActivity = {};
+    
+    for (var session in stats.sessionHistory) {
+      if (session['completed'] == true) {
+        final date = session['date'] as DateTime;
+        dailyActivity['${date.year}-${date.month}-${date.day}'] = 
+            (dailyActivity['${date.year}-${date.month}-${date.day}'] ?? 0) + 1;
+      }
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.process.withValues(alpha: 0.2),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.accent.withValues(alpha: 0.1)),
+      ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: List.generate(13, (weekIndex) {
+            return Column(
+              children: List.generate(7, (dayIndex) {
+                final dayOffset = (weekIndex * 7) + dayIndex;
+                if (dayOffset >= 90) return const SizedBox.shrink();
+                final date = ninetyDaysAgo.add(Duration(days: dayOffset));
+                final count = dailyActivity['${date.year}-${date.month}-${date.day}'] ?? 0;
+                
+                Color color = AppColors.process.withValues(alpha: 0.1);
+                if (count > 0) color = AppColors.accent.withValues(alpha: (count * 0.3).clamp(0.3, 1.0));
+
+                return Container(
+                  width: 12, height: 12, margin: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(2)),
+                );
+              }),
+            );
+          }),
+        ),
+      ),
+    );
+  }
+
   Widget _buildEmptyState(String message) {
     return Container(
       padding: const EdgeInsets.all(40),
+      width: double.infinity,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            AppColors.process.withValues(alpha: 0.6),
-            AppColors.process.withValues(alpha: 0.3),
-          ],
-        ),
+        color: AppColors.process.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: AppColors.accent.withValues(alpha: 0.3),
-          width: 1.5,
-        ),
       ),
-      child: Center(
-        child: Column(
-          children: [
-            Icon(
-              Icons.bar_chart_rounded,
-              size: 48,
-              color: AppColors.textSecondary.withValues(alpha: 0.5),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: AppColors.textSecondary,
-                fontSize: 14,
-              ),
-            ),
-          ],
-        ),
+      child: Column(
+        children: [
+          const Icon(Icons.bar_chart_rounded, size: 40, color: AppColors.textSecondary),
+          const SizedBox(height: 12),
+          Text(message, style: const TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+        ],
       ),
     );
   }

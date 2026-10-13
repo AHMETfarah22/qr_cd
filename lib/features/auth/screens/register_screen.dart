@@ -5,7 +5,7 @@ import '../../../core/widgets/common_button.dart';
 import '../../../core/widgets/common_text_field.dart';
 import '../services/auth_service.dart';
 import '../services/statistics_service.dart';
-import '../../timer/screens/timer_screen.dart';
+import '../../core/screens/main_screen.dart';
 import '../../onboarding/screens/onboarding_screen.dart';
 import '../../../core/services/settings_service.dart';
 import '../../../l10n/app_localizations.dart';
@@ -30,7 +30,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _passwordController.dispose();
     super.dispose();
   }
-
+  
   Future<void> _handleRegister() async {
     final name = _nameController.text.trim();
     final email = _emailController.text.trim();
@@ -85,7 +85,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       } else {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const TimerScreen()),
+          MaterialPageRoute(builder: (_) => const MainScreen()),
         );
       }
     } else {

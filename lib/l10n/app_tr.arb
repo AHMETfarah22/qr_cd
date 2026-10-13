@@ -174,5 +174,157 @@
   "permissionGranted": "İzin Verildi",
   "permissionDenied": "İzin Reddildi",
   "tutorialTitle": "Uygulama Rehberi",
-  "tutorialSubtitle": "Tanıtım ekranlarını tekrar göster"
+  "tutorialSubtitle": "Tanıtım ekranlarını tekrar göster",
+  "addSessionNoteTitle": "Ne üzerine odaklandın?",
+  "sessionNoteHint": "örn: matematik çalışmak, kodlama",
+  "sessionNoteLabel": "Oturum Notu",
+  "saveBtn": "Kaydet",
+  "dailyGoalSetting": "Günlük Odaklanma Hedefi",
+  "dailyGoalSubtitle": "Günlük hedef odaklanma süresi",
+  "dailyGoalReached": "GÜNLÜK ODAKLANMA HEDEFİ TAMAM! 🎉",
+  "dailyGoalProgress": "Günlük Hedef İlerlemesi",
+  "dailyMinutesFocused": "{minutes} / {goal} dakika",
+  "dailyGoalRemaining": "Hedefine ulaşmak için {minutes} dakika kaldı!",
+  "pdfStudyTitle": "PDF Çalışma",
+  "pdfDestekliCalisma": "AI Destekli PDF Çalışma",
+  "pdfYukleAciklama": "Ders notlarını yükle, AI okuma süresini tahmin etsin.\nSüre bitince seni test etsin! 🚀",
+  "pdfStep1": "PDF Yükle",
+  "pdfStep2": "AI Analiz Etsin",
+  "pdfStep3": "Odaklan & Oku",
+  "pdfStep4": "Quiz ile Test Ol",
+  "pdfDosyaSec": "PDF Dosyası Seç",
+  "sonCalisilanBelgeler": "Son Çalışılan Belgeler",
+  "temizle": "Temizle",
+  "tekrarCalis": "Tekrar Çalış",
+  "sil": "Sil",
+  "premiumOzellik": "Premium Özellik",
+  "premiumCalismaAsistani": "AI ile süre tahmini ve sınav üretme gibi gelişmiş çalışma asistanı özelliklerini kullanabilmek için Premium üye olmalısınız.",
+  "premiumYukselt": "Premium'a Yükselt 🚀",
+  "pdfSeciliyor": "PDF dosyası seçiliyor...",
+  "pdfOkunuyor": "📄 PDF okunuyor...",
+  "aiAnalizEdiyor": "🤖 AI metin analiz ediyor...",
+  "onboardingPdfTitle": "Yapay Zeka ve PDF Modu",
+  "onboardingPdfDesc": "Ders notlarınızı yükleyin; TScan yapay zekası ideal çalışma sürenizi hesaplasın, siz odaklanırken odanızı sessize alsın ve seans bitiminde sizi akıllı testlerle sınasın!",
+  "onboardingPdfExtra": "Akıllı Okuma & AI Quiz Modu",
+  "aiAnalizSonuclari": "Yapay Zeka Analiz Sonuçları",
+  "dersAdi": "Ders / Konu",
+  "zorlukDerecesi": "Zorluk Derecesi",
+  "tahminiOkumaSuresi": "Tahmini Okuma Süresi",
+  "tahminiSureDk": "{minutes} dakika",
+  "@tahminiSureDk": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "tscanOnerisi": "TScan Önerisi",
+  "calismayiBaslat": "Çalışmayı Başlat ⏱️",
+  "pdfGizlilikOnayiTitle": "KVKK ve Bulut Analiz Onayı",
+  "pdfGizlilikOnayiBody": "Yüklediğiniz PDF'in metin içeriği, süre tahmini ve quiz üretimi amacıyla güvenli bağlantı üzerinden yapay zeka servisine (OpenRouter) gönderilir. Kişisel verilerinizin buluta gönderilmesini onaylıyor musunuz?",
+  "onayla": "Onayla",
+  "reddet": "Reddet",
+  "aiQuizBaslat": "AI Quiz Başlat",
+  "akilliSoruModu": "Seans bitti! AI soruları çözmeye hazır mısınız?",
+  "quizBasligi": "Yapay Zeka Değerlendirme Testi",
+  "soruSayisi": "Soru {current} / {total}",
+  "@soruSayisi": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "quiziBitir": "Testi Bitir",
+  "quizSonuclari": "Test Sonuçları",
+  "basariSkoru": "Başarı Skoru: %{score}",
+  "@basariSkoru": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "dogruSoruSayisi": "Doğru: {correct} / {total}",
+  "@dogruSoruSayisi": {
+    "placeholders": {
+      "correct": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "odaklanmayaDon": "Odaklanmaya Dön",
+  "farkliSureSec": "Farklı süre seç",
+  "sureSec": "Süre Seç",
+  "dakika": "dakika",
+  "aiSorulariHazirliyor": "🤖 AI sorularını hazırlıyor...",
+  "buBirkacSaniyeSurebilir": "Bu birkaç saniye sürebilir",
+  "quizYuklenemedi": "Quiz yüklenemedi",
+  "tekrarDene": "Tekrar Dene",
+  "sonrakiSoru": "Sonraki Soru",
+  "sonuclariGor": "Sonuçları Gör",
+  "aiYanlisAnalizi": "🤖 AI yanlışlarını analiz ediyor...",
+  "aiKocAnalizi": "AI Koç Analizi",
+  "soruDetaylari": "Soru Detayları",
+  "anaSayfayaDon": "Ana Sayfaya Dön",
+  "soruNo": "Soru {number}",
+  "@soruNo": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "seninCevabin": "Senin cevabın: {answer}",
+  "@seninCevabin": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "dogruCevap": "Doğru cevap: {answer}",
+  "@dogruCevap": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "muhtesemKonuyaHakimsin": "Muhteşem! Konuya hakimsin!",
+  "iyiGidiyorsunTekrar": "İyi gidiyorsun, biraz daha tekrar!",
+  "gelismeAlaninVar": "Gelişme alanın var, tekrar oku",
+  "tekrarCalismalisin": "Metin üzerinde tekrar çalışmalısın",
+  "pdfCalismasi": "PDF Çalışması",
+  "tamamlananQuiz": "Tamamlanan Quiz",
+  "ortalamaQuizBasarisi": "Ortalama Quiz Başarısı",
+  "oturum": "oturum",
+  "sinav": "sınav",
+  "basariOrani": "başarı oranı",
+  "okumaHizi": "Kişisel Okuma Hızı",
+  "okumaHiziAciklama": "Premium ile AI süre tahminlerini okuma hızınıza göre uyarlayın.",
+  "hizYavas": "Yavaş",
+  "hizNormal": "Normal",
+  "hizHizli": "Hızlı",
+  "navHome": "Anasayfa",
+  "navAiQuest": "AI Quest",
+  "navAccount": "Hesap",
+  "aiQuestSubtitle": "PDF yükle, AI ile quiz çöz",
+  "aiQuestUploadTitle": "📄 PDF Yükle & Çalış",
+  "aiQuestUploadDesc": "Belge yükle, AI analiz etsin ve quiz oluştursun",
+  "aiQuestNoDocs": "Henüz belge yok",
+  "aiQuestNoDocsDesc": "İlk PDF'ini yükleyerek AI destekli\nçalışmaya başla!",
+  "aiQuestRecentDocs": "📚 Son Çalışılan Belgeler",
+  "aiQuestClear": "Temizle",
+  "aiQuestClearConfirm": "Tüm belgeler geçmişten silinsin mi?",
+  "aiQuestDeleteConfirm": "\"{name}\" geçmişten silinsin mi?",
+  "aiQuestDocMeta": "{minutes} dk • {pages} Sayfa",
+  "gizlilikKontrol": "Gizlilik onayı kontrol ediliyor...",
+  "apiKey401Hata": "Yetkisiz API Anahtarı (401)! Lütfen geçerli bir OpenRouter API anahtarı girin. Mevcut anahtar temizlendi."
 }

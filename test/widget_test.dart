@@ -1,33 +1,85 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
+import 'package:tscan/core/models/quiz_question.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp() as Widget);
+  group('QuizQuestion Model Tests', () {
+    test('should calculate correctness correctly', () {
+      final question = QuizQuestion(
+        id: 1,
+        question: 'What is the capital of Turkey?',
+        options: {'A': 'Istanbul', 'B': 'Ankara', 'C': 'Izmir', 'D': 'Bursa'},
+        correctAnswer: 'B',
+        explanation: 'Ankara is the capital.',
+      );
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+      expect(question.isAnswered, isFalse);
+      expect(question.isCorrect, isFalse);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+      question.userAnswer = 'A';
+      expect(question.isAnswered, isTrue);
+      expect(question.isCorrect, isFalse);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+      question.userAnswer = 'B';
+      expect(question.isAnswered, isTrue);
+      expect(question.isCorrect, isTrue);
+    });
+
+    test('should serialize and deserialize json correctly', () {
+      final question = QuizQuestion(
+        id: 1,
+        question: 'What is 2+2?',
+        options: {'A': '3', 'B': '4', 'C': '5'},
+        correctAnswer: 'B',
+        explanation: 'Simple math.',
+      );
+
+      final jsonMap = question.toJson();
+      expect(jsonMap['id'], 1);
+      expect(jsonMap['question'], 'What is 2+2?');
+
+      final parsedQuestion = QuizQuestion.fromJson(jsonMap);
+      expect(parsedQuestion.id, 1);
+      expect(parsedQuestion.question, 'What is 2+2?');
+      expect(parsedQuestion.correctAnswer, 'B');
+    });
   });
-}
 
-class MyApp {
-  const MyApp();
+  group('QuizResult Model Tests', () {
+    test('should calculate correct count and percentage correctly', () {
+      final question1 = QuizQuestion(
+        id: 1,
+        question: 'Q1',
+        options: {'A': '1', 'B': '2'},
+        correctAnswer: 'A',
+        explanation: '',
+      );
+      final question2 = QuizQuestion(
+        id: 2,
+        question: 'Q2',
+        options: {'A': '1', 'B': '2'},
+        correctAnswer: 'B',
+        explanation: '',
+      );
+
+      final result = QuizResult(
+        documentId: 'doc123',
+        documentName: 'math_test.pdf',
+        questions: [question1, question2],
+        completedAt: DateTime.now(),
+        totalTimeSeconds: 120,
+      );
+
+      expect(result.totalCount, 2);
+      expect(result.correctCount, 0);
+      expect(result.scorePercent, 0.0);
+
+      question1.userAnswer = 'A'; // correct
+      question2.userAnswer = 'A'; // wrong
+
+      expect(result.correctCount, 1);
+      expect(result.scorePercent, 50.0);
+      expect(result.wrongAnswers.length, 1);
+      expect(result.wrongAnswers.first.id, 2);
+    });
+  });
 }

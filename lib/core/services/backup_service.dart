@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../security/backup_integrity.dart';
 
 class BackupService {
-  
   /// Exports all data related to the given email as a JSON string.
   static Future<String?> exportUserData(String email) async {
     try {
@@ -12,29 +12,25 @@ class BackupService {
       final Map<String, dynamic> exportData = {};
       final String prefix = 'user_${email.toLowerCase()}';
 
-      // Find all keys for this user
       for (String key in keys) {
         if (key.startsWith(prefix)) {
-          final value = prefs.get(key);
-          // Store relative key (without prefix) for portability? 
-          // No, keep full key for simplicity, assuming email is the unique ID.
-          // Or strip prefix to allow importing to another email? 
-          // Better to keep full key integrity for now, or use a "data" object.
-          
-          exportData[key] = value;
+          exportData[key] = prefs.get(key);
         }
       }
-
       if (exportData.isEmpty) {
         return null;
       }
-
-      // Add metadata
-      final backup = {
-        'version': 1,
+      final payload = <String, dynamic>{
+        'version': BackupIntegrity.currentVersion,
         'timestamp': DateTime.now().toIso8601String(),
-        'email': email,
+        'email': email.toLowerCase(),
         'data': exportData,
+      };
+
+      final backup = <String, dynamic>{
+        ...payload,
+        'checksumAlgorithm': BackupIntegrity.checksumAlgorithm,
+        'checksum': BackupIntegrity.computeChecksum(payload),
       };
 
       return jsonEncode(backup);
@@ -45,47 +41,55 @@ class BackupService {
   }
 
   /// Imports user data from a JSON string.
-  /// Returns a map with success status and message.
-  static Future<Map<String, dynamic>> importUserData(String jsonString, String currentEmail) async {
+  static Future<Map<String, dynamic>> importUserData(
+    String jsonString,
+    String currentEmail,
+  ) async {
     try {
-      final Map<String, dynamic> backup = jsonDecode(jsonString);
-      
-      // Basic validation
+      final dynamic decoded = jsonDecode(jsonString);
+      if (decoded is! Map<String, dynamic>) {
+        return {'success': false, 'message': 'Geçersiz yedek dosyası formatı.'};
+      }
+      final Map<String, dynamic> backup = decoded;
+
       if (!backup.containsKey('version') || !backup.containsKey('data')) {
         return {'success': false, 'message': 'Geçersiz yedek dosyası formatı.'};
       }
 
-      final String backupEmail = backup['email'] ?? '';
-      if (backupEmail.toLowerCase() != currentEmail.toLowerCase()) {
-         // Optional: Allow importing cross-account? For security, maybe warn or block.
-         // For now, let's warn but allow if user insists? No, simpler to just check.
-         // Actually, if we import data with a different email prefix, it won't be read by the app 
-         // unless we rename the keys.
-         
-         // Let's implement smart import: rename keys to current email if different.
+      final version = backup['version'];
+      if (version == BackupIntegrity.currentVersion &&
+          !BackupIntegrity.verify(backup)) {
+        return {
+          'success': false,
+          'message':
+              'Yedek dosyası bozulmuş veya değiştirilmiş. İçe aktarma iptal edildi.',
+        };
       }
+      // version 1 backups: no checksum — import allowed for backward compatibility
 
-      final Map<String, dynamic> data = backup['data'];
+      final String backupEmail = (backup['email'] as String?) ?? '';
+      final Map<String, dynamic> data = Map<String, dynamic>.from(
+        backup['data'] as Map,
+      );
       final prefs = await SharedPreferences.getInstance();
       final String targetPrefix = 'user_${currentEmail.toLowerCase()}';
       final String sourcePrefix = 'user_${backupEmail.toLowerCase()}';
-      
+
       int importedCount = 0;
 
       for (String key in data.keys) {
         dynamic value = data[key];
         String targetKey = key;
 
-        // If email differs, rewrite the key
-        if (backupEmail.isNotEmpty && backupEmail != currentEmail) {
-            if (key.startsWith(sourcePrefix)) {
-                targetKey = key.replaceFirst(sourcePrefix, targetPrefix);
-            }
+        if (backupEmail.isNotEmpty &&
+            backupEmail.toLowerCase() != currentEmail.toLowerCase()) {
+          if (key.startsWith(sourcePrefix)) {
+            targetKey = key.replaceFirst(sourcePrefix, targetPrefix);
+          }
         } else {
-             // Ensure we only import data for the CURRENT user to avoid polluting global namespace
-             if (!key.startsWith(targetPrefix)) {
-                 continue; 
-             }
+          if (!key.startsWith(targetPrefix)) {
+            continue;
+          }
         }
 
         if (value is String) {
@@ -97,13 +101,18 @@ class BackupService {
         } else if (value is bool) {
           await prefs.setBool(targetKey, value);
         } else if (value is List) {
-           await prefs.setStringList(targetKey, value.map((e) => e.toString()).toList());
+          await prefs.setStringList(
+            targetKey,
+            value.map((e) => e.toString()).toList(),
+          );
         }
         importedCount++;
       }
 
-      return {'success': true, 'message': '$importedCount veri noktası başarıyla geri yüklendi.'};
-
+      return {
+        'success': true,
+        'message': '$importedCount veri noktası başarıyla geri yüklendi.',
+      };
     } catch (e) {
       return {'success': false, 'message': 'İçe aktarma hatası: $e'};
     }

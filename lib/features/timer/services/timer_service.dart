@@ -95,6 +95,7 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
   StreamSubscription<bool>? _sensorSubscription;
   bool _hasBeenFaceDown = false;
   SessionCategory _currentCategory = SessionCategory.other;
+  String? pdfName;
 
   SessionCategory get currentCategory => _currentCategory;
 
@@ -107,6 +108,18 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
 
   void setDuration(int minutes) {
     if (_state == TimerState.idle && _level > 1) {
+      _totalTimeSeconds = minutes * 60;
+      _currentTimeSeconds = _totalTimeSeconds;
+      
+      // Make the duration selection persistent in settings
+      _settingsService.setPreferredFocusDuration(minutes);
+      
+      notifyListeners();
+    }
+  }
+
+  void setPdfDuration(int minutes) {
+    if (_state == TimerState.idle) {
       _totalTimeSeconds = minutes * 60;
       _currentTimeSeconds = _totalTimeSeconds;
       notifyListeners();
@@ -138,6 +151,11 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
     _enableDND();
     _startTicker();
     WakelockPlus.enable();
+    
+    // Play ambient sound if selected
+    if (_settingsService.ambientSound != AmbientSound.none) {
+      _audioService.playAmbientSound(_settingsService.ambientSound);
+    }
     
     // Notify statistics service
     _statisticsService?.startSession();
@@ -191,13 +209,22 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
     _disableDND();
     _state = TimerState.failure;
     _audioService.playAlarm();
+    _audioService.stopAmbientSound(); // Stop ambient sound on failure
     WakelockPlus.disable();
+
+    // HARD MODE PENALTY: Reset streak if hard mode is on
+    if (_settingsService.isHardMode && _statisticsService != null) {
+      _statisticsService!.resetStreak();
+    }
+    
     notifyListeners();
   }
 
   void _completeTimer() {
     _timer?.cancel();
     _phoneStateSubscription?.cancel();
+    _sensorSubscription?.cancel(); // Stop sensor tracking on success
+    _audioService.stopAmbientSound(); // Stop ambient sound on success
     _disableDND();
     _state = TimerState.success;
     _completedSessions++;
@@ -208,14 +235,16 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
       _level++; 
     }
     
-    // Always update duration after completion/level up
-    _updateInitialDuration();
-
-    // Notify statistics service
+    // Notify statistics service BEFORE updating initial duration for next session
     if (_statisticsService != null) {
-      final totalMinutes = (_totalTimeSeconds / 60).ceil();
-      _statisticsService!.completeSession(totalMinutes, category: _currentCategory);
+      final completedMinutes = (_totalTimeSeconds / 60).ceil();
+      final noteStr = pdfName != null ? 'PDF: $pdfName' : '';
+      _statisticsService!.completeSession(completedMinutes, category: _currentCategory, note: noteStr);
+      pdfName = null; // Clear it for future non-PDF sessions
     }
+    
+    // Note: We don't call _updateInitialDuration() here anymore to keep 00:00 on Success screen.
+    // It will be called when user hits 'Reset' or starts a new session.
 
     _notificationService.showNotification(
       id: 1,
