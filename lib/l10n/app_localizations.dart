@@ -1978,6 +1978,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{pages} pages • {words} words'**
   String pagesWords(int pages, int words);
+
+  /// No description provided for @aiErrUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'AI is temporarily unavailable. Please try again later.'**
+  String get aiErrUnavailable;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

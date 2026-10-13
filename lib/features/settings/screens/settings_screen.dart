@@ -85,7 +85,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 decoration: InputDecoration(
                   hintText: _hasApiKey
                       ? 'Anahtar Kaydedildi (Değiştirmek için yazın)'
-                      : 'AIza... / AQ....',
+                      : 'sk-... / AIza...',
                   hintStyle: const TextStyle(color: AppColors.textSecondary),
                   filled: true,
                   fillColor: Colors.black26,
@@ -104,7 +104,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     if (_hasApiKey) return null;
                     return l10n.apiKeyRequired;
                   }
-                  if (!AiService.looksLikeGeminiKey(val)) {
+                  if (!AiService.looksLikeApiKey(val)) {
                     return l10n.apiKeyInvalidFormat;
                   }
                   return null;

@@ -1019,4 +1019,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String pagesWords(int pages, int words) {
     return '$pages sayfa • $words kelime';
   }
+
+  @override
+  String get aiErrUnavailable => 'AI şu an kullanılamıyor. Lütfen daha sonra tekrar dene.';
 }

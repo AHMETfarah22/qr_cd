@@ -482,5 +482,6 @@
         "type": "int"
       }
     }
-  }
+  },
+  "aiErrUnavailable": "AI is temporarily unavailable. Please try again later."
 }

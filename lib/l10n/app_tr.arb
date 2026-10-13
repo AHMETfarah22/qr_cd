@@ -389,5 +389,6 @@
   "aiErrGeneric": "AI servisinde bir sorun oldu. Lütfen tekrar dene.",
   "enterApiKeyBtn": "API anahtarı gir",
   "apiKeyWhere": "Ücretsiz anahtar: aistudio.google.com/apikey",
-  "pagesWords": "{pages} sayfa • {words} kelime"
+  "pagesWords": "{pages} sayfa • {words} kelime",
+  "aiErrUnavailable": "AI şu an kullanılamıyor. Lütfen daha sonra tekrar dene."
 }

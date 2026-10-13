@@ -12,7 +12,10 @@ String aiErrorMessage(Object error, AppLocalizations l10n) {
     case AiErrorType.missingKey:
       return l10n.aiErrMissingKey;
     case AiErrorType.invalidKey:
-      return l10n.apiKey401Hata;
+    case AiErrorType.noCredits:
+      // Key/billing problems are the developer's to fix; students just see
+      // that AI is unavailable.
+      return l10n.aiErrUnavailable;
     case AiErrorType.busy:
       return l10n.aiErrBusy;
     case AiErrorType.rateLimited:
@@ -28,11 +31,10 @@ String aiErrorMessage(Object error, AppLocalizations l10n) {
   }
 }
 
-/// True when the fix for [error] is entering a (new) API key.
+/// True when no API key is configured at all (only in builds without
+/// secrets.json), so entering one is the fix.
 bool aiErrorNeedsKey(Object? error) =>
-    error is AiException &&
-    (error.type == AiErrorType.missingKey ||
-        error.type == AiErrorType.invalidKey);
+    error is AiException && error.type == AiErrorType.missingKey;
 
 /// Asks for a Gemini API key and stores it. Returns true when a key was saved.
 Future<bool> showGeminiKeyDialog(BuildContext context) async {
@@ -91,7 +93,7 @@ Future<bool> showGeminiKeyDialog(BuildContext context) async {
                 autofocus: true,
                 style: TextStyle(color: p.textPrimary, fontSize: 14),
                 decoration: InputDecoration(
-                  hintText: 'AIza... / AQ....',
+                  hintText: 'sk-... / AIza...',
                   hintStyle: TextStyle(color: p.textSecondary),
                   filled: true,
                   fillColor: p.cardMuted,
@@ -104,7 +106,7 @@ Future<bool> showGeminiKeyDialog(BuildContext context) async {
                   if (val == null || val.trim().isEmpty) {
                     return l10n.apiKeyRequired;
                   }
-                  if (!AiService.looksLikeGeminiKey(val)) {
+                  if (!AiService.looksLikeApiKey(val)) {
                     return l10n.apiKeyInvalidFormat;
                   }
                   return null;

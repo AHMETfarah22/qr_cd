@@ -1031,4 +1031,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String pagesWords(int pages, int words) {
     return '$pages pages • $words words';
   }
+
+  @override
+  String get aiErrUnavailable => 'AI is temporarily unavailable. Please try again later.';
 }

@@ -2,11 +2,11 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
 
-/// Shared app backdrop with a study theme: green gradient, faint notebook
-/// ruling with a margin line, and line-art books, pages, a pencil and
-/// sparkles drifting slowly upward. Drawn in code (sharp on every screen)
-/// and kept low-contrast so content stays readable. Motion stops when the
-/// system "remove animations" setting is on.
+/// Shared app backdrop: a glass hourglass with gold sand that slowly runs
+/// out, flips and starts again, plus a few drifting gold specks. Light theme
+/// is white/grey like a studio photo; dark theme keeps the deep green. The
+/// hourglass is kept faint so content on top stays readable, and it stands
+/// still when the system "remove animations" setting is on.
 class AppBackground extends StatefulWidget {
   final Widget child;
 
@@ -23,7 +23,7 @@ class _AppBackgroundState extends State<AppBackground>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     vsync: this,
-    duration: const Duration(seconds: 48),
+    duration: _HourglassPainter.cycle,
   );
 
   @override
@@ -31,6 +31,7 @@ class _AppBackgroundState extends State<AppBackground>
     super.didChangeDependencies();
     if (MediaQuery.disableAnimationsOf(context)) {
       _controller.stop();
+      _controller.value = 0.35;
     } else if (!_controller.isAnimating) {
       _controller.repeat();
     }
@@ -51,7 +52,7 @@ class _AppBackgroundState extends State<AppBackground>
         Positioned.fill(
           child: RepaintBoundary(
             child: CustomPaint(
-              painter: _BackgroundPainter(
+              painter: _HourglassPainter(
                 isDark: isDark,
                 animation: _controller,
               ),
@@ -64,43 +65,75 @@ class _AppBackgroundState extends State<AppBackground>
   }
 }
 
-enum _Doodle { closedBook, openBook, page, pencil, sparkle, cap }
+class _HourglassPainter extends CustomPainter {
+  static const _runSeconds = 60.0;
+  static const _flipSeconds = 1.8;
+  static final cycle = Duration(
+    milliseconds: ((_runSeconds + _flipSeconds) * 1000).round(),
+  );
 
-class _Floater {
-  final _Doodle kind;
-  final double x; // 0..1 of width
-  final double y; // 0..1 of height at t = 0
-  final double size;
-  final int speed; // screen passes per loop (integer keeps the loop seamless)
-  final double phase;
+  static const _gold = [
+    Color(0xFFF6D277),
+    Color(0xFFE2AE45),
+    Color(0xFFB98426),
+  ];
 
-  const _Floater(this.kind, this.x, this.y, this.size, this.speed, this.phase);
-}
-
-const _floaters = [
-  _Floater(_Doodle.openBook, 0.78, 0.18, 46, 1, 0.0),
-  _Floater(_Doodle.closedBook, 0.16, 0.42, 38, 1, 0.3),
-  _Floater(_Doodle.pencil, 0.86, 0.62, 40, 1, 0.55),
-  _Floater(_Doodle.page, 0.30, 0.86, 34, 1, 0.8),
-  _Floater(_Doodle.sparkle, 0.55, 0.30, 14, 2, 0.15),
-  _Floater(_Doodle.cap, 0.62, 0.74, 34, 1, 0.45),
-  _Floater(_Doodle.sparkle, 0.10, 0.08, 10, 2, 0.65),
-  _Floater(_Doodle.closedBook, 0.92, 0.95, 30, 1, 0.9),
-];
-
-class _BackgroundPainter extends CustomPainter {
   final bool isDark;
   final Animation<double> animation;
 
-  _BackgroundPainter({required this.isDark, required this.animation})
+  _HourglassPainter({required this.isDark, required this.animation})
     : super(repaint: animation);
+
+  // Glass half-width at |y| = u (0 = neck, 1 = rim), as a fraction of max.
+  static double _profile(double u) {
+    const neck = 0.07;
+    return neck +
+        (1 - neck) *
+            math.pow(math.sin(u.clamp(0.0, 1.0) * math.pi * 0.70), 0.75);
+  }
 
   @override
   void paint(Canvas canvas, Size size) {
     final rect = Offset.zero & size;
-    final t = animation.value;
+    final seconds = animation.value * (_runSeconds + _flipSeconds);
+    final running = seconds < _runSeconds;
+    final progress = running ? seconds / _runSeconds : 1.0;
+    final flip = running
+        ? 0.0
+        : Curves.easeInOutCubic.transform(
+            (seconds - _runSeconds) / _flipSeconds,
+          );
 
-    // Base green gradient
+    _paintBackdrop(canvas, rect);
+
+    final h = math.min(size.height * 0.58, size.width * 1.15);
+    final w = h * 0.58;
+    final center = Offset(size.width / 2, size.height * 0.53);
+
+    _paintDust(canvas, size, animation.value);
+
+    // Table shadow (light theme), squashes while the glass is flipping.
+    if (!isDark) {
+      canvas.drawOval(
+        Rect.fromCenter(
+          center: center + Offset(w * 0.25, h / 2 + 6),
+          width: w * 1.25 * (1 - 0.4 * math.sin(flip * math.pi)),
+          height: h * 0.05,
+        ),
+        Paint()
+          ..color = Colors.black.withValues(alpha: 0.07)
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12),
+      );
+    }
+
+    canvas.save();
+    canvas.translate(center.dx, center.dy);
+    canvas.rotate(flip * math.pi);
+    _paintHourglass(canvas, w, h, progress, seconds);
+    canvas.restore();
+  }
+
+  void _paintBackdrop(Canvas canvas, Rect rect) {
     canvas.drawRect(
       rect,
       Paint()
@@ -113,188 +146,168 @@ class _BackgroundPainter extends CustomPainter {
                   AppColors.background,
                   Color(0xFF031009),
                 ]
-              : const [Color(0xFFF1FAF4), Color(0xFFE6F5EC), Color(0xFFD9EFE1)],
+              : const [Color(0xFFF7F8F9), Color(0xFFEEF0F2), Color(0xFFE3E6EA)],
         ).createShader(rect),
     );
-
-    _glow(
-      canvas,
-      Offset(size.width * 0.95, size.height * 0.04),
-      size.width * 0.85,
-      AppColors.accent.withValues(alpha: isDark ? 0.16 : 0.22),
+    // Warm glow behind the hourglass
+    final glowCenter = Offset(rect.width / 2, rect.height * 0.5);
+    final glowRadius = rect.width * 0.9;
+    final glow = (isDark ? const Color(0xFFE2AE45) : Colors.white).withValues(
+      alpha: isDark ? 0.07 : 0.8,
     );
-    _glow(
-      canvas,
-      Offset(0, size.height * 0.78),
-      size.width * 0.9,
-      const Color(0xFF1FB5A0).withValues(alpha: isDark ? 0.10 : 0.12),
-    );
-
-    // Notebook ruling and margin line
-    final rule = Paint()
-      ..color = (isDark ? Colors.white : AppColors.accentDeep).withValues(
-        alpha: isDark ? 0.035 : 0.07,
-      )
-      ..strokeWidth = 1;
-    for (double y = 96; y < size.height; y += 30) {
-      canvas.drawLine(Offset(0, y), Offset(size.width, y), rule);
-    }
-    canvas.drawLine(
-      const Offset(34, 0),
-      Offset(34, size.height),
-      Paint()
-        ..color = const Color(
-          0xFFFF7A7A,
-        ).withValues(alpha: isDark ? 0.10 : 0.18)
-        ..strokeWidth = 1.2,
-    );
-
-    // Drifting doodles
-    final stroke = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.6
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round
-      ..color = (isDark ? const Color(0xFFB8F5CB) : AppColors.accentDeep)
-          .withValues(alpha: isDark ? 0.11 : 0.16);
-    final fill = Paint()
-      ..color = (isDark ? AppColors.accent : AppColors.accentDeep).withValues(
-        alpha: isDark ? 0.14 : 0.16,
-      );
-
-    for (final f in _floaters) {
-      final travel = 1.2 * f.speed * t;
-      final yFrac = ((f.y - travel) % 1.2 + 1.2) % 1.2 - 0.1;
-      final wave = math.sin(2 * math.pi * (t * f.speed + f.phase));
-      final center = Offset(f.x * size.width + wave * 12, yFrac * size.height);
-      canvas.save();
-      canvas.translate(center.dx, center.dy);
-      canvas.rotate(wave * 0.18);
-      _drawDoodle(canvas, f.kind, f.size, stroke, fill);
-      canvas.restore();
-    }
-  }
-
-  void _glow(Canvas canvas, Offset center, double radius, Color color) {
     canvas.drawCircle(
-      center,
-      radius,
+      glowCenter,
+      glowRadius,
       Paint()
         ..shader = RadialGradient(
-          colors: [color, color.withValues(alpha: 0)],
-        ).createShader(Rect.fromCircle(center: center, radius: radius)),
+          colors: [glow, glow.withValues(alpha: 0)],
+        ).createShader(Rect.fromCircle(center: glowCenter, radius: glowRadius)),
     );
   }
 
-  void _drawDoodle(
+  void _paintDust(Canvas canvas, Size size, double t) {
+    final rnd = math.Random(11);
+    final paint = Paint();
+    for (var i = 0; i < 18; i++) {
+      final x0 = rnd.nextDouble();
+      final y0 = rnd.nextDouble();
+      final r = 0.8 + rnd.nextDouble() * 1.8;
+      final speed = 1 + rnd.nextInt(2); // whole passes per cycle: seamless loop
+      final phase = rnd.nextDouble();
+      final y = ((y0 - t * speed) % 1.0 + 1.0) % 1.0;
+      final x = x0 + 0.015 * math.sin(2 * math.pi * (t * speed * 3 + phase));
+      final twinkle = 0.5 + 0.5 * math.sin(2 * math.pi * (t * 20 + phase));
+      paint.color = _gold[1].withValues(
+        alpha: (isDark ? 0.22 : 0.30) * (0.4 + 0.6 * twinkle),
+      );
+      canvas.drawCircle(Offset(x * size.width, y * size.height), r, paint);
+    }
+  }
+
+  void _paintHourglass(
     Canvas canvas,
-    _Doodle kind,
-    double s,
-    Paint stroke,
-    Paint fill,
+    double w,
+    double h,
+    double progress,
+    double seconds,
   ) {
-    switch (kind) {
-      case _Doodle.closedBook:
-        final r = Rect.fromCenter(
-          center: Offset.zero,
-          width: s * 0.75,
-          height: s,
-        );
-        canvas.drawRRect(
-          RRect.fromRectAndRadius(r, Radius.circular(s * 0.08)),
-          stroke,
-        );
+    final half = h / 2;
+    final maxHw = w / 2;
+
+    // Glass outline: right side top -> bottom, then left side bottom -> top.
+    final glass = Path();
+    const steps = 48;
+    for (var i = 0; i <= steps; i++) {
+      final y = -1 + 2 * i / steps;
+      final p = Offset(maxHw * _profile(y.abs()), y * half);
+      i == 0 ? glass.moveTo(p.dx, p.dy) : glass.lineTo(p.dx, p.dy);
+    }
+    for (var i = steps; i >= 0; i--) {
+      final y = -1 + 2 * i / steps;
+      glass.lineTo(-maxHw * _profile(y.abs()), y * half);
+    }
+    glass.close();
+
+    // Glass body tint
+    canvas.drawPath(
+      glass,
+      Paint()..color = Colors.white.withValues(alpha: isDark ? 0.03 : 0.35),
+    );
+
+    // Sand, clipped to the glass interior
+    final topLevel =
+        0.62 * (1 - progress); // fraction of the half height above the neck
+    final bottomLevel = 0.62 * progress; // fraction filled from the base
+    final sandPaint = Paint()
+      ..shader = LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: _gold
+            .map((c) => c.withValues(alpha: isDark ? 0.30 : 0.55))
+            .toList(),
+      ).createShader(Rect.fromLTRB(-maxHw, -half, maxHw, half));
+
+    canvas.save();
+    canvas.clipPath(glass);
+    if (topLevel > 0.005) {
+      final y = -topLevel * half;
+      final dip = h * 0.03 * math.min(1, topLevel * 4);
+      final top = Path()
+        ..moveTo(-maxHw, y)
+        ..quadraticBezierTo(0, y + dip * 2, maxHw, y)
+        ..lineTo(maxHw, 0)
+        ..lineTo(-maxHw, 0)
+        ..close();
+      canvas.drawPath(top, sandPaint);
+    }
+    if (bottomLevel > 0.005) {
+      final y = half - bottomLevel * half;
+      final mound = h * 0.045 * math.min(1, progress * 4);
+      final bottom = Path()
+        ..moveTo(-maxHw, y + mound * 0.4)
+        ..quadraticBezierTo(0, y - mound * 1.6, maxHw, y + mound * 0.4)
+        ..lineTo(maxHw, half)
+        ..lineTo(-maxHw, half)
+        ..close();
+      canvas.drawPath(bottom, sandPaint);
+
+      // Falling stream with grains sliding down it
+      if (progress < 0.995) {
+        final streamEnd = y - mound * 0.6;
         canvas.drawLine(
-          Offset(r.left + s * 0.14, r.top),
-          Offset(r.left + s * 0.14, r.bottom),
-          stroke,
+          Offset.zero,
+          Offset(0, streamEnd),
+          Paint()
+            ..color = _gold[1].withValues(alpha: isDark ? 0.35 : 0.6)
+            ..strokeWidth = 1.6,
         );
-        canvas.drawLine(
-          Offset(r.left + s * 0.26, r.top + s * 0.3),
-          Offset(r.right - s * 0.12, r.top + s * 0.3),
-          stroke,
-        );
-      case _Doodle.openBook:
-        final h = s * 0.32;
-        final left = Path()
-          ..moveTo(0, -h * 0.6)
-          ..quadraticBezierTo(-s * 0.25, -h, -s * 0.5, -h * 0.75)
-          ..lineTo(-s * 0.5, h)
-          ..quadraticBezierTo(-s * 0.25, h * 0.75, 0, h * 1.2)
-          ..close();
-        canvas.drawPath(left, stroke);
-        canvas.save();
-        canvas.scale(-1, 1);
-        canvas.drawPath(left, stroke);
-        canvas.restore();
-        for (var i = 0; i < 2; i++) {
-          final y = -h * 0.2 + i * h * 0.5;
-          canvas.drawLine(Offset(-s * 0.38, y), Offset(-s * 0.12, y), stroke);
-          canvas.drawLine(Offset(s * 0.12, y), Offset(s * 0.38, y), stroke);
+        final grain = Paint()
+          ..color = _gold[0].withValues(alpha: isDark ? 0.5 : 0.8);
+        for (var i = 0; i < 4; i++) {
+          final f = ((seconds * 1.6 + i / 4) % 1.0);
+          canvas.drawCircle(Offset(0, f * streamEnd), 1.4, grain);
         }
-      case _Doodle.page:
-        final w = s * 0.72, h = s;
-        final fold = s * 0.2;
-        final path = Path()
-          ..moveTo(-w / 2, -h / 2)
-          ..lineTo(w / 2 - fold, -h / 2)
-          ..lineTo(w / 2, -h / 2 + fold)
-          ..lineTo(w / 2, h / 2)
-          ..lineTo(-w / 2, h / 2)
-          ..close()
-          ..moveTo(w / 2 - fold, -h / 2)
-          ..lineTo(w / 2 - fold, -h / 2 + fold)
-          ..lineTo(w / 2, -h / 2 + fold);
-        canvas.drawPath(path, stroke);
-        for (var i = 0; i < 3; i++) {
-          final y = -h * 0.1 + i * h * 0.18;
-          canvas.drawLine(Offset(-w * 0.32, y), Offset(w * 0.3, y), stroke);
-        }
-      case _Doodle.pencil:
-        canvas.rotate(-math.pi / 4);
-        final w = s * 0.2, len = s;
-        canvas.drawRect(Rect.fromLTWH(-len / 2, -w / 2, len * 0.75, w), stroke);
-        final tip = Path()
-          ..moveTo(len * 0.25, -w / 2)
-          ..lineTo(len / 2, 0)
-          ..lineTo(len * 0.25, w / 2);
-        canvas.drawPath(tip, stroke);
-        canvas.drawLine(
-          Offset(-len * 0.32, -w / 2),
-          Offset(-len * 0.32, w / 2),
-          stroke,
-        );
-      case _Doodle.sparkle:
-        final path = Path();
-        for (var i = 0; i < 8; i++) {
-          final a = i * math.pi / 4 - math.pi / 2;
-          final r = i.isEven ? s : s * 0.32;
-          final p = Offset(math.cos(a) * r, math.sin(a) * r);
-          i == 0 ? path.moveTo(p.dx, p.dy) : path.lineTo(p.dx, p.dy);
-        }
-        canvas.drawPath(path..close(), fill);
-      case _Doodle.cap:
-        final top = Path()
-          ..moveTo(0, -s * 0.3)
-          ..lineTo(s * 0.5, -s * 0.08)
-          ..lineTo(0, s * 0.14)
-          ..lineTo(-s * 0.5, -s * 0.08)
-          ..close();
-        canvas.drawPath(top, stroke);
-        final base = Path()
-          ..moveTo(-s * 0.3, 0)
-          ..lineTo(-s * 0.3, s * 0.26)
-          ..quadraticBezierTo(0, s * 0.42, s * 0.3, s * 0.26)
-          ..lineTo(s * 0.3, 0);
-        canvas.drawPath(base, stroke);
-        canvas.drawLine(
-          Offset(s * 0.5, -s * 0.08),
-          Offset(s * 0.5, s * 0.26),
-          stroke,
-        );
+      }
+    }
+    canvas.restore();
+
+    // Outline, rims and highlights
+    final lineColor = isDark
+        ? const Color(0xFFCFE9D8)
+        : const Color(0xFFA8B1BC);
+    final outline = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.6
+      ..color = lineColor.withValues(alpha: isDark ? 0.18 : 0.55);
+    canvas.drawPath(glass, outline);
+    final rimHw = maxHw * _profile(1);
+    for (final y in [-half, half]) {
+      canvas.drawOval(
+        Rect.fromCenter(
+          center: Offset(0, y),
+          width: rimHw * 2,
+          height: h * 0.022,
+        ),
+        outline,
+      );
+    }
+
+    final highlight = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3
+      ..strokeCap = StrokeCap.round
+      ..color = Colors.white.withValues(alpha: isDark ? 0.10 : 0.75);
+    for (final sign in [-1.0, 1.0]) {
+      final path = Path();
+      for (var i = 0; i <= 12; i++) {
+        final u = 0.35 + 0.45 * i / 12;
+        final p = Offset(-maxHw * _profile(u) * 0.78, sign * u * half);
+        i == 0 ? path.moveTo(p.dx, p.dy) : path.lineTo(p.dx, p.dy);
+      }
+      canvas.drawPath(path, highlight);
     }
   }
 
   @override
-  bool shouldRepaint(covariant _BackgroundPainter old) => old.isDark != isDark;
+  bool shouldRepaint(covariant _HourglassPainter old) => old.isDark != isDark;
 }

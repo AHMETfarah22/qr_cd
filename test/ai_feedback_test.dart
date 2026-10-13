@@ -22,10 +22,19 @@ void main() {
     expect(aiErrorMessage(Exception('boom'), en), en.aiErrGeneric);
   });
 
-  test('accepts Gemini key formats and rejects OpenRouter keys', () {
-    expect(AiService.looksLikeGeminiKey('AIza${'x' * 35}'), isTrue);
-    expect(AiService.looksLikeGeminiKey('AQ.${'x' * 40}'), isTrue);
-    expect(AiService.looksLikeGeminiKey('sk-or-v1-${'x' * 40}'), isFalse);
-    expect(AiService.looksLikeGeminiKey('AIza'), isFalse);
+  test('no credit or a rejected key never asks the student for a key', () {
+    for (final type in [AiErrorType.noCredits, AiErrorType.invalidKey]) {
+      final e = AiException(type);
+      expect(aiErrorMessage(e, tr), tr.aiErrUnavailable);
+      expect(aiErrorNeedsKey(e), isFalse);
+    }
+  });
+
+  test('accepts OpenAI and Gemini key formats, rejects OpenRouter keys', () {
+    expect(AiService.looksLikeApiKey('sk-proj-${'x' * 40}'), isTrue);
+    expect(AiService.looksLikeApiKey('AIza${'x' * 35}'), isTrue);
+    expect(AiService.looksLikeApiKey('AQ.${'x' * 40}'), isTrue);
+    expect(AiService.looksLikeApiKey('sk-or-v1-${'x' * 40}'), isFalse);
+    expect(AiService.looksLikeApiKey('AIza'), isFalse);
   });
 }
