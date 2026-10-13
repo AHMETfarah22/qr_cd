@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'core/theme/app_theme.dart';
 import 'core/services/settings_service.dart';
+import 'core/services/billing_service.dart';
 import 'core/services/premium_service.dart';
 import 'features/auth/screens/login_screen.dart';
 import 'features/auth/services/auth_service.dart';
@@ -32,6 +33,11 @@ void main() async {
         Provider<NotificationService>.value(value: notificationService),
         ChangeNotifierProvider(create: (_) => AuthService()),
         ChangeNotifierProvider(create: (_) => PremiumService()),
+        // Not lazy: re-checks owned subscriptions with the store at startup.
+        ChangeNotifierProvider(
+          lazy: false,
+          create: (context) => BillingService(context.read<PremiumService>()),
+        ),
         ChangeNotifierProxyProvider<AuthService, SettingsService>(
           create: (context) {
             final authService = context.read<AuthService>();

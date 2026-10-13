@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:confetti/confetti.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/services/billing_service.dart';
 import '../../../core/services/premium_service.dart';
 import '../../../core/theme/palette.dart';
 import '../../../core/widgets/app_background.dart';
@@ -26,23 +27,75 @@ class _PaywallScreenState extends State<PaywallScreen> {
   PremiumPlan _selectedPlan = PremiumPlan.yearly;
   bool _isProcessing = false;
 
+  /// Set while a purchase started here is waiting for the store; the
+  /// success dialog shows once Premium becomes active.
+  bool _awaitingPurchase = false;
+  late final PremiumService _premium;
+
+  @override
+  void initState() {
+    super.initState();
+    _premium = Provider.of<PremiumService>(context, listen: false);
+    _premium.addListener(_onPremiumChanged);
+  }
+
   @override
   void dispose() {
+    _premium.removeListener(_onPremiumChanged);
     _confettiController.dispose();
     super.dispose();
   }
 
+  void _onPremiumChanged() {
+    if (_awaitingPurchase && _premium.isPremium && mounted) {
+      _awaitingPurchase = false;
+      _showSuccess();
+    }
+  }
+
   Future<void> _handlePurchase() async {
-    final l10n = AppLocalizations.of(context)!;
-    final premiumService = Provider.of<PremiumService>(context, listen: false);
-    setState(() => _isProcessing = true);
-
-    // Simulated store purchase; replace with In-App Purchase before release.
-    await Future.delayed(const Duration(milliseconds: 1500));
-    await premiumService.activatePlan(_selectedPlan);
+    final billing = Provider.of<BillingService>(context, listen: false);
+    setState(() {
+      _isProcessing = true;
+      _awaitingPurchase = true;
+    });
+    final started = await billing.buy(_selectedPlan);
     if (!mounted) return;
-
     setState(() => _isProcessing = false);
+    if (!started) {
+      _awaitingPurchase = false;
+      _showBillingError(billing.lastError);
+    }
+  }
+
+  Future<void> _handleRestore() async {
+    final billing = Provider.of<BillingService>(context, listen: false);
+    final l10n = AppLocalizations.of(context)!;
+    await billing.restore();
+    if (!mounted) return;
+    if (billing.lastError != null) {
+      _showBillingError(billing.lastError);
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.restoreDone)));
+    }
+  }
+
+  void _showBillingError(BillingError? error) {
+    final l10n = AppLocalizations.of(context)!;
+    final message = switch (error) {
+      BillingError.storeUnavailable => l10n.billingUnavailable,
+      BillingError.productNotFound => l10n.billingProductMissing,
+      _ => l10n.billingFailed,
+    };
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.redAccent),
+    );
+  }
+
+  void _showSuccess() {
+    final l10n = AppLocalizations.of(context)!;
     _confettiController.play();
 
     showDialog(
@@ -116,6 +169,8 @@ class _PaywallScreenState extends State<PaywallScreen> {
   @override
   Widget build(BuildContext context) {
     final premiumService = Provider.of<PremiumService>(context);
+    final billing = Provider.of<BillingService>(context);
+    final busy = _isProcessing || billing.purchasePending;
     final l10n = AppLocalizations.of(context)!;
     final p = Palette.of(context);
     final locale = Localizations.localeOf(context).toString();
@@ -231,8 +286,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                             width: double.infinity,
                             height: 56,
                             child: ElevatedButton(
-                              onPressed:
-                                  _isProcessing || premiumService.isPremium
+                              onPressed: busy || premiumService.isPremium
                                   ? null
                                   : _handlePurchase,
                               style: ElevatedButton.styleFrom(
@@ -245,12 +299,12 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                 ),
                                 elevation: 0,
                               ),
-                              child: _isProcessing
+                              child: busy
                                   ? const SizedBox(
                                       width: 24,
                                       height: 24,
                                       child: CircularProgressIndicator(
-                                        color: Colors.black,
+                                        color: Colors.white,
                                         strokeWidth: 2.5,
                                       ),
                                     )
@@ -265,7 +319,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                                     ),
                                                   )
                                                 : l10n.premiumActivatedTitle)
-                                          : '${l10n.subscribeNow} · ${_selectedPlan.priceTl} TL',
+                                          : '${l10n.subscribeNow} · ${billing.priceLabel(_selectedPlan)}',
                                       style: GoogleFonts.poppins(
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold,
@@ -273,7 +327,31 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                     ),
                             ),
                           ),
-                          const SizedBox(height: 14),
+                          if (billing.purchasePending) ...[
+                            const SizedBox(height: 10),
+                            Text(
+                              l10n.billingPending,
+                              style: GoogleFonts.poppins(
+                                fontSize: 12,
+                                color: p.textSecondary,
+                              ),
+                            ),
+                          ],
+                          const SizedBox(height: 6),
+                          TextButton(
+                            onPressed: busy ? null : _handleRestore,
+                            child: Text(
+                              l10n.restorePurchases,
+                              style: GoogleFonts.poppins(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                                decoration: TextDecoration.underline,
+                                decorationColor: Colors.white54,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 6),
                           Text(
                             l10n.paywallTerms,
                             style: GoogleFonts.poppins(
@@ -483,7 +561,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  '${plan.priceTl} TL',
+                  Provider.of<BillingService>(context).priceLabel(plan),
                   style: GoogleFonts.poppins(
                     color: isSelected ? p.textPrimary : p.textPrimary,
                     fontWeight: FontWeight.bold,

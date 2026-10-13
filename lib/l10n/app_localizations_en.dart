@@ -1045,4 +1045,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noRecentSessions => 'No sessions in the last 7 days';
+
+  @override
+  String get restorePurchases => 'Restore purchases';
+
+  @override
+  String get restoreDone => 'Purchases checked';
+
+  @override
+  String get billingUnavailable => 'The store isn\'t available on this device. Install TScan from Google Play to subscribe.';
+
+  @override
+  String get billingProductMissing => 'This subscription isn\'t available right now. Please try again later.';
+
+  @override
+  String get billingFailed => 'The purchase could not be completed.';
+
+  @override
+  String get billingPending => 'Waiting for payment confirmation...';
 }

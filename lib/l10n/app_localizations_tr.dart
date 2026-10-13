@@ -1033,4 +1033,22 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get noRecentSessions => 'Son 7 günde oturum yok';
+
+  @override
+  String get restorePurchases => 'Satın alımları geri yükle';
+
+  @override
+  String get restoreDone => 'Satın alımlar kontrol edildi';
+
+  @override
+  String get billingUnavailable => 'Mağaza bu cihazda kullanılamıyor. Abone olmak için TScan\'i Google Play\'den yükle.';
+
+  @override
+  String get billingProductMissing => 'Bu abonelik şu an kullanılamıyor. Lütfen daha sonra tekrar dene.';
+
+  @override
+  String get billingFailed => 'Satın alma tamamlanamadı.';
+
+  @override
+  String get billingPending => 'Ödeme onayı bekleniyor...';
 }

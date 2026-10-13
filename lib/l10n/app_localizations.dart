@@ -2002,6 +2002,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No sessions in the last 7 days'**
   String get noRecentSessions;
+
+  /// No description provided for @restorePurchases.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore purchases'**
+  String get restorePurchases;
+
+  /// No description provided for @restoreDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchases checked'**
+  String get restoreDone;
+
+  /// No description provided for @billingUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'The store isn\'t available on this device. Install TScan from Google Play to subscribe.'**
+  String get billingUnavailable;
+
+  /// No description provided for @billingProductMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'This subscription isn\'t available right now. Please try again later.'**
+  String get billingProductMissing;
+
+  /// No description provided for @billingFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The purchase could not be completed.'**
+  String get billingFailed;
+
+  /// No description provided for @billingPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for payment confirmation...'**
+  String get billingPending;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

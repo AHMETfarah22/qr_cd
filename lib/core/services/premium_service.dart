@@ -57,10 +57,14 @@ class PremiumService extends ChangeNotifier {
   }
 
   /// Activates [plan] starting now (called after a successful purchase).
-  Future<void> activatePlan(PremiumPlan plan) async {
+  /// [validFor] overrides the plan length, e.g. a short grace window for a
+  /// subscription the store reported as still active at app start.
+  Future<void> activatePlan(PremiumPlan plan, {Duration? validFor}) async {
     _isPremium = true;
     _plan = plan;
-    _expiry = DateTime.now().add(plan.duration);
+    final until = DateTime.now().add(validFor ?? plan.duration);
+    // Never shorten an expiry that is already further out.
+    if (_expiry == null || until.isAfter(_expiry!)) _expiry = until;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_premiumKey, true);
     await prefs.setInt(_expiryKey, _expiry!.millisecondsSinceEpoch);
