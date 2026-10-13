@@ -822,4 +822,33 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get apiKey401Hata => 'Unauthorized API key (401)! Please enter a valid OpenRouter API key. The current key was cleared.';
+
+  @override
+  String get navStats => 'Stats';
+
+  @override
+  String get navHistory => 'History';
+
+  @override
+  String get activityIntensity => 'ACTIVITY INTENSITY';
+
+  @override
+  String timeAgoWeeks(int weeks) {
+    return '$weeks weeks ago';
+  }
+
+  @override
+  String timeAgoMonths(int months) {
+    return '$months months ago';
+  }
+
+  @override
+  String timeAgoYears(int years) {
+    return '$years years ago';
+  }
+
+  @override
+  String minutesValue(int minutes) {
+    return '$minutes min';
+  }
 }

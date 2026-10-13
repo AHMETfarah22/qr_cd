@@ -810,4 +810,33 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get apiKey401Hata => 'Yetkisiz API Anahtarı (401)! Lütfen geçerli bir OpenRouter API anahtarı girin. Mevcut anahtar temizlendi.';
+
+  @override
+  String get navStats => 'İstatistik';
+
+  @override
+  String get navHistory => 'Geçmiş';
+
+  @override
+  String get activityIntensity => 'AKTİVİTE YOĞUNLUĞU';
+
+  @override
+  String timeAgoWeeks(int weeks) {
+    return '$weeks hafta önce';
+  }
+
+  @override
+  String timeAgoMonths(int months) {
+    return '$months ay önce';
+  }
+
+  @override
+  String timeAgoYears(int years) {
+    return '$years yıl önce';
+  }
+
+  @override
+  String minutesValue(int minutes) {
+    return '$minutes dk';
+  }
 }

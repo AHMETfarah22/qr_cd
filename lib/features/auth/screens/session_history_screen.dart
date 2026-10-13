@@ -2,36 +2,47 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/palette.dart';
+import '../../core/screens/main_screen.dart';
 import '../../../core/models/session_category.dart';
 import '../services/statistics_service.dart';
 import 'package:tscan/l10n/app_localizations.dart';
 
 class SessionHistoryScreen extends StatelessWidget {
-  const SessionHistoryScreen({super.key});
+  /// True when shown as a bottom-navigation tab (no back button).
+  final bool embedded;
+
+  const SessionHistoryScreen({super.key, this.embedded = false});
 
   @override
   Widget build(BuildContext context) {
     final statsService = Provider.of<StatisticsService>(context);
     final sessions = statsService.sessionHistory;
+    final p = Palette.of(context);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: p.background,
       appBar: AppBar(
         title: Text(
           AppLocalizations.of(context)!.historyTitle,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
             letterSpacing: 2.0,
+            color: p.textPrimary,
           ),
         ),
         centerTitle: true,
         backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded, color: AppColors.accent),
-          onPressed: () => Navigator.pop(context),
-        ),
+        automaticallyImplyLeading: false,
+        leading: embedded
+            ? null
+            : IconButton(
+                icon: Icon(Icons.arrow_back_rounded, color: p.accentText),
+                onPressed: () => Navigator.pop(context),
+              ),
       ),
       body: sessions.isEmpty
           ? Center(
@@ -41,13 +52,13 @@ class SessionHistoryScreen extends StatelessWidget {
                   Icon(
                     Icons.history_rounded,
                     size: 80,
-                    color: AppColors.textSecondary.withValues(alpha: 0.5),
+                    color: p.textSecondary.withValues(alpha: 0.5),
                   ),
                   const SizedBox(height: 16),
                   Text(
                     AppLocalizations.of(context)!.noHistoryYet,
-                    style: const TextStyle(
-                      color: AppColors.textSecondary,
+                    style: TextStyle(
+                      color: p.textSecondary,
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
                     ),
@@ -55,14 +66,16 @@ class SessionHistoryScreen extends StatelessWidget {
                   const SizedBox(height: 8),
                   Text(
                     AppLocalizations.of(context)!.startFocusNow,
-                    style: const TextStyle(
-                      color: AppColors.textSecondary,
+                    style: TextStyle(
+                      color: p.textSecondary,
                       fontSize: 14,
                     ),
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton(
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => embedded
+                        ? MainScreen.switchTab(context, 0)
+                        : Navigator.pop(context),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.accent,
                       foregroundColor: Colors.black,
@@ -80,7 +93,7 @@ class SessionHistoryScreen extends StatelessWidget {
                 children: [
                   _buildWeeklySummary(context, statsService),
                   Expanded(
-                    child: _buildSessionList(sessions),
+                    child: _buildSessionList(context, sessions),
                   ),
                 ],
               ),
@@ -95,9 +108,11 @@ class SessionHistoryScreen extends StatelessWidget {
     required String note,
     required BuildContext context,
   }) {
-    final dateFormat = DateFormat('dd MMM yyyy, HH:mm', 'tr_TR');
+    final p = Palette.of(context);
+    final locale = Localizations.localeOf(context).toString();
+    final dateFormat = DateFormat('dd MMM yyyy, HH:mm', locale);
     final timeAgo = _getTimeAgo(date, context);
-    
+
     final hours = duration ~/ 60;
     final minutes = duration % 60;
     String durationText;
@@ -107,31 +122,18 @@ class SessionHistoryScreen extends StatelessWidget {
       durationText = AppLocalizations.of(context)!.mins(minutes);
     }
 
+    final statusColor = completed ? Colors.green : Colors.redAccent;
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: completed
-              ? [
-                  Colors.green.withValues(alpha: 0.15),
-                  Colors.green.withValues(alpha: 0.05),
-                ]
-              : [
-                  Colors.red.withValues(alpha: 0.15),
-                  Colors.red.withValues(alpha: 0.05),
-                ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: completed
-              ? Colors.green.withValues(alpha: 0.3)
-              : Colors.red.withValues(alpha: 0.3),
-          width: 1.5,
-        ),
-      ),
+      decoration: p.cardDecoration(radius: 16).copyWith(
+            gradient: LinearGradient(
+              colors: [statusColor.withValues(alpha: 0.12), p.card],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            border: Border.all(color: statusColor.withValues(alpha: 0.3), width: 1.2),
+          ),
       child: Row(
         children: [
           // Icon
@@ -169,8 +171,8 @@ class SessionHistoryScreen extends StatelessWidget {
                     ),
                     Text(
                       timeAgo,
-                      style: const TextStyle(
-                        color: AppColors.textSecondary,
+                      style: TextStyle(
+                        color: p.textSecondary,
                         fontSize: 11,
                       ),
                     ),
@@ -179,8 +181,8 @@ class SessionHistoryScreen extends StatelessWidget {
                 const SizedBox(height: 6),
                 Text(
                   durationText,
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: p.textPrimary,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
@@ -195,7 +197,7 @@ class SessionHistoryScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      category.displayName,
+                      category.getDisplayName(context),
                       style: TextStyle(
                         color: category.color,
                         fontSize: 12,
@@ -205,8 +207,8 @@ class SessionHistoryScreen extends StatelessWidget {
                     const Spacer(),
                     Text(
                       dateFormat.format(date),
-                      style: const TextStyle(
-                        color: AppColors.textSecondary,
+                      style: TextStyle(
+                        color: p.textSecondary,
                         fontSize: 11,
                       ),
                     ),
@@ -218,24 +220,24 @@ class SessionHistoryScreen extends StatelessWidget {
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.05),
+                      color: p.cardMuted,
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+                      border: Border.all(color: p.border),
                     ),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.note_alt_outlined,
                           size: 14,
-                          color: AppColors.accent,
+                          color: p.accentText,
                         ),
                         const SizedBox(width: 6),
                         Expanded(
                           child: Text(
                             note,
-                            style: const TextStyle(
-                              color: AppColors.textSecondary,
+                            style: TextStyle(
+                              color: p.textSecondary,
                               fontSize: 12,
                               fontStyle: FontStyle.italic,
                             ),
@@ -253,26 +255,25 @@ class SessionHistoryScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSessionList(List<Map<String, dynamic>> sessions) {
-    // Group sessions by date
-    final groupedSessions = <String, List<Map<String, dynamic>>>{};
-    
+  Widget _buildSessionList(BuildContext context, List<Map<String, dynamic>> sessions) {
+    final p = Palette.of(context);
+    // Group sessions by calendar day
+    final groupedSessions = <DateTime, List<Map<String, dynamic>>>{};
+
     for (var session in sessions) {
       final date = session['date'] as DateTime;
-      final dateKey = DateFormat('dd MMM yyyy', 'tr_TR').format(date);
-      if (!groupedSessions.containsKey(dateKey)) {
-        groupedSessions[dateKey] = [];
-      }
-      groupedSessions[dateKey]!.add(session);
+      final dateKey = DateTime(date.year, date.month, date.day);
+      groupedSessions.putIfAbsent(dateKey, () => []).add(session);
     }
 
     return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
       itemCount: groupedSessions.length,
       itemBuilder: (context, index) {
         final dateKey = groupedSessions.keys.elementAt(index);
         final daySessions = groupedSessions[dateKey]!;
-        
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -280,8 +281,8 @@ class SessionHistoryScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 4.0),
               child: Text(
                 _getDateLabel(dateKey, context),
-                style: const TextStyle(
-                  color: AppColors.accent,
+                style: TextStyle(
+                  color: p.accentText,
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.0,
@@ -310,14 +311,15 @@ class SessionHistoryScreen extends StatelessWidget {
     );
   }
 
-  String _getDateLabel(String dateKey, BuildContext context) {
+  String _getDateLabel(DateTime day, BuildContext context) {
     final now = DateTime.now();
-    final today = DateFormat('dd MMM yyyy', 'tr_TR').format(now);
-    final yesterday = DateFormat('dd MMM yyyy', 'tr_TR').format(now.subtract(const Duration(days: 1)));
-    
-    if (dateKey == today) return AppLocalizations.of(context)!.today;
-    if (dateKey == yesterday) return AppLocalizations.of(context)!.yesterday;
-    return dateKey.toUpperCase();
+    final today = DateTime(now.year, now.month, now.day);
+    final daysAgo = today.difference(day).inDays;
+
+    if (daysAgo == 0) return AppLocalizations.of(context)!.today;
+    if (daysAgo == 1) return AppLocalizations.of(context)!.yesterday;
+    final locale = Localizations.localeOf(context).toString();
+    return DateFormat('dd MMM yyyy', locale).format(day).toUpperCase();
   }
 
   Widget _buildWeeklySummary(BuildContext context, StatisticsService stats) {
@@ -368,8 +370,8 @@ class SessionHistoryScreen extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   AppLocalizations.of(context)!.weeklyMinutesNote(hours, minutes),
-                  style: const TextStyle(
-                    color: AppColors.textSecondary,
+                  style: TextStyle(
+                    color: Palette.of(context).textSecondary,
                     fontSize: 12,
                   ),
                 ),
@@ -407,14 +409,11 @@ class SessionHistoryScreen extends StatelessWidget {
     } else if (difference.inDays < 7) {
       return l10n.timeAgoDays(difference.inDays);
     } else if (difference.inDays < 30) {
-      final weeks = (difference.inDays / 7).floor();
-      return '$weeks hafta önce'; // TODO: Localize these as well if needed
+      return l10n.timeAgoWeeks((difference.inDays / 7).floor());
     } else if (difference.inDays < 365) {
-      final months = (difference.inDays / 30).floor();
-      return '$months ay önce';
+      return l10n.timeAgoMonths((difference.inDays / 30).floor());
     } else {
-      final years = (difference.inDays / 365).floor();
-      return '$years yıl önce';
+      return l10n.timeAgoYears((difference.inDays / 365).floor());
     }
   }
 }

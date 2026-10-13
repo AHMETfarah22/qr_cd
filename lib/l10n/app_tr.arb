@@ -326,5 +326,12 @@
   "aiQuestDeleteConfirm": "\"{name}\" geçmişten silinsin mi?",
   "aiQuestDocMeta": "{minutes} dk • {pages} Sayfa",
   "gizlilikKontrol": "Gizlilik onayı kontrol ediliyor...",
-  "apiKey401Hata": "Yetkisiz API Anahtarı (401)! Lütfen geçerli bir OpenRouter API anahtarı girin. Mevcut anahtar temizlendi."
+  "apiKey401Hata": "Yetkisiz API Anahtarı (401)! Lütfen geçerli bir OpenRouter API anahtarı girin. Mevcut anahtar temizlendi.",
+  "navStats": "İstatistik",
+  "navHistory": "Geçmiş",
+  "activityIntensity": "AKTİVİTE YOĞUNLUĞU",
+  "timeAgoWeeks": "{weeks} hafta önce",
+  "timeAgoMonths": "{months} ay önce",
+  "timeAgoYears": "{years} yıl önce",
+  "minutesValue": "{minutes} dk"
 }

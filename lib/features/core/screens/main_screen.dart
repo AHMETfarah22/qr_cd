@@ -3,6 +3,8 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/models/pdf_document.dart' as models;
 import '../../timer/screens/timer_screen.dart';
 import '../../auth/screens/account_screen.dart';
+import '../../auth/screens/statistics_chart_screen.dart';
+import '../../auth/screens/session_history_screen.dart';
 import 'ai_quest_screen.dart';
 import '../widgets/custom_bottom_nav_bar.dart';
 
@@ -17,6 +19,11 @@ class MainScreen extends StatefulWidget {
     this.suggestedMinutes,
     this.initialTab = 0,
   });
+
+  /// Switches the enclosing MainScreen to [index], e.g. from a tab's button.
+  static void switchTab(BuildContext context, int index) {
+    context.findAncestorStateOfType<_MainScreenState>()?._onTabTapped(index);
+  }
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -81,6 +88,8 @@ class _MainScreenState extends State<MainScreen>
                 suggestedMinutes: widget.suggestedMinutes,
               ),
               const AiQuestScreen(),
+              const StatisticsChartScreen(embedded: true),
+              const SessionHistoryScreen(embedded: true),
               const AccountScreen(),
             ],
           ),

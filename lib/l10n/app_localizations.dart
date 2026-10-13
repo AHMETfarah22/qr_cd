@@ -1600,6 +1600,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unauthorized API key (401)! Please enter a valid OpenRouter API key. The current key was cleared.'**
   String get apiKey401Hata;
+
+  /// No description provided for @navStats.
+  ///
+  /// In en, this message translates to:
+  /// **'Stats'**
+  String get navStats;
+
+  /// No description provided for @navHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get navHistory;
+
+  /// No description provided for @activityIntensity.
+  ///
+  /// In en, this message translates to:
+  /// **'ACTIVITY INTENSITY'**
+  String get activityIntensity;
+
+  /// No description provided for @timeAgoWeeks.
+  ///
+  /// In en, this message translates to:
+  /// **'{weeks} weeks ago'**
+  String timeAgoWeeks(int weeks);
+
+  /// No description provided for @timeAgoMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'{months} months ago'**
+  String timeAgoMonths(int months);
+
+  /// No description provided for @timeAgoYears.
+  ///
+  /// In en, this message translates to:
+  /// **'{years} years ago'**
+  String timeAgoYears(int years);
+
+  /// No description provided for @minutesValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String minutesValue(int minutes);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

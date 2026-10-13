@@ -343,5 +343,40 @@
     }
   },
   "gizlilikKontrol": "Checking privacy consent...",
-  "apiKey401Hata": "Unauthorized API key (401)! Please enter a valid OpenRouter API key. The current key was cleared."
+  "apiKey401Hata": "Unauthorized API key (401)! Please enter a valid OpenRouter API key. The current key was cleared.",
+  "navStats": "Stats",
+  "navHistory": "History",
+  "activityIntensity": "ACTIVITY INTENSITY",
+  "timeAgoWeeks": "{weeks} weeks ago",
+  "@timeAgoWeeks": {
+    "placeholders": {
+      "weeks": {
+        "type": "int"
+      }
+    }
+  },
+  "timeAgoMonths": "{months} months ago",
+  "@timeAgoMonths": {
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "timeAgoYears": "{years} years ago",
+  "@timeAgoYears": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      }
+    }
+  },
+  "minutesValue": "{minutes} min",
+  "@minutesValue": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  }
 }
