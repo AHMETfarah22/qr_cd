@@ -53,18 +53,33 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
     _pulseOpacityAnimation = Tween<double>(begin: 0.55, end: 1.0).animate(
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
-    if (widget.suggestedMinutes != null || widget.pdfDocument != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        final timerService = Provider.of<TimerService>(context, listen: false);
-        if (widget.suggestedMinutes != null) {
-          timerService.setPdfDuration(widget.suggestedMinutes!);
-        }
-        if (widget.pdfDocument != null) {
-          timerService.pdfName = widget.pdfDocument!.fileName;
-          timerService.setCategory(SessionCategory.study);
-        }
-      });
+    _applyPdfSetup();
+  }
+
+  @override
+  void didUpdateWidget(covariant TimerScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // MainScreen hands over a new PDF session when the user starts focusing
+    // from the AI analysis screen.
+    if (widget.pdfDocument != oldWidget.pdfDocument ||
+        widget.suggestedMinutes != oldWidget.suggestedMinutes) {
+      _applyPdfSetup();
     }
+  }
+
+  void _applyPdfSetup() {
+    if (widget.suggestedMinutes == null && widget.pdfDocument == null) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final timerService = Provider.of<TimerService>(context, listen: false);
+      if (widget.suggestedMinutes != null) {
+        timerService.setPdfDuration(widget.suggestedMinutes!);
+      }
+      if (widget.pdfDocument != null) {
+        timerService.pdfName = widget.pdfDocument!.fileName;
+        timerService.setCategory(SessionCategory.study);
+      }
+    });
   }
 
   @override
@@ -126,13 +141,13 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
     final audioService = Provider.of<AudioService>(context);
     final premiumService = Provider.of<PremiumService>(context);
     final l10n = AppLocalizations.of(context)!;
-    
+
     int totalSeconds = timerService.currentTimeSeconds;
     int hours = totalSeconds ~/ 3600;
     int minutes = (totalSeconds % 3600) ~/ 60;
     int seconds = totalSeconds % 60;
 
-    String timerString = hours > 0 
+    String timerString = hours > 0
         ? '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}'
         : '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
 

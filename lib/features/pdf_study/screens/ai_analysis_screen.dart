@@ -250,15 +250,10 @@ class AiAnalysisScreen extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     // Navigate to timer with the AI-suggested duration
-                    Navigator.pushAndRemoveUntil(
+                    MainScreen.startPdfSession(
                       context,
-                      MaterialPageRoute(
-                        builder: (_) => MainScreen(
-                          pdfDocument: document,
-                          suggestedMinutes: minutes,
-                        ),
-                      ),
-                      (route) => route.isFirst,
+                      document: document,
+                      suggestedMinutes: minutes,
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -400,15 +395,10 @@ class AiAnalysisScreen extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(ctx);
-                  Navigator.pushAndRemoveUntil(
+                  MainScreen.startPdfSession(
                     context,
-                    MaterialPageRoute(
-                      builder: (_) => MainScreen(
-                        pdfDocument: document,
-                        suggestedMinutes: selectedMinutes,
-                      ),
-                    ),
-                    (route) => route.isFirst,
+                    document: document,
+                    suggestedMinutes: selectedMinutes,
                   );
                 },
                 style: ElevatedButton.styleFrom(

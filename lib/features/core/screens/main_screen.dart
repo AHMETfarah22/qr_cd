@@ -25,13 +25,50 @@ class MainScreen extends StatefulWidget {
     context.findAncestorStateOfType<_MainScreenState>()?._onTabTapped(index);
   }
 
+  static final ValueNotifier<_PdfSessionRequest?> _pdfSessionRequest =
+      ValueNotifier(null);
+  static int _mountedCount = 0;
+
+  /// Returns to the root MainScreen and prepares the timer for [document]
+  /// instead of stacking a second MainScreen (which would leave two timer
+  /// screens reacting to the same session).
+  static void startPdfSession(
+    BuildContext context, {
+    required models.PdfDocument document,
+    int? suggestedMinutes,
+  }) {
+    final navigator = Navigator.of(context);
+    if (_mountedCount == 0) {
+      navigator.pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (_) => MainScreen(
+            pdfDocument: document,
+            suggestedMinutes: suggestedMinutes,
+          ),
+        ),
+        (route) => false,
+      );
+      return;
+    }
+    navigator.popUntil((route) => route.isFirst);
+    _pdfSessionRequest.value = _PdfSessionRequest(document, suggestedMinutes);
+  }
+
   @override
   State<MainScreen> createState() => _MainScreenState();
+}
+
+class _PdfSessionRequest {
+  final models.PdfDocument document;
+  final int? suggestedMinutes;
+  _PdfSessionRequest(this.document, this.suggestedMinutes);
 }
 
 class _MainScreenState extends State<MainScreen>
     with SingleTickerProviderStateMixin {
   late int _currentIndex;
+  models.PdfDocument? _pdfDocument;
+  int? _suggestedMinutes;
   late final AnimationController _fadeController;
   late final Animation<double> _fadeAnimation;
 
@@ -39,6 +76,10 @@ class _MainScreenState extends State<MainScreen>
   void initState() {
     super.initState();
     _currentIndex = widget.initialTab;
+    _pdfDocument = widget.pdfDocument;
+    _suggestedMinutes = widget.suggestedMinutes;
+    MainScreen._mountedCount++;
+    MainScreen._pdfSessionRequest.addListener(_onPdfSessionRequested);
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
@@ -50,8 +91,21 @@ class _MainScreenState extends State<MainScreen>
     _fadeController.forward();
   }
 
+  void _onPdfSessionRequested() {
+    final request = MainScreen._pdfSessionRequest.value;
+    if (request == null || !mounted) return;
+    MainScreen._pdfSessionRequest.value = null;
+    setState(() {
+      _pdfDocument = request.document;
+      _suggestedMinutes = request.suggestedMinutes;
+    });
+    _onTabTapped(0);
+  }
+
   @override
   void dispose() {
+    MainScreen._mountedCount--;
+    MainScreen._pdfSessionRequest.removeListener(_onPdfSessionRequested);
     _fadeController.dispose();
     super.dispose();
   }
@@ -84,8 +138,8 @@ class _MainScreenState extends State<MainScreen>
             index: _currentIndex,
             children: [
               TimerScreen(
-                pdfDocument: widget.pdfDocument,
-                suggestedMinutes: widget.suggestedMinutes,
+                pdfDocument: _pdfDocument,
+                suggestedMinutes: _suggestedMinutes,
               ),
               const AiQuestScreen(),
               const StatisticsChartScreen(embedded: true),
