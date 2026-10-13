@@ -975,4 +975,16 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get apiKeyInvalidFormat => 'Bu bir Gemini API anahtarına benzemiyor';
+
+  @override
+  String get flipPhoneHint => 'Telefonu yüzüstü çevirin';
+
+  @override
+  String get autoQuizTitle => '🎉 Tebrikler!';
+
+  @override
+  String get autoQuizDone => 'PDF odaklanma seansın başarıyla tamamlandı.';
+
+  @override
+  String get autoQuizStarting => 'Öğrendiklerini test etmek için AI Quiz başlıyor...';
 }

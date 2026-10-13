@@ -563,14 +563,14 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
                         width: 1,
                       ),
                     ),
-                    child: const Row(
+                    child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.screen_lock_rotation_rounded, color: AppColors.accent, size: 20),
-                        SizedBox(width: 8),
+                        const Icon(Icons.screen_lock_rotation_rounded, color: AppColors.accent, size: 20),
+                        const SizedBox(width: 8),
                         Text(
-                          "Telefonu yüzüstü çevirin",
-                          style: TextStyle(
+                          AppLocalizations.of(context)!.flipPhoneHint,
+                          style: const TextStyle(
                             color: AppColors.accent,
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -673,24 +673,24 @@ class _AutoQuizDialogState extends State<_AutoQuizDialog> {
     return AlertDialog(
       backgroundColor: const Color(0xFF1E1E2C),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      title: const Center(
-        child: Text('🎉 Tebrikler!', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
+      title: Center(
+        child: Text(AppLocalizations.of(context)!.autoQuizTitle, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           const Icon(Icons.psychology_rounded, size: 64, color: AppColors.accent),
           const SizedBox(height: 16),
-          const Text(
-            'PDF odaklanma seansın başarıyla tamamlandı.',
+          Text(
+            AppLocalizations.of(context)!.autoQuizDone,
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white70, fontSize: 14),
+            style: const TextStyle(color: Colors.white70, fontSize: 14),
           ),
           const SizedBox(height: 12),
-          const Text(
-            'Öğrendiklerini test etmek için AI Quiz başlıyor...',
+          Text(
+            AppLocalizations.of(context)!.autoQuizStarting,
             textAlign: TextAlign.center,
-            style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+            style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
           ),
           const SizedBox(height: 24),
           Stack(

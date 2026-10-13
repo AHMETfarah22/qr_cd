@@ -1894,6 +1894,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This doesn\'t look like a Gemini API key'**
   String get apiKeyInvalidFormat;
+
+  /// No description provided for @flipPhoneHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn your phone face down'**
+  String get flipPhoneHint;
+
+  /// No description provided for @autoQuizTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'🎉 Well done!'**
+  String get autoQuizTitle;
+
+  /// No description provided for @autoQuizDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Your PDF focus session is complete.'**
+  String get autoQuizDone;
+
+  /// No description provided for @autoQuizStarting.
+  ///
+  /// In en, this message translates to:
+  /// **'The AI quiz is starting so you can test what you learned...'**
+  String get autoQuizStarting;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

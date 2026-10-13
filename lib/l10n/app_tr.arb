@@ -375,5 +375,9 @@
   "apiKeyDialogTitle": "Gemini API Anahtarı",
   "apiKeyDialogBody": "AI özelliklerini kullanmak için Google Gemini API anahtarını gir. Ücretsiz anahtarı Google AI Studio'dan alabilirsin.",
   "apiKeyRequired": "Lütfen anahtarını gir",
-  "apiKeyInvalidFormat": "Bu bir Gemini API anahtarına benzemiyor"
+  "apiKeyInvalidFormat": "Bu bir Gemini API anahtarına benzemiyor",
+  "flipPhoneHint": "Telefonu yüzüstü çevirin",
+  "autoQuizTitle": "🎉 Tebrikler!",
+  "autoQuizDone": "PDF odaklanma seansın başarıyla tamamlandı.",
+  "autoQuizStarting": "Öğrendiklerini test etmek için AI Quiz başlıyor..."
 }

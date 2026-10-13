@@ -166,7 +166,6 @@ class AiQuestScreen extends StatelessWidget {
             const SizedBox(height: 14),
             SizedBox(
               width: double.infinity,
-              height: 48,
               child: ElevatedButton.icon(
                 onPressed: onTap,
                 icon: Icon(
@@ -182,6 +181,8 @@ class AiQuestScreen extends StatelessWidget {
                   backgroundColor: canUpload ? AppColors.accent : Colors.amber,
                   foregroundColor: Colors.black,
                   elevation: 0,
+                  // No fixed height: Poppins' tall line box clipped the label.
+                  padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14),
                   ),

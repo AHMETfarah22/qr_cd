@@ -458,5 +458,9 @@
   "apiKeyDialogTitle": "Gemini API Key",
   "apiKeyDialogBody": "Enter your Google Gemini API key to use AI features. You can get a free key from Google AI Studio.",
   "apiKeyRequired": "Please enter your key",
-  "apiKeyInvalidFormat": "This doesn't look like a Gemini API key"
+  "apiKeyInvalidFormat": "This doesn't look like a Gemini API key",
+  "flipPhoneHint": "Turn your phone face down",
+  "autoQuizTitle": "🎉 Well done!",
+  "autoQuizDone": "Your PDF focus session is complete.",
+  "autoQuizStarting": "The AI quiz is starting so you can test what you learned..."
 }
