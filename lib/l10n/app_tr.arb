@@ -399,5 +399,13 @@
   "billingUnavailable": "Mağaza bu cihazda kullanılamıyor. Abone olmak için TScan'i Google Play'den yükle.",
   "billingProductMissing": "Bu abonelik şu an kullanılamıyor. Lütfen daha sonra tekrar dene.",
   "billingFailed": "Satın alma tamamlanamadı.",
-  "billingPending": "Ödeme onayı bekleniyor..."
+  "billingPending": "Ödeme onayı bekleniyor...",
+  "accountSection": "Hesap",
+  "menuSettings": "Ayarlar",
+  "menuLogout": "Çıkış yap",
+  "streakDays": "{count} günlük seri",
+  "dailyGoalShort": "Günlük hedef",
+  "goalReachedShort": "Hedef tamam 🎉",
+  "minutesLeft": "{minutes} dk kaldı",
+  "freePlan": "Ücretsiz plan"
 }

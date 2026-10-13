@@ -5,12 +5,12 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/services/premium_service.dart';
 import '../../../core/theme/palette.dart';
 import '../../../core/widgets/book_illustration.dart';
+import '../../../core/widgets/glass.dart';
 import '../../premium/screens/paywall_screen.dart';
 import '../../pdf_study/screens/all_documents_screen.dart';
 import '../../pdf_study/screens/pdf_upload_screen.dart';
 import '../../pdf_study/services/pdf_history_service.dart';
 import '../../pdf_study/widgets/document_card.dart';
-import '../../auth/services/statistics_service.dart';
 import '../../../l10n/app_localizations.dart';
 
 class AiQuestScreen extends StatelessWidget {
@@ -38,11 +38,7 @@ class AiQuestScreen extends StatelessWidget {
               _buildHeader(p, l10n),
               const SizedBox(height: 16),
               _buildUploadCard(context, p, premiumService, l10n),
-              const SizedBox(height: 16),
-              Consumer<StatisticsService>(
-                builder: (context, stats, _) => _buildQuizStats(p, stats, l10n),
-              ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 4),
               Consumer<PdfHistoryService>(
                 builder: (context, historyService, _) {
                   if (historyService.history.isEmpty) {
@@ -229,77 +225,6 @@ class AiQuestScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildQuizStats(
-    Palette p,
-    StatisticsService stats,
-    AppLocalizations l10n,
-  ) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-      decoration: p.cardDecoration(),
-      child: Row(
-        children: [
-          _buildMiniStat(
-            p,
-            Icons.menu_book_rounded,
-            '${stats.totalPdfSessions}',
-            l10n.oturum,
-            const Color(0xFF1E8A4C),
-          ),
-          _buildDivider(p),
-          _buildMiniStat(
-            p,
-            Icons.quiz_rounded,
-            '${stats.totalQuizzesTaken}',
-            l10n.sinav,
-            Colors.teal,
-          ),
-          _buildDivider(p),
-          _buildMiniStat(
-            p,
-            Icons.percent_rounded,
-            '${stats.averageQuizScore.toStringAsFixed(0)}%',
-            l10n.basariOrani,
-            Colors.orange,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMiniStat(
-    Palette p,
-    IconData icon,
-    String value,
-    String label,
-    Color color,
-  ) {
-    return Expanded(
-      child: Column(
-        children: [
-          Icon(icon, color: color, size: 20),
-          const SizedBox(height: 6),
-          Text(
-            value,
-            style: GoogleFonts.poppins(
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-              color: p.textPrimary,
-            ),
-          ),
-          Text(
-            label,
-            style: GoogleFonts.poppins(fontSize: 11, color: p.textSecondary),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDivider(Palette p) {
-    return Container(width: 1, height: 44, color: p.border);
-  }
-
   Widget _buildEmptyState(Palette p, AppLocalizations l10n) {
     return Container(
       width: double.infinity,
@@ -344,19 +269,11 @@ class AiQuestScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          l10n.aiQuestRecentDocs,
-          style: GoogleFonts.poppins(
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-            color: p.textPrimary,
-          ),
+        SectionLabel(l10n.aiQuestRecentDocs.replaceAll('📚 ', '')),
+        GlassGroup(
+          children: [for (final doc in recent) DocumentCard(doc: doc)],
         ),
-        const SizedBox(height: 10),
-        for (final doc in recent) ...[
-          DocumentCard(doc: doc),
-          const SizedBox(height: 10),
-        ],
+        const SizedBox(height: 12),
         SizedBox(
           width: double.infinity,
           child: OutlinedButton.icon(

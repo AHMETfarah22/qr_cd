@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../../core/theme/palette.dart';
 import '../../../core/widgets/app_background.dart';
 import '../../../core/widgets/book_illustration.dart';
+import '../../../core/widgets/glass.dart';
 import '../../../l10n/app_localizations.dart';
 import '../services/pdf_history_service.dart';
 import '../widgets/document_card.dart';
@@ -79,7 +80,7 @@ class AllDocumentsScreen extends StatelessWidget {
                         ],
                       ),
                     )
-                  : ListView.separated(
+                  : SingleChildScrollView(
                       physics: const BouncingScrollPhysics(),
                       padding: EdgeInsets.fromLTRB(
                         16,
@@ -87,10 +88,11 @@ class AllDocumentsScreen extends StatelessWidget {
                         16,
                         24 + MediaQuery.paddingOf(context).bottom,
                       ),
-                      itemCount: history.length,
-                      separatorBuilder: (_, _) => const SizedBox(height: 10),
-                      itemBuilder: (context, index) =>
-                          DocumentCard(doc: history[index]),
+                      child: GlassGroup(
+                        children: [
+                          for (final doc in history) DocumentCard(doc: doc),
+                        ],
+                      ),
                     ),
             ),
           ],

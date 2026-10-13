@@ -509,5 +509,27 @@
   "billingUnavailable": "The store isn't available on this device. Install TScan from Google Play to subscribe.",
   "billingProductMissing": "This subscription isn't available right now. Please try again later.",
   "billingFailed": "The purchase could not be completed.",
-  "billingPending": "Waiting for payment confirmation..."
+  "billingPending": "Waiting for payment confirmation...",
+  "accountSection": "Account",
+  "menuSettings": "Settings",
+  "menuLogout": "Log out",
+  "streakDays": "{count}-day streak",
+  "@streakDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dailyGoalShort": "Daily goal",
+  "goalReachedShort": "Goal reached 🎉",
+  "minutesLeft": "{minutes} min left",
+  "@minutesLeft": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "freePlan": "Free plan"
 }

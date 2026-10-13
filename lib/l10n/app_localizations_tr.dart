@@ -75,13 +75,15 @@ class AppLocalizationsTr extends AppLocalizations {
   String get cancel => 'VAZGEÇ';
 
   @override
-  String get statusIdleLvl1 => '30 saniyelik testi tamamla ve\ngerçek odaklanmaya başla!';
+  String get statusIdleLvl1 =>
+      '30 saniyelik testi tamamla ve\ngerçek odaklanmaya başla!';
 
   @override
   String get statusIdle => 'Süreyi ayarla, kategori seç ve odaklan!';
 
   @override
-  String get statusRunning => 'Derin odaklanma başlıyor...\nTelefonu ters çevir!';
+  String get statusRunning =>
+      'Derin odaklanma başlıyor...\nTelefonu ters çevir!';
 
   @override
   String get statusPaused => 'Duraklatıldı';
@@ -90,7 +92,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get statusFailure => 'ODAK BOZULDU!\nTelefonu kaldırdın.';
 
   @override
-  String get statusSuccessFirst => 'TEBRİKLER! İlk aşama tamam.\n1 saatlik odaklanma açıldı!';
+  String get statusSuccessFirst =>
+      'TEBRİKLER! İlk aşama tamam.\n1 saatlik odaklanma açıldı!';
 
   @override
   String get statusSuccess => 'Tebrikler! Oturum tamamlandı.';
@@ -153,7 +156,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get dontHaveAccount => 'Hesabınız yok mu? ';
 
   @override
-  String get forgotPasswordDialog => 'Şifrenizi unuttuğunuz için yeni bir hesap oluşturmanız gerekecek. Emin misiniz?';
+  String get forgotPasswordDialog =>
+      'Şifrenizi unuttuğunuz için yeni bir hesap oluşturmanız gerekecek. Emin misiniz?';
 
   @override
   String get yes => 'Evet';
@@ -177,7 +181,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get enterNameSurname => 'Adınızı ve soyadınızı girin';
 
   @override
-  String get agreeTerms => 'Kayıt olarak Kullanım Koşulları\'nı ve Gizlilik Politikası\'nı kabul etmiş olursunuz.';
+  String get agreeTerms =>
+      'Kayıt olarak Kullanım Koşulları\'nı ve Gizlilik Politikası\'nı kabul etmiş olursunuz.';
 
   @override
   String get alreadyHaveAccount => 'Zaten bir hesabınız var mı? ';
@@ -227,7 +232,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get logoutConfirm => 'Çıkış yapmak istediğinizden emin misiniz?';
 
   @override
-  String get deleteAccountConfirm => 'Hesabınızı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.';
+  String get deleteAccountConfirm =>
+      'Hesabınızı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.';
 
   @override
   String get delete => 'SİL';
@@ -297,7 +303,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get updatePasswordSubtitle => 'Hesap şifrenizi güncelleyin';
 
   @override
-  String get passwordSecureNote => 'Not: Şifreniz güvenli bir şekilde saklanır.';
+  String get passwordSecureNote =>
+      'Not: Şifreniz güvenli bir şekilde saklanır.';
 
   @override
   String get sectionDataManagement => 'VERİ YÖNETİMİ';
@@ -442,7 +449,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get notifSuccessTitle => 'Tebrikler!';
 
   @override
-  String get notifSuccessBody => 'Odaklanma oturumu başarıyla tamamlandı. Harikasın!';
+  String get notifSuccessBody =>
+      'Odaklanma oturumu başarıyla tamamlandı. Harikasın!';
 
   @override
   String get notifBreakEndTitle => 'Mola Bitti!';
@@ -454,25 +462,29 @@ class AppLocalizationsTr extends AppLocalizations {
   String get onboardingWelcome => 'TScan\'e Hoş Geldiniz';
 
   @override
-  String get onboardingWelcomeDesc => 'En iyi deneyim için odaklanma ortamınızı ayarlayalım.';
+  String get onboardingWelcomeDesc =>
+      'En iyi deneyim için odaklanma ortamınızı ayarlayalım.';
 
   @override
   String get onboardingSensorTitle => 'Sensör Erişimi';
 
   @override
-  String get onboardingSensorDesc => 'TScan, telefonunuzun ters çevrildiğini algılamak için ivmeölçeri kullanır. Bu odaklanmanıza yardımcı olur!';
+  String get onboardingSensorDesc =>
+      'TScan, telefonunuzun ters çevrildiğini algılamak için ivmeölçeri kullanır. Bu odaklanmanıza yardımcı olur!';
 
   @override
   String get onboardingDndTitle => 'Rahatsız Etme';
 
   @override
-  String get onboardingDndDesc => 'Dikkat dağıtıcı bildirimleri engellemek için Rahatsız Etme modunu yönetme iznine ihtiyacımız var.';
+  String get onboardingDndDesc =>
+      'Dikkat dağıtıcı bildirimleri engellemek için Rahatsız Etme modunu yönetme iznine ihtiyacımız var.';
 
   @override
   String get onboardingPhoneTitle => 'Arama Algılama';
 
   @override
-  String get onboardingPhoneDesc => 'Odaklanma sırasında bir arama gelirse, karar vermeniz için otomatik olarak duraklatacağız.';
+  String get onboardingPhoneDesc =>
+      'Odaklanma sırasında bir arama gelirse, karar vermeniz için otomatik olarak duraklatacağız.';
 
   @override
   String get btnGrant => 'İzin Ver';
@@ -539,7 +551,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get pdfDestekliCalisma => 'AI Destekli PDF Çalışma';
 
   @override
-  String get pdfYukleAciklama => 'Ders notlarını yükle, AI okuma süresini tahmin etsin.\nSüre bitince seni test etsin! 🚀';
+  String get pdfYukleAciklama =>
+      'Ders notlarını yükle, AI okuma süresini tahmin etsin.\nSüre bitince seni test etsin! 🚀';
 
   @override
   String get pdfStep1 => 'PDF Yükle';
@@ -572,7 +585,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get premiumOzellik => 'Premium Özellik';
 
   @override
-  String get premiumCalismaAsistani => 'AI ile süre tahmini ve sınav üretme gibi gelişmiş çalışma asistanı özelliklerini kullanabilmek için Premium üye olmalısınız.';
+  String get premiumCalismaAsistani =>
+      'AI ile süre tahmini ve sınav üretme gibi gelişmiş çalışma asistanı özelliklerini kullanabilmek için Premium üye olmalısınız.';
 
   @override
   String get premiumYukselt => 'Premium\'a Yükselt 🚀';
@@ -590,7 +604,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get onboardingPdfTitle => 'Yapay Zeka ve PDF Modu';
 
   @override
-  String get onboardingPdfDesc => 'Ders notlarınızı yükleyin; TScan yapay zekası ideal çalışma sürenizi hesaplasın, siz odaklanırken odanızı sessize alsın ve seans bitiminde sizi akıllı testlerle sınasın!';
+  String get onboardingPdfDesc =>
+      'Ders notlarınızı yükleyin; TScan yapay zekası ideal çalışma sürenizi hesaplasın, siz odaklanırken odanızı sessize alsın ve seans bitiminde sizi akıllı testlerle sınasın!';
 
   @override
   String get onboardingPdfExtra => 'Akıllı Okuma & AI Quiz Modu';
@@ -622,7 +637,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get pdfGizlilikOnayiTitle => 'KVKK ve Bulut Analiz Onayı';
 
   @override
-  String get pdfGizlilikOnayiBody => 'Yüklediğiniz PDF\'in metin içeriği, süre tahmini ve quiz üretimi amacıyla güvenli bağlantı üzerinden yapay zeka servisine (Google Gemini) gönderilir. Kişisel verilerinizin buluta gönderilmesini onaylıyor musunuz?';
+  String get pdfGizlilikOnayiBody =>
+      'Yüklediğiniz PDF\'in metin içeriği, süre tahmini ve quiz üretimi amacıyla güvenli bağlantı üzerinden yapay zeka servisine (Google Gemini) gönderilir. Kişisel verilerinizin buluta gönderilmesini onaylıyor musunuz?';
 
   @override
   String get onayla => 'Onayla';
@@ -634,7 +650,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get aiQuizBaslat => 'AI Quiz Başlat';
 
   @override
-  String get akilliSoruModu => 'Seans bitti! AI soruları çözmeye hazır mısınız?';
+  String get akilliSoruModu =>
+      'Seans bitti! AI soruları çözmeye hazır mısınız?';
 
   @override
   String get quizBasligi => 'Yapay Zeka Değerlendirme Testi';
@@ -751,7 +768,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get okumaHizi => 'Kişisel Okuma Hızı';
 
   @override
-  String get okumaHiziAciklama => 'Premium ile AI süre tahminlerini okuma hızınıza göre uyarlayın.';
+  String get okumaHiziAciklama =>
+      'Premium ile AI süre tahminlerini okuma hızınıza göre uyarlayın.';
 
   @override
   String get hizYavas => 'Yavaş';
@@ -778,13 +796,15 @@ class AppLocalizationsTr extends AppLocalizations {
   String get aiQuestUploadTitle => '📄 PDF Yükle & Çalış';
 
   @override
-  String get aiQuestUploadDesc => 'Belge yükle, AI analiz etsin ve quiz oluştursun';
+  String get aiQuestUploadDesc =>
+      'Belge yükle, AI analiz etsin ve quiz oluştursun';
 
   @override
   String get aiQuestNoDocs => 'Henüz belge yok';
 
   @override
-  String get aiQuestNoDocsDesc => 'İlk PDF\'ini yükleyerek AI destekli\nçalışmaya başla!';
+  String get aiQuestNoDocsDesc =>
+      'İlk PDF\'ini yükleyerek AI destekli\nçalışmaya başla!';
 
   @override
   String get aiQuestRecentDocs => '📚 Son Çalışılan Belgeler';
@@ -809,7 +829,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get gizlilikKontrol => 'Gizlilik onayı kontrol ediliyor...';
 
   @override
-  String get apiKey401Hata => 'API anahtarı reddedildi. Lütfen geçerli bir Gemini API anahtarı gir; kayıtlı anahtar temizlendi.';
+  String get apiKey401Hata =>
+      'API anahtarı reddedildi. Lütfen geçerli bir Gemini API anahtarı gir; kayıtlı anahtar temizlendi.';
 
   @override
   String get navStats => 'İstatistik';
@@ -857,7 +878,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get freeLimitReachedTitle => 'Ücretsiz hakkın doldu';
 
   @override
-  String get freeLimitReachedBody => '2 ücretsiz PDF hakkını kullandın. Sınırsız PDF ve AI quiz için Premium\'a geç.';
+  String get freeLimitReachedBody =>
+      '2 ücretsiz PDF hakkını kullandın. Sınırsız PDF ve AI quiz için Premium\'a geç.';
 
   @override
   String get statsTotalStudy => 'Toplam çalışma';
@@ -897,7 +919,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get paywallTitle => 'TScan Premium';
 
   @override
-  String get paywallSubtitle => 'Sınırsız PDF ve AI çalışma koçuyla daha akıllı çalış';
+  String get paywallSubtitle =>
+      'Sınırsız PDF ve AI çalışma koçuyla daha akıllı çalış';
 
   @override
   String get planMonthly => 'Aylık';
@@ -932,19 +955,22 @@ class AppLocalizationsTr extends AppLocalizations {
   String get premiumActivatedTitle => '🎉 Premium Aktif!';
 
   @override
-  String get premiumActivatedBody => 'Artık tüm özelliklere sınırsız erişimin var. İyi çalışmalar!';
+  String get premiumActivatedBody =>
+      'Artık tüm özelliklere sınırsız erişimin var. İyi çalışmalar!';
 
   @override
   String get greatBtn => 'Harika!';
 
   @override
-  String get paywallTerms => 'Aboneliğini istediğin zaman Play Store ayarlarından iptal edebilirsin.';
+  String get paywallTerms =>
+      'Aboneliğini istediğin zaman Play Store ayarlarından iptal edebilirsin.';
 
   @override
   String get benefitUnlimitedPdf => 'Sınırsız PDF';
 
   @override
-  String get benefitUnlimitedPdfDesc => 'İstediğin kadar ders notu ve kitap yükle.';
+  String get benefitUnlimitedPdfDesc =>
+      'İstediğin kadar ders notu ve kitap yükle.';
 
   @override
   String get benefitAiQuiz => 'AI quiz ve çalışma süresi';
@@ -956,7 +982,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get benefitWrongAnswers => 'Yanlış cevap analizi';
 
   @override
-  String get benefitWrongAnswersDesc => 'Her quizden sonra tekrar etmen gereken konuları gör.';
+  String get benefitWrongAnswersDesc =>
+      'Her quizden sonra tekrar etmen gereken konuları gör.';
 
   @override
   String get benefitSounds => 'Tüm odak sesleri';
@@ -968,7 +995,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get apiKeyDialogTitle => 'Gemini API Anahtarı';
 
   @override
-  String get apiKeyDialogBody => 'AI özelliklerini kullanmak için Google Gemini API anahtarını gir. Ücretsiz anahtarı Google AI Studio\'dan alabilirsin.';
+  String get apiKeyDialogBody =>
+      'AI özelliklerini kullanmak için Google Gemini API anahtarını gir. Ücretsiz anahtarı Google AI Studio\'dan alabilirsin.';
 
   @override
   String get apiKeyRequired => 'Lütfen anahtarını gir';
@@ -986,28 +1014,35 @@ class AppLocalizationsTr extends AppLocalizations {
   String get autoQuizDone => 'PDF odaklanma seansın başarıyla tamamlandı.';
 
   @override
-  String get autoQuizStarting => 'Öğrendiklerini test etmek için AI Quiz başlıyor...';
+  String get autoQuizStarting =>
+      'Öğrendiklerini test etmek için AI Quiz başlıyor...';
 
   @override
-  String get aiErrMissingKey => 'AI özelliklerini kullanmak için Gemini API anahtarını ekle.';
+  String get aiErrMissingKey =>
+      'AI özelliklerini kullanmak için Gemini API anahtarını ekle.';
 
   @override
-  String get aiErrBusy => 'AI servisi şu an yoğun. Birkaç dakika sonra tekrar dene.';
+  String get aiErrBusy =>
+      'AI servisi şu an yoğun. Birkaç dakika sonra tekrar dene.';
 
   @override
-  String get aiErrRateLimit => 'AI kullanım limitine ulaşıldı. Biraz sonra tekrar dene.';
+  String get aiErrRateLimit =>
+      'AI kullanım limitine ulaşıldı. Biraz sonra tekrar dene.';
 
   @override
-  String get aiErrNetwork => 'İnternet bağlantısı yok. Bağlantını kontrol edip tekrar dene.';
+  String get aiErrNetwork =>
+      'İnternet bağlantısı yok. Bağlantını kontrol edip tekrar dene.';
 
   @override
   String get aiErrFileMissing => 'PDF dosyası bu cihazda bulunamadı.';
 
   @override
-  String get aiErrBadResponse => 'AI soruları hazırlayamadı. Lütfen tekrar dene.';
+  String get aiErrBadResponse =>
+      'AI soruları hazırlayamadı. Lütfen tekrar dene.';
 
   @override
-  String get aiErrGeneric => 'AI servisinde bir sorun oldu. Lütfen tekrar dene.';
+  String get aiErrGeneric =>
+      'AI servisinde bir sorun oldu. Lütfen tekrar dene.';
 
   @override
   String get enterApiKeyBtn => 'API anahtarı gir';
@@ -1021,7 +1056,8 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get aiErrUnavailable => 'AI şu an kullanılamıyor. Lütfen daha sonra tekrar dene.';
+  String get aiErrUnavailable =>
+      'AI şu an kullanılamıyor. Lütfen daha sonra tekrar dene.';
 
   @override
   String get olderSessionsTitle => 'ESKİ OTURUMLAR';
@@ -1041,14 +1077,44 @@ class AppLocalizationsTr extends AppLocalizations {
   String get restoreDone => 'Satın alımlar kontrol edildi';
 
   @override
-  String get billingUnavailable => 'Mağaza bu cihazda kullanılamıyor. Abone olmak için TScan\'i Google Play\'den yükle.';
+  String get billingUnavailable =>
+      'Mağaza bu cihazda kullanılamıyor. Abone olmak için TScan\'i Google Play\'den yükle.';
 
   @override
-  String get billingProductMissing => 'Bu abonelik şu an kullanılamıyor. Lütfen daha sonra tekrar dene.';
+  String get billingProductMissing =>
+      'Bu abonelik şu an kullanılamıyor. Lütfen daha sonra tekrar dene.';
 
   @override
   String get billingFailed => 'Satın alma tamamlanamadı.';
 
   @override
   String get billingPending => 'Ödeme onayı bekleniyor...';
+
+  @override
+  String get accountSection => 'Hesap';
+
+  @override
+  String get menuSettings => 'Ayarlar';
+
+  @override
+  String get menuLogout => 'Çıkış yap';
+
+  @override
+  String streakDays(int count) {
+    return '$count günlük seri';
+  }
+
+  @override
+  String get dailyGoalShort => 'Günlük hedef';
+
+  @override
+  String get goalReachedShort => 'Hedef tamam 🎉';
+
+  @override
+  String minutesLeft(int minutes) {
+    return '$minutes dk kaldı';
+  }
+
+  @override
+  String get freePlan => 'Ücretsiz plan';
 }

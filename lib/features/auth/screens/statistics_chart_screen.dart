@@ -170,78 +170,51 @@ class StatisticsChartScreen extends StatelessWidget {
     );
   }
 
+  /// The four headline numbers in one calm strip instead of four cards.
   Widget _buildTiles(
     Palette p,
     AppLocalizations l10n,
     StatisticsService stats,
   ) {
-    final tiles = [
-      _tile(
-        p,
+    final items = [
+      (
         Icons.local_fire_department_rounded,
         Colors.deepOrange,
         '${stats.currentStreak}',
         l10n.statsStreak,
       ),
-      _tile(
-        p,
+      (
         Icons.check_circle_rounded,
         Colors.green,
         '${stats.completedSessions}',
         l10n.statsSessions,
       ),
-      _tile(
-        p,
+      (
         Icons.emoji_events_rounded,
-        Colors.amber.shade700,
+        Colors.amber,
         '${stats.successRate.round()}%',
         l10n.statsSuccess,
       ),
-      _tile(
-        p,
+      (
         Icons.quiz_rounded,
-        Colors.teal,
+        Colors.tealAccent,
         stats.totalQuizzesTaken == 0
             ? '–'
             : '${stats.averageQuizScore.round()}%',
         l10n.statsQuizAvg,
       ),
     ];
-    return Column(
-      children: [
-        Row(children: [tiles[0], const SizedBox(width: 12), tiles[1]]),
-        const SizedBox(height: 12),
-        Row(children: [tiles[2], const SizedBox(width: 12), tiles[3]]),
-      ],
-    );
-  }
-
-  Widget _tile(
-    Palette p,
-    IconData icon,
-    Color color,
-    String value,
-    String label,
-  ) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(14),
-        decoration: p.cardDecoration(radius: 18),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.14),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(icon, color: color, size: 20),
-            ),
-            const SizedBox(width: 10),
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 6),
+      decoration: p.cardDecoration(radius: 20),
+      child: Row(
+        children: [
+          for (final (icon, color, value, label) in items)
             Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Icon(icon, color: color, size: 22),
+                  const SizedBox(height: 6),
                   Text(
                     value,
                     style: TextStyle(
@@ -250,17 +223,17 @@ class StatisticsChartScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  const SizedBox(height: 2),
                   Text(
                     label,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
                     style: TextStyle(color: p.textSecondary, fontSize: 11),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
+        ],
       ),
     );
   }

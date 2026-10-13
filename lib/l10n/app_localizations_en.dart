@@ -20,7 +20,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get accountInfo => 'Account Info';
 
   @override
-  String get cannotGoToAccount => 'You cannot go to account while timer is running!';
+  String get cannotGoToAccount =>
+      'You cannot go to account while timer is running!';
 
   @override
   String get ready => 'READY';
@@ -75,7 +76,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cancel => 'CANCEL';
 
   @override
-  String get statusIdleLvl1 => 'Complete the 30-second test and\nstart real focus!';
+  String get statusIdleLvl1 =>
+      'Complete the 30-second test and\nstart real focus!';
 
   @override
   String get statusIdle => 'Set duration, select category and focus!';
@@ -90,7 +92,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statusFailure => 'FOCUS BROKEN!\nYou lifted the phone.';
 
   @override
-  String get statusSuccessFirst => 'CONGRATULATIONS! First stage complete.\n1 hour focus unlocked!';
+  String get statusSuccessFirst =>
+      'CONGRATULATIONS! First stage complete.\n1 hour focus unlocked!';
 
   @override
   String get statusSuccess => 'Congratulations! Session completed.';
@@ -153,7 +156,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dontHaveAccount => 'Don\'t have an account? ';
 
   @override
-  String get forgotPasswordDialog => 'You will need to create a new account since you forgot your password. Are you sure?';
+  String get forgotPasswordDialog =>
+      'You will need to create a new account since you forgot your password. Are you sure?';
 
   @override
   String get yes => 'Yes';
@@ -177,7 +181,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enterNameSurname => 'Enter your name and surname';
 
   @override
-  String get agreeTerms => 'By registering, you agree to the Terms of Service and Privacy Policy.';
+  String get agreeTerms =>
+      'By registering, you agree to the Terms of Service and Privacy Policy.';
 
   @override
   String get alreadyHaveAccount => 'Already have an account? ';
@@ -233,7 +238,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get logoutConfirm => 'Are you sure you want to logout?';
 
   @override
-  String get deleteAccountConfirm => 'Are you sure you want to delete your account? This action cannot be undone.';
+  String get deleteAccountConfirm =>
+      'Are you sure you want to delete your account? This action cannot be undone.';
 
   @override
   String get delete => 'DELETE';
@@ -353,7 +359,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noHistoryYet => 'No session history yet';
 
   @override
-  String get startFocusNow => 'Start focusing now and create your first record!';
+  String get startFocusNow =>
+      'Start focusing now and create your first record!';
 
   @override
   String get startFocusingBtn => 'Start Focusing';
@@ -454,7 +461,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notifSuccessTitle => 'Congratulations!';
 
   @override
-  String get notifSuccessBody => 'Focus session completed successfully. You\'re awesome!';
+  String get notifSuccessBody =>
+      'Focus session completed successfully. You\'re awesome!';
 
   @override
   String get notifBreakEndTitle => 'Break Over!';
@@ -466,25 +474,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingWelcome => 'Welcome to TScan';
 
   @override
-  String get onboardingWelcomeDesc => 'Let\'s set up your focus environment for the best experience.';
+  String get onboardingWelcomeDesc =>
+      'Let\'s set up your focus environment for the best experience.';
 
   @override
   String get onboardingSensorTitle => 'Sensor Access';
 
   @override
-  String get onboardingSensorDesc => 'TScan uses the accelerometer to detect if your phone is face down. This helps you stay focused!';
+  String get onboardingSensorDesc =>
+      'TScan uses the accelerometer to detect if your phone is face down. This helps you stay focused!';
 
   @override
   String get onboardingDndTitle => 'Do Not Disturb';
 
   @override
-  String get onboardingDndDesc => 'To block distracting notifications, we need permission to manage Do Not Disturb mode.';
+  String get onboardingDndDesc =>
+      'To block distracting notifications, we need permission to manage Do Not Disturb mode.';
 
   @override
   String get onboardingPhoneTitle => 'Call Detection';
 
   @override
-  String get onboardingPhoneDesc => 'If you receive a call during focus, we\'ll automatically pause to let you decide.';
+  String get onboardingPhoneDesc =>
+      'If you receive a call during focus, we\'ll automatically pause to let you decide.';
 
   @override
   String get btnGrant => 'Grant Permission';
@@ -551,7 +563,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pdfDestekliCalisma => 'AI Powered PDF Study';
 
   @override
-  String get pdfYukleAciklama => 'Upload study notes, let AI estimate reading time.\nThen it tests you when done! 🚀';
+  String get pdfYukleAciklama =>
+      'Upload study notes, let AI estimate reading time.\nThen it tests you when done! 🚀';
 
   @override
   String get pdfStep1 => 'Upload PDF';
@@ -584,7 +597,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get premiumOzellik => 'Premium Feature';
 
   @override
-  String get premiumCalismaAsistani => 'You must be a Premium member to use advanced study assistant features such as AI time estimation and quiz generation.';
+  String get premiumCalismaAsistani =>
+      'You must be a Premium member to use advanced study assistant features such as AI time estimation and quiz generation.';
 
   @override
   String get premiumYukselt => 'Upgrade to Premium 🚀';
@@ -602,7 +616,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingPdfTitle => 'AI & PDF Study Mode';
 
   @override
-  String get onboardingPdfDesc => 'Upload your study notes; TScan\'s AI will auto-calculate your study duration, keep you focused, and generate interactive quizzes right after your session!';
+  String get onboardingPdfDesc =>
+      'Upload your study notes; TScan\'s AI will auto-calculate your study duration, keep you focused, and generate interactive quizzes right after your session!';
 
   @override
   String get onboardingPdfExtra => 'Smart Reading & AI Quizzes';
@@ -634,7 +649,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pdfGizlilikOnayiTitle => 'Privacy & Cloud Analysis Consent';
 
   @override
-  String get pdfGizlilikOnayiBody => 'The text content of your uploaded PDF will be sent to the AI service (Google Gemini) over a secure connection for duration estimation and quiz generation. Do you consent to sending your data to the cloud?';
+  String get pdfGizlilikOnayiBody =>
+      'The text content of your uploaded PDF will be sent to the AI service (Google Gemini) over a secure connection for duration estimation and quiz generation. Do you consent to sending your data to the cloud?';
 
   @override
   String get onayla => 'Approve';
@@ -763,7 +779,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get okumaHizi => 'Personalized Reading Speed';
 
   @override
-  String get okumaHiziAciklama => 'Tailor AI time estimates to your reading speed with Premium.';
+  String get okumaHiziAciklama =>
+      'Tailor AI time estimates to your reading speed with Premium.';
 
   @override
   String get hizYavas => 'Slow';
@@ -790,13 +807,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aiQuestUploadTitle => '📄 Upload PDF & Study';
 
   @override
-  String get aiQuestUploadDesc => 'Upload a document, let AI analyze it and build a quiz';
+  String get aiQuestUploadDesc =>
+      'Upload a document, let AI analyze it and build a quiz';
 
   @override
   String get aiQuestNoDocs => 'No documents yet';
 
   @override
-  String get aiQuestNoDocsDesc => 'Upload your first PDF to start\nAI-assisted studying!';
+  String get aiQuestNoDocsDesc =>
+      'Upload your first PDF to start\nAI-assisted studying!';
 
   @override
   String get aiQuestRecentDocs => '📚 Recently Studied Documents';
@@ -821,7 +840,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gizlilikKontrol => 'Checking privacy consent...';
 
   @override
-  String get apiKey401Hata => 'The API key was rejected. Please enter a valid Gemini API key; the saved key was cleared.';
+  String get apiKey401Hata =>
+      'The API key was rejected. Please enter a valid Gemini API key; the saved key was cleared.';
 
   @override
   String get navStats => 'Stats';
@@ -869,7 +889,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get freeLimitReachedTitle => 'Your free uploads are used up';
 
   @override
-  String get freeLimitReachedBody => 'You have used your 2 free PDF uploads. Go Premium for unlimited PDFs and AI quizzes.';
+  String get freeLimitReachedBody =>
+      'You have used your 2 free PDF uploads. Go Premium for unlimited PDFs and AI quizzes.';
 
   @override
   String get statsTotalStudy => 'Total study';
@@ -909,7 +930,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paywallTitle => 'TScan Premium';
 
   @override
-  String get paywallSubtitle => 'Study smarter with unlimited PDFs and your AI study coach';
+  String get paywallSubtitle =>
+      'Study smarter with unlimited PDFs and your AI study coach';
 
   @override
   String get planMonthly => 'Monthly';
@@ -944,31 +966,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get premiumActivatedTitle => '🎉 Premium Activated!';
 
   @override
-  String get premiumActivatedBody => 'You now have unlimited access to every feature. Happy studying!';
+  String get premiumActivatedBody =>
+      'You now have unlimited access to every feature. Happy studying!';
 
   @override
   String get greatBtn => 'Great!';
 
   @override
-  String get paywallTerms => 'You can cancel your subscription at any time from Play Store settings.';
+  String get paywallTerms =>
+      'You can cancel your subscription at any time from Play Store settings.';
 
   @override
   String get benefitUnlimitedPdf => 'Unlimited PDFs';
 
   @override
-  String get benefitUnlimitedPdfDesc => 'Upload as many notes and books as you like.';
+  String get benefitUnlimitedPdfDesc =>
+      'Upload as many notes and books as you like.';
 
   @override
   String get benefitAiQuiz => 'AI quiz & study time';
 
   @override
-  String get benefitAiQuizDesc => 'Auto-generated quizzes and reading time for every PDF.';
+  String get benefitAiQuizDesc =>
+      'Auto-generated quizzes and reading time for every PDF.';
 
   @override
   String get benefitWrongAnswers => 'Wrong answer analysis';
 
   @override
-  String get benefitWrongAnswersDesc => 'See which topics to review after each quiz.';
+  String get benefitWrongAnswersDesc =>
+      'See which topics to review after each quiz.';
 
   @override
   String get benefitSounds => 'All focus sounds';
@@ -980,7 +1007,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get apiKeyDialogTitle => 'Gemini API Key';
 
   @override
-  String get apiKeyDialogBody => 'Enter your Google Gemini API key to use AI features. You can get a free key from Google AI Studio.';
+  String get apiKeyDialogBody =>
+      'Enter your Google Gemini API key to use AI features. You can get a free key from Google AI Studio.';
 
   @override
   String get apiKeyRequired => 'Please enter your key';
@@ -998,28 +1026,35 @@ class AppLocalizationsEn extends AppLocalizations {
   String get autoQuizDone => 'Your PDF focus session is complete.';
 
   @override
-  String get autoQuizStarting => 'The AI quiz is starting so you can test what you learned...';
+  String get autoQuizStarting =>
+      'The AI quiz is starting so you can test what you learned...';
 
   @override
   String get aiErrMissingKey => 'Add your Gemini API key to use AI features.';
 
   @override
-  String get aiErrBusy => 'The AI service is busy right now. Please try again in a few minutes.';
+  String get aiErrBusy =>
+      'The AI service is busy right now. Please try again in a few minutes.';
 
   @override
-  String get aiErrRateLimit => 'The AI usage limit was reached. Please try again later.';
+  String get aiErrRateLimit =>
+      'The AI usage limit was reached. Please try again later.';
 
   @override
-  String get aiErrNetwork => 'No internet connection. Check your connection and try again.';
+  String get aiErrNetwork =>
+      'No internet connection. Check your connection and try again.';
 
   @override
-  String get aiErrFileMissing => 'The PDF file could not be found on this device.';
+  String get aiErrFileMissing =>
+      'The PDF file could not be found on this device.';
 
   @override
-  String get aiErrBadResponse => 'The AI couldn\'t prepare the questions. Please try again.';
+  String get aiErrBadResponse =>
+      'The AI couldn\'t prepare the questions. Please try again.';
 
   @override
-  String get aiErrGeneric => 'Something went wrong with the AI service. Please try again.';
+  String get aiErrGeneric =>
+      'Something went wrong with the AI service. Please try again.';
 
   @override
   String get enterApiKeyBtn => 'Enter API key';
@@ -1033,7 +1068,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get aiErrUnavailable => 'AI is temporarily unavailable. Please try again later.';
+  String get aiErrUnavailable =>
+      'AI is temporarily unavailable. Please try again later.';
 
   @override
   String get olderSessionsTitle => 'OLDER SESSIONS';
@@ -1053,14 +1089,44 @@ class AppLocalizationsEn extends AppLocalizations {
   String get restoreDone => 'Purchases checked';
 
   @override
-  String get billingUnavailable => 'The store isn\'t available on this device. Install TScan from Google Play to subscribe.';
+  String get billingUnavailable =>
+      'The store isn\'t available on this device. Install TScan from Google Play to subscribe.';
 
   @override
-  String get billingProductMissing => 'This subscription isn\'t available right now. Please try again later.';
+  String get billingProductMissing =>
+      'This subscription isn\'t available right now. Please try again later.';
 
   @override
   String get billingFailed => 'The purchase could not be completed.';
 
   @override
   String get billingPending => 'Waiting for payment confirmation...';
+
+  @override
+  String get accountSection => 'Account';
+
+  @override
+  String get menuSettings => 'Settings';
+
+  @override
+  String get menuLogout => 'Log out';
+
+  @override
+  String streakDays(int count) {
+    return '$count-day streak';
+  }
+
+  @override
+  String get dailyGoalShort => 'Daily goal';
+
+  @override
+  String get goalReachedShort => 'Goal reached 🎉';
+
+  @override
+  String minutesLeft(int minutes) {
+    return '$minutes min left';
+  }
+
+  @override
+  String get freePlan => 'Free plan';
 }

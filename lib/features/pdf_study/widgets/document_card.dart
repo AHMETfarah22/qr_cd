@@ -8,7 +8,7 @@ import '../screens/ai_analysis_screen.dart';
 import '../screens/quiz_screen.dart';
 import '../services/pdf_history_service.dart';
 
-/// A studied PDF with shortcuts to study again, take the quiz or delete it.
+/// A studied PDF row with shortcuts to study again, take the quiz or delete it.
 class DocumentCard extends StatelessWidget {
   final PdfDocument doc;
 
@@ -19,9 +19,9 @@ class DocumentCard extends StatelessWidget {
     final p = Palette.of(context);
     final l10n = AppLocalizations.of(context)!;
 
-    return Container(
+    // A row, not a card: lists group these inside one GlassGroup.
+    return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      decoration: p.cardDecoration(radius: 16),
       child: Row(
         children: [
           Container(

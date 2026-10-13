@@ -1,526 +1,398 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/services/premium_service.dart';
+import '../../../core/services/settings_service.dart';
+import '../../../core/widgets/glass.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../premium/screens/paywall_screen.dart';
+import '../../settings/screens/settings_screen.dart';
 import '../services/auth_service.dart';
 import '../services/statistics_service.dart';
-import '../../settings/screens/settings_screen.dart';
-import '../../../core/services/settings_service.dart';
 import 'login_screen.dart';
-import 'dart:io';
-import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
-import 'session_history_screen.dart';
-import 'statistics_chart_screen.dart';
-import '../../../l10n/app_localizations.dart';
 
+/// Account tab: who you are, today's progress, badges, and the few things
+/// you manage here (Premium, settings, sign-out). Detailed numbers live in
+/// the Stats and History tabs.
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
+    final stats = Provider.of<StatisticsService>(context);
+    final premium = Provider.of<PremiumService>(context);
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: SafeArea(
         bottom: false,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-          child: Column(
-            children: [
-              // Settings button row at top
-              Align(
-                alignment: Alignment.centerRight,
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.settings_outlined,
-                    color: AppColors.accent,
-                    size: 24,
-                  ),
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SettingsScreen(),
-                    ),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 10),
-
-              // Profile Section (New Design)
-              Center(
-                child: Column(
-                  children: [
-                    Stack(
-                      alignment: Alignment.bottomRight,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: AppColors.accent.withValues(alpha: 0.5),
-                              width: 2,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColors.accent.withValues(alpha: 0.15),
-                                blurRadius: 20,
-                                spreadRadius: 5,
-                              ),
-                            ],
-                          ),
-                          child: CircleAvatar(
-                            radius: 50,
-                            backgroundColor: AppColors.process.withValues(
-                              alpha: 0.5,
-                            ),
-                            backgroundImage: authService.userImagePath != null
-                                ? FileImage(File(authService.userImagePath!))
-                                : null,
-                            child: authService.userImagePath == null
-                                ? Text(
-                                    authService.userName
-                                            ?.substring(0, 1)
-                                            .toUpperCase() ??
-                                        'U',
-                                    style: const TextStyle(
-                                      fontSize: 40,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  )
-                                : null,
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () => _pickImage(context, authService),
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: const BoxDecoration(
-                              color: AppColors.accent,
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.edit,
-                              color: Colors.black,
-                              size: 16,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      authService.userName ?? l10n.user,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.glass,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        authService.userEmail ?? 'email@example.com',
-                        style: const TextStyle(
-                          color: AppColors.textSecondary,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 40),
-
-              // Statistics Section Header
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  l10n.focusSummary,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.5,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              Consumer<StatisticsService>(
-                builder: (context, statsService, _) {
-                  return Column(
-                    children: [
-                      // Streak Card (Prominent)
-                      _buildStreakCard(statsService, context),
-
-                      const SizedBox(height: 12),
-
-                      // Daily Goal progress card
-                      _buildDailyGoalCard(statsService, context),
-
-                      const SizedBox(height: 16),
-
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildStatCard(
-                              icon: Icons.play_circle_outline,
-                              title: l10n.total,
-                              value: '${statsService.totalSessions}',
-                              subtitle: l10n.session(
-                                statsService.totalSessions,
-                              ),
-                              color: Colors.blue.shade300,
-                              context: context,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: _buildStatCard(
-                              icon: Icons.check_circle_outline,
-                              title: l10n.successful,
-                              value: '${statsService.completedSessions}',
-                              subtitle: l10n.session(
-                                statsService.completedSessions,
-                              ),
-                              color: Colors.green.shade300,
-                              context: context,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildStatCard(
-                              icon: Icons.cancel_outlined,
-                              title: l10n.cancelled,
-                              value: '${statsService.cancelledSessions}',
-                              subtitle: l10n.session(
-                                statsService.cancelledSessions,
-                              ),
-                              color: Colors.red.shade300,
-                              context: context,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: _buildStatCard(
-                              icon: Icons.access_time_rounded,
-                              title: l10n.totalTime,
-                              value: statsService.totalTimeFormatted,
-                              subtitle: '',
-                              color: Colors.orange.shade300,
-                              context: context,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildStatCard(
-                              icon: Icons.picture_as_pdf_rounded,
-                              title: l10n.pdfCalismasi,
-                              value: '${statsService.totalPdfSessions}',
-                              subtitle: l10n.oturum,
-                              color: Colors.deepPurpleAccent,
-                              context: context,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: _buildStatCard(
-                              icon: Icons.quiz_rounded,
-                              title: l10n.tamamlananQuiz,
-                              value: '${statsService.totalQuizzesTaken}',
-                              subtitle: l10n.sinav,
-                              color: Colors.tealAccent,
-                              context: context,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      _buildStatCard(
-                        icon: Icons.percent_rounded,
-                        title: l10n.ortalamaQuizBasarisi,
-                        value:
-                            '${statsService.averageQuizScore.toStringAsFixed(1)}%',
-                        subtitle: l10n.basariOrani,
-                        color: Colors.pinkAccent,
-                        context: context,
-                      ),
-
-                      const SizedBox(height: 32),
-
-                      // Badges Section
-                      if (statsService.badges.isNotEmpty) ...[
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            l10n.earnedBadges,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1.5,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3,
-                                childAspectRatio: 0.9,
-                                crossAxisSpacing: 12,
-                                mainAxisSpacing: 12,
-                              ),
-                          itemCount: statsService.badges.length,
-                          itemBuilder: (context, index) {
-                            return _buildBadgeItem(
-                              statsService.badges[index],
-                              l10n,
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 32),
-                      ],
-
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          l10n.successAnalysis,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.5,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      // Success Rate
-                      _buildSuccessRateCard(statsService, context, l10n),
-
-                      const SizedBox(height: 24),
-
-                      // Session History Button
-                      Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              AppColors.process.withValues(alpha: 0.6),
-                              AppColors.process.withValues(alpha: 0.4),
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: AppColors.accent.withValues(alpha: 0.3),
-                            width: 1.5,
-                          ),
-                        ),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const SessionHistoryScreen(),
-                              ),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            shadowColor: Colors.transparent,
-                            padding: const EdgeInsets.symmetric(vertical: 20),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.history_rounded,
-                                color: AppColors.accent,
-                              ),
-                              const SizedBox(width: 12),
-                              Text(
-                                l10n.sessionHistory,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1.2,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
-
-              const SizedBox(height: 16),
-
-              // Statistics Charts Button
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.purple.withValues(alpha: 0.25),
-                      Colors.blue.withValues(alpha: 0.25),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: Colors.purple.withValues(alpha: 0.5),
-                    width: 1.5,
-                  ),
-                ),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const StatisticsChartScreen(),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.bar_chart_rounded,
-                        color: Colors.purple.shade200,
-                      ),
-                      const SizedBox(width: 12),
-                      Text(
-                        l10n.detailedCharts,
-                        style: TextStyle(
-                          color: Colors.purple.shade200,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.2,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 48),
-
-              // Logout & Delete Buttons
-              _buildActionButtons(context, authService, l10n),
-
-              const SizedBox(height: 32),
+        child: ListView(
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+          children: [
+            _buildProfileHeader(context, authService, premium, l10n),
+            const SizedBox(height: 22),
+            _buildTodayCard(context, stats, l10n),
+            if (stats.badges.isNotEmpty) ...[
+              SectionLabel(l10n.earnedBadges),
+              _buildBadges(stats.badges, l10n),
             ],
-          ),
+            SectionLabel(l10n.accountSection),
+            GlassGroup(
+              children: [
+                GlassTile(
+                  icon: Icons.workspace_premium_rounded,
+                  iconColor: Colors.amber,
+                  title: l10n.paywallTitle,
+                  subtitle: _premiumSubtitle(context, premium, l10n),
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const PaywallScreen()),
+                  ),
+                ),
+                GlassTile(
+                  icon: Icons.settings_rounded,
+                  title: l10n.menuSettings,
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const SettingsScreen()),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            GlassGroup(
+              children: [
+                GlassTile(
+                  icon: Icons.logout_rounded,
+                  iconColor: Colors.white,
+                  title: l10n.menuLogout,
+                  trailing: const SizedBox.shrink(),
+                  onTap: () => _confirmLogout(context, authService, l10n),
+                ),
+                GlassTile(
+                  icon: Icons.delete_forever_rounded,
+                  iconColor: Colors.redAccent,
+                  title: l10n.deleteAccount,
+                  titleColor: Colors.redAccent,
+                  trailing: const SizedBox.shrink(),
+                  onTap: () =>
+                      _confirmDeleteAccount(context, authService, l10n),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
   }
 
-  // Extracted Action Buttons to clean up build method
-  Widget _buildActionButtons(
+  String _premiumSubtitle(
     BuildContext context,
-    AuthService authService,
+    PremiumService premium,
     AppLocalizations l10n,
   ) {
+    if (premium.isPremium) {
+      final expiry = premium.expiry;
+      if (expiry == null) return l10n.premiumActivatedTitle;
+      final locale = Localizations.localeOf(context).toString();
+      return l10n.premiumActiveUntil(DateFormat.yMMMd(locale).format(expiry));
+    }
+    return premium.canUploadPdf
+        ? '${l10n.freePlan} · ${l10n.freePdfRemaining(premium.freePdfRemaining)}'
+        : '${l10n.freePlan} · ${l10n.freeLimitReachedTitle}';
+  }
+
+  Widget _buildProfileHeader(
+    BuildContext context,
+    AuthService authService,
+    PremiumService premium,
+    AppLocalizations l10n,
+  ) {
+    final name = authService.userName ?? l10n.user;
     return Column(
       children: [
-        // Logout Button
-        Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: AppColors.glass,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: AppColors.textSecondary.withValues(alpha: 0.2),
-            ),
-          ),
-          child: ElevatedButton(
-            onPressed: () => _confirmLogout(context, authService, l10n),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.transparent,
-              shadowColor: Colors.transparent,
-              padding: const EdgeInsets.symmetric(vertical: 18),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+        Stack(
+          alignment: Alignment.bottomRight,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(3),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: premium.isPremium
+                      ? [Colors.amber, const Color(0xFFF6D277)]
+                      : [AppColors.accent, AppColors.accentDeep],
+                ),
+              ),
+              child: CircleAvatar(
+                radius: 44,
+                backgroundColor: AppColors.process,
+                backgroundImage: authService.userImagePath != null
+                    ? FileImage(File(authService.userImagePath!))
+                    : null,
+                child: authService.userImagePath == null
+                    ? Text(
+                        name.isEmpty ? 'U' : name.substring(0, 1).toUpperCase(),
+                        style: const TextStyle(
+                          fontSize: 34,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      )
+                    : null,
               ),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.logout_rounded,
-                  color: AppColors.textSecondary,
+            GestureDetector(
+              onTap: () => _pickImage(context, authService),
+              child: Container(
+                padding: const EdgeInsets.all(7),
+                decoration: BoxDecoration(
+                  color: AppColors.accentDeep,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: AppColors.background, width: 2),
                 ),
-                const SizedBox(width: 8),
+                child: const Icon(
+                  Icons.edit_rounded,
+                  color: Colors.white,
+                  size: 15,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Flexible(
+              child: Text(
+                name,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            if (premium.isPremium) ...[
+              const SizedBox(width: 6),
+              const Icon(
+                Icons.workspace_premium_rounded,
+                color: Colors.amber,
+                size: 20,
+              ),
+            ],
+          ],
+        ),
+        const SizedBox(height: 2),
+        Text(
+          authService.userEmail ?? '',
+          style: TextStyle(
+            color: Colors.white.withValues(alpha: 0.65),
+            fontSize: 13,
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Today at a glance: streak on the left, daily goal on the right.
+  Widget _buildTodayCard(
+    BuildContext context,
+    StatisticsService stats,
+    AppLocalizations l10n,
+  ) {
+    final settings = Provider.of<SettingsService>(context);
+    final goal = settings.dailyFocusGoalMinutes;
+    final minutes = stats.dailyFocusMinutes;
+    final progress = goal == 0 ? 0.0 : (minutes / goal).clamp(0.0, 1.0);
+    final reached = minutes >= goal;
+
+    return GlassCard(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+      child: IntrinsicHeight(
+        child: Row(
+          children: [
+            Expanded(
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(9),
+                    decoration: BoxDecoration(
+                      color: Colors.deepOrange.withValues(alpha: 0.18),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(
+                      Icons.local_fire_department_rounded,
+                      color: Colors.deepOrange,
+                      size: 24,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${stats.currentStreak}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        Text(
+                          l10n.streakDays(stats.currentStreak),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.65),
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            VerticalDivider(
+              width: 24,
+              thickness: 1,
+              color: Colors.white.withValues(alpha: 0.1),
+            ),
+            Expanded(
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 46,
+                    height: 46,
+                    child: CircularProgressIndicator(
+                      value: progress,
+                      strokeWidth: 5,
+                      strokeCap: StrokeCap.round,
+                      backgroundColor: Colors.white.withValues(alpha: 0.1),
+                      color: reached ? Colors.tealAccent : AppColors.accent,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '$minutes/$goal',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        Text(
+                          reached
+                              ? l10n.goalReachedShort
+                              : l10n.minutesLeft(goal - minutes),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.65),
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBadges(List<String> badges, AppLocalizations l10n) {
+    return SizedBox(
+      height: 40,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        itemCount: badges.length,
+        separatorBuilder: (_, _) => const SizedBox(width: 8),
+        itemBuilder: (context, index) {
+          final (label, icon, color) = _badgeInfo(badges[index], l10n);
+          return Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.14),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: color.withValues(alpha: 0.35)),
+            ),
+            child: Row(
+              children: [
+                Icon(icon, color: color, size: 18),
+                const SizedBox(width: 6),
                 Text(
-                  l10n.logout,
+                  label,
                   style: const TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 16,
+                    color: Colors.white,
+                    fontSize: 13,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
             ),
-          ),
-        ),
-
-        const SizedBox(height: 16),
-
-        // Delete Account Button
-        TextButton(
-          onPressed: () => _confirmDeleteAccount(context, authService, l10n),
-          child: Text(
-            l10n.deleteAccount,
-            style: TextStyle(
-              color: Colors.red.withValues(alpha: 0.7),
-              fontSize: 14,
-            ),
-          ),
-        ),
-      ],
+          );
+        },
+      ),
     );
+  }
+
+  (String, IconData, Color) _badgeInfo(String badge, AppLocalizations l10n) {
+    final tr = l10n.localeName == 'tr';
+    return switch (badge) {
+      'Erkenci Kuş' => (
+        l10n.badgeEarlyBird,
+        Icons.wb_sunny_rounded,
+        Colors.amber,
+      ),
+      'Maratoncu' => (
+        l10n.badgeMarathoner,
+        Icons.timer_rounded,
+        Colors.lightBlueAccent,
+      ),
+      'Usta Odaklanıcı' => (
+        l10n.badgeMaster,
+        Icons.workspace_premium_rounded,
+        Colors.purpleAccent,
+      ),
+      'Akademisyen' => (
+        tr ? 'Akademisyen' : 'Scholar',
+        Icons.school_rounded,
+        Colors.deepPurpleAccent,
+      ),
+      'Dahi' => (
+        tr ? 'Dahi' : 'Genius',
+        Icons.psychology_rounded,
+        Colors.pinkAccent,
+      ),
+      'Bilgin' => (
+        tr ? 'Bilgin' : 'Sage',
+        Icons.auto_stories_rounded,
+        Colors.tealAccent,
+      ),
+      _ => (badge, Icons.military_tech_rounded, Colors.grey),
+    };
   }
 
   Future<void> _confirmLogout(
@@ -533,7 +405,7 @@ class AccountScreen extends StatelessWidget {
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.process,
         title: Text(
-          l10n.logout.toLowerCase(),
+          l10n.menuLogout,
           style: const TextStyle(color: Colors.white),
         ),
         content: Text(
@@ -543,17 +415,11 @@ class AccountScreen extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: Text(
-              l10n.cancelBtn,
-              style: const TextStyle(color: AppColors.textSecondary),
-            ),
+            child: Text(l10n.cancelBtn),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: Text(
-              l10n.logout.toLowerCase(),
-              style: const TextStyle(color: Colors.white),
-            ),
+            child: Text(l10n.menuLogout),
           ),
         ],
       ),
@@ -576,14 +442,13 @@ class AccountScreen extends StatelessWidget {
     AuthService authService,
     AppLocalizations l10n,
   ) async {
-    // Similar to logout but for delete
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.process,
         title: Text(
           l10n.deleteAccount,
-          style: const TextStyle(color: Colors.red),
+          style: const TextStyle(color: Colors.redAccent),
         ),
         content: Text(
           l10n.deleteAccountConfirm,
@@ -592,17 +457,14 @@ class AccountScreen extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: Text(
-              l10n.cancelBtn,
-              style: const TextStyle(color: AppColors.textSecondary),
-            ),
+            child: Text(l10n.cancelBtn),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             child: Text(
               l10n.delete,
               style: const TextStyle(
-                color: Colors.red,
+                color: Colors.redAccent,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -623,381 +485,15 @@ class AccountScreen extends StatelessWidget {
     }
   }
 
-  Widget _buildStatCard({
-    required IconData icon,
-    required String title,
-    required String value,
-    String? subtitle,
-    required Color color,
-    required BuildContext context,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.glass,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: Icon(icon, color: color, size: 24),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            value,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              letterSpacing: -0.5,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Wrap(
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  color: AppColors.textSecondary.withValues(alpha: 0.9),
-                  fontSize: 13,
-                ),
-              ),
-              if (subtitle != null && subtitle.isNotEmpty) ...[
-                const SizedBox(width: 4),
-                Text(
-                  subtitle,
-                  style: TextStyle(
-                    color: AppColors.textSecondary.withValues(alpha: 0.6),
-                    fontSize: 13,
-                  ),
-                ),
-              ],
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSuccessRateCard(
-    StatisticsService statsService,
-    BuildContext context,
-    AppLocalizations l10n,
-  ) {
-    // Safely calculate success rate
-    final double successRate = statsService.totalSessions > 0
-        ? (statsService.completedSessions / statsService.totalSessions * 100)
-        : 0.0;
-
-    final color = successRate >= 70
-        ? Colors.green
-        : (successRate >= 40 ? Colors.orange : Colors.red);
-
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: AppColors.glass,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: color.withValues(alpha: 0.3), width: 1.5),
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: color.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Icon(
-                      Icons.emoji_events_rounded,
-                      color: color,
-                      size: 24,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Text(
-                    l10n.successRate,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-              Text(
-                '${successRate.toStringAsFixed(0)}%',
-                style: TextStyle(
-                  color: color,
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: LinearProgressIndicator(
-              value: successRate / 100,
-              backgroundColor: AppColors.background,
-              valueColor: AlwaysStoppedAnimation<Color>(color),
-              minHeight: 12,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStreakCard(StatisticsService stats, BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFFFF9100), Color(0xFFFF3D00)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.orange.withValues(alpha: 0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                l10n.dailyStreak,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.2,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                '${stats.currentStreak} ${l10n.day(stats.currentStreak)}!',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 36,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: -1,
-                ),
-              ),
-            ],
-          ),
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: const Icon(
-              Icons.local_fire_department_rounded,
-              color: Colors.white,
-              size: 48,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDailyGoalCard(StatisticsService stats, BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final settings = Provider.of<SettingsService>(context, listen: false);
-    final dailyGoal = settings.dailyFocusGoalMinutes;
-    final dailyMinutes = stats.dailyFocusMinutes;
-    final progress = (dailyMinutes / dailyGoal).clamp(0.0, 1.0);
-    final isGoalReached = dailyMinutes >= dailyGoal;
-
-    final mainColor = isGoalReached ? Colors.tealAccent : AppColors.accent;
-
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.glass,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: mainColor.withValues(alpha: 0.2), width: 1.5),
-      ),
-      child: Row(
-        children: [
-          // Circular Progress Indicator
-          SizedBox(
-            width: 80,
-            height: 80,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                CircularProgressIndicator(
-                  value: progress,
-                  strokeWidth: 8,
-                  backgroundColor: AppColors.background,
-                  valueColor: AlwaysStoppedAnimation<Color>(mainColor),
-                ),
-                Text(
-                  '${(progress * 100).toStringAsFixed(0)}%',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 20),
-          // Details
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  l10n.dailyGoalProgress,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  l10n.dailyMinutesFocused(dailyMinutes, dailyGoal),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  isGoalReached
-                      ? l10n.dailyGoalReached
-                      : l10n.dailyGoalRemaining(dailyGoal - dailyMinutes),
-                  style: TextStyle(
-                    color: isGoalReached
-                        ? Colors.tealAccent
-                        : AppColors.textSecondary,
-                    fontSize: 12,
-                    fontWeight: isGoalReached
-                        ? FontWeight.bold
-                        : FontWeight.normal,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBadgeItem(String badgeName, AppLocalizations l10n) {
-    IconData icon;
-    Color color;
-
-    switch (badgeName) {
-      case 'Erkenci Kuş':
-        badgeName = l10n.badgeEarlyBird;
-        icon = Icons.wb_sunny_rounded;
-        color = Colors.amber;
-        break;
-      case 'Maratoncu':
-        badgeName = l10n.badgeMarathoner;
-        icon = Icons.timer_rounded;
-        color = Colors.blueAccent;
-        break;
-      case 'Usta Odaklanıcı':
-        badgeName = l10n.badgeMaster;
-        icon = Icons.workspace_premium_rounded;
-        color = Colors.purpleAccent;
-        break;
-      case 'Akademisyen':
-        badgeName = l10n.localeName == 'tr' ? 'Akademisyen' : 'Scholar';
-        icon = Icons.school_rounded;
-        color = Colors.deepPurpleAccent;
-        break;
-      case 'Dahi':
-        badgeName = l10n.localeName == 'tr' ? 'Dahi' : 'Genius';
-        icon = Icons.psychology_rounded;
-        color = Colors.pinkAccent;
-        break;
-      case 'Bilgin':
-        badgeName = l10n.localeName == 'tr' ? 'Bilgin' : 'Sage';
-        icon = Icons.auto_stories_rounded;
-        color = Colors.tealAccent;
-        break;
-      default:
-        icon = Icons.military_tech_rounded;
-        color = Colors.grey;
-    }
-
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.glass,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withValues(alpha: 0.3), width: 1.5),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, color: color, size: 32),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            badgeName,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: color,
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Future<void> _pickImage(BuildContext context, AuthService authService) async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
       final appDir = await getApplicationDocumentsDirectory();
-      final fileName = pickedFile.name;
       final savedImage = await File(
         pickedFile.path,
-      ).copy('${appDir.path}/$fileName');
-
+      ).copy('${appDir.path}/${pickedFile.name}');
       authService.updateProfileImage(savedImage.path);
     }
   }

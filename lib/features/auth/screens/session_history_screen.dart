@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/palette.dart';
+import '../../../core/widgets/glass.dart';
 import '../../core/screens/main_screen.dart';
 import '../../../core/models/session_category.dart';
 import '../services/statistics_service.dart';
@@ -129,6 +130,7 @@ class SessionHistoryScreen extends StatelessWidget {
     );
   }
 
+  /// One session as a compact row; a day's rows share one GlassGroup.
   Widget _buildSessionCard({
     required int duration,
     required bool completed,
@@ -137,148 +139,86 @@ class SessionHistoryScreen extends StatelessWidget {
     required String note,
     required BuildContext context,
   }) {
-    final p = Palette.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final locale = Localizations.localeOf(context).toString();
-    final dateFormat = DateFormat('dd MMM yyyy, HH:mm', locale);
-    final timeAgo = _getTimeAgo(date, context);
+    final statusColor = completed ? Colors.greenAccent : Colors.redAccent;
 
     final hours = duration ~/ 60;
     final minutes = duration % 60;
-    String durationText;
-    if (hours > 0) {
-      durationText =
-          '$hours${AppLocalizations.of(context)!.hoursShort} $minutes${AppLocalizations.of(context)!.minutesShort}';
-    } else {
-      durationText = AppLocalizations.of(context)!.mins(minutes);
-    }
+    final durationText = hours > 0
+        ? l10n.hoursMinutesShort(hours, minutes)
+        : l10n.minutesValue(minutes);
 
-    final statusColor = completed ? Colors.green : Colors.redAccent;
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: p
-          .cardDecoration(radius: 16)
-          .copyWith(
-            gradient: LinearGradient(
-              colors: [statusColor.withValues(alpha: 0.12), p.card],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            border: Border.all(
-              color: statusColor.withValues(alpha: 0.3),
-              width: 1.2,
-            ),
-          ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Icon
           Container(
-            padding: const EdgeInsets.all(12),
+            width: 36,
+            height: 36,
             decoration: BoxDecoration(
-              color: completed
-                  ? Colors.green.withValues(alpha: 0.2)
-                  : Colors.red.withValues(alpha: 0.2),
-              shape: BoxShape.circle,
+              color: category.color.withValues(alpha: 0.18),
+              borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(
-              completed ? Icons.check_circle : Icons.cancel,
-              color: completed ? Colors.green : Colors.red,
-              size: 28,
-            ),
+            child: Icon(category.icon, color: category.color, size: 19),
           ),
-          const SizedBox(width: 16),
-          // Info
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      completed
-                          ? AppLocalizations.of(context)!.successLabel
-                          : AppLocalizations.of(context)!.failedLabel,
-                      style: TextStyle(
-                        color: completed ? Colors.green : Colors.red,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-                    Text(
-                      timeAgo,
-                      style: TextStyle(color: p.textSecondary, fontSize: 11),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 6),
                 Text(
                   durationText,
-                  style: TextStyle(
-                    color: p.textPrimary,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Icon(category.icon, size: 14, color: category.color),
-                    const SizedBox(width: 4),
-                    Text(
-                      category.getDisplayName(context),
-                      style: TextStyle(
-                        color: category.color,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const Spacer(),
-                    Text(
-                      dateFormat.format(date),
-                      style: TextStyle(color: p.textSecondary, fontSize: 11),
-                    ),
-                  ],
+                const SizedBox(height: 2),
+                Text(
+                  '${category.getDisplayName(context)} · ${DateFormat.Hm(locale).format(date)}',
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.65),
+                    fontSize: 12.5,
+                  ),
                 ),
                 if (note.isNotEmpty) ...[
-                  const SizedBox(height: 8),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: p.cardMuted,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: p.border),
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(
-                          Icons.note_alt_outlined,
-                          size: 14,
-                          color: p.accentText,
-                        ),
-                        const SizedBox(width: 6),
-                        Expanded(
-                          child: Text(
-                            note,
-                            style: TextStyle(
-                              color: p.textSecondary,
-                              fontSize: 12,
-                              fontStyle: FontStyle.italic,
-                            ),
-                          ),
-                        ),
-                      ],
+                  const SizedBox(height: 4),
+                  Text(
+                    note,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.75),
+                      fontSize: 12,
+                      fontStyle: FontStyle.italic,
                     ),
                   ),
                 ],
               ],
             ),
+          ),
+          const SizedBox(width: 8),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                completed ? Icons.check_circle_rounded : Icons.cancel_rounded,
+                color: statusColor,
+                size: 16,
+              ),
+              const SizedBox(width: 4),
+              Text(
+                completed ? l10n.successLabel : l10n.failedLabel,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -371,22 +311,20 @@ class SessionHistoryScreen extends StatelessWidget {
                 ),
               ),
             ),
-            ...daySessions.map((session) {
-              final duration = session['duration'] as int;
-              final completed = session['completed'] as bool;
-              final date = session['date'] as DateTime;
-              final category = session['category'] as SessionCategory;
-              final note = session['note'] as String? ?? '';
-
-              return _buildSessionCard(
-                duration: duration,
-                completed: completed,
-                date: date,
-                category: category,
-                note: note,
-                context: context,
-              );
-            }),
+            GlassGroup(
+              children: [
+                for (final session in daySessions)
+                  _buildSessionCard(
+                    duration: session['duration'] as int,
+                    completed: session['completed'] as bool,
+                    date: session['date'] as DateTime,
+                    category: session['category'] as SessionCategory,
+                    note: session['note'] as String? ?? '',
+                    context: context,
+                  ),
+              ],
+            ),
+            const SizedBox(height: 4),
           ],
         );
       },
@@ -487,27 +425,5 @@ class SessionHistoryScreen extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String _getTimeAgo(DateTime date, BuildContext context) {
-    final now = DateTime.now();
-    final difference = now.difference(date);
-    final l10n = AppLocalizations.of(context)!;
-
-    if (difference.inMinutes < 1) {
-      return l10n.timeAgoJustNow;
-    } else if (difference.inMinutes < 60) {
-      return l10n.timeAgoMinutes(difference.inMinutes);
-    } else if (difference.inHours < 24) {
-      return l10n.timeAgoHours(difference.inHours);
-    } else if (difference.inDays < 7) {
-      return l10n.timeAgoDays(difference.inDays);
-    } else if (difference.inDays < 30) {
-      return l10n.timeAgoWeeks((difference.inDays / 7).floor());
-    } else if (difference.inDays < 365) {
-      return l10n.timeAgoMonths((difference.inDays / 30).floor());
-    } else {
-      return l10n.timeAgoYears((difference.inDays / 365).floor());
-    }
   }
 }
