@@ -390,5 +390,8 @@
   "enterApiKeyBtn": "API anahtarı gir",
   "apiKeyWhere": "Ücretsiz anahtar: aistudio.google.com/apikey",
   "pagesWords": "{pages} sayfa • {words} kelime",
-  "aiErrUnavailable": "AI şu an kullanılamıyor. Lütfen daha sonra tekrar dene."
+  "aiErrUnavailable": "AI şu an kullanılamıyor. Lütfen daha sonra tekrar dene.",
+  "olderSessionsTitle": "ESKİ OTURUMLAR",
+  "olderSessionsBtn": "Eski oturumlar ({count})",
+  "noRecentSessions": "Son 7 günde oturum yok"
 }

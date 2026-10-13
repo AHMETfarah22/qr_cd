@@ -157,7 +157,7 @@ class _QuizScreenState extends State<QuizScreen> {
                     l10n.soruSayisi(_currentIndex + 1, _questions!.length),
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w600,
-                      color: p.accentText,
+                      color: p.textPrimary,
                     ),
                   ),
                 ),
@@ -274,7 +274,7 @@ class _QuizScreenState extends State<QuizScreen> {
                   icon: const Icon(Icons.refresh_rounded),
                   label: Text(l10n.tekrarDene),
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: p.accentText,
+                    foregroundColor: Colors.white,
                     side: BorderSide(
                       color: p.accentText.withValues(alpha: 0.5),
                     ),
@@ -406,7 +406,7 @@ class _QuizScreenState extends State<QuizScreen> {
                   key,
                   style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w700,
-                    color: isSelected ? Colors.white : p.accentText,
+                    color: isSelected ? Colors.white : p.textPrimary,
                     fontSize: 15,
                   ),
                 ),

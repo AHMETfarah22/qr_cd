@@ -89,7 +89,7 @@ class AccountScreen extends StatelessWidget {
                                     style: const TextStyle(
                                       fontSize: 40,
                                       fontWeight: FontWeight.bold,
-                                      color: AppColors.accent,
+                                      color: Colors.white,
                                     ),
                                   )
                                 : null,
@@ -129,7 +129,7 @@ class AccountScreen extends StatelessWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.process.withValues(alpha: 0.3),
+                        color: AppColors.glass,
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
@@ -153,7 +153,7 @@ class AccountScreen extends StatelessWidget {
                 child: Text(
                   l10n.focusSummary,
                   style: TextStyle(
-                    color: AppColors.accent,
+                    color: Colors.white,
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.5,
@@ -280,7 +280,7 @@ class AccountScreen extends StatelessWidget {
                           child: Text(
                             l10n.earnedBadges,
                             style: TextStyle(
-                              color: AppColors.accent,
+                              color: Colors.white,
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
                               letterSpacing: 1.5,
@@ -314,7 +314,7 @@ class AccountScreen extends StatelessWidget {
                         child: Text(
                           l10n.successAnalysis,
                           style: TextStyle(
-                            color: AppColors.accent,
+                            color: Colors.white,
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1.5,
@@ -372,7 +372,7 @@ class AccountScreen extends StatelessWidget {
                               Text(
                                 l10n.sessionHistory,
                                 style: TextStyle(
-                                  color: AppColors.accent,
+                                  color: Colors.white,
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                   letterSpacing: 1.2,
@@ -469,7 +469,7 @@ class AccountScreen extends StatelessWidget {
         Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            color: AppColors.process.withValues(alpha: 0.3),
+            color: AppColors.glass,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
               color: AppColors.textSecondary.withValues(alpha: 0.2),
@@ -552,7 +552,7 @@ class AccountScreen extends StatelessWidget {
             onPressed: () => Navigator.pop(context, true),
             child: Text(
               l10n.logout.toLowerCase(),
-              style: const TextStyle(color: AppColors.accent),
+              style: const TextStyle(color: Colors.white),
             ),
           ),
         ],
@@ -634,7 +634,7 @@ class AccountScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.process.withValues(alpha: 0.3),
+        color: AppColors.glass,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
       ),
@@ -704,7 +704,7 @@ class AccountScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: AppColors.process.withValues(alpha: 0.3),
+        color: AppColors.glass,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: color.withValues(alpha: 0.3), width: 1.5),
       ),
@@ -839,7 +839,7 @@ class AccountScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.process.withValues(alpha: 0.3),
+        color: AppColors.glass,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: mainColor.withValues(alpha: 0.2), width: 1.5),
       ),
@@ -861,7 +861,7 @@ class AccountScreen extends StatelessWidget {
                 Text(
                   '${(progress * 100).toStringAsFixed(0)}%',
                   style: TextStyle(
-                    color: mainColor,
+                    color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -886,8 +886,8 @@ class AccountScreen extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   l10n.dailyMinutesFocused(dailyMinutes, dailyGoal),
-                  style: TextStyle(
-                    color: mainColor,
+                  style: const TextStyle(
+                    color: Colors.white,
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
                   ),
@@ -957,7 +957,7 @@ class AccountScreen extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.process.withValues(alpha: 0.3),
+        color: AppColors.glass,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: color.withValues(alpha: 0.3), width: 1.5),
       ),

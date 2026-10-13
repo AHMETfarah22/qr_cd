@@ -1071,7 +1071,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'{minutes} / {goal} minutes'**
-  String dailyMinutesFocused(Object goal, Object minutes);
+  String dailyMinutesFocused(int minutes, int goal);
 
   /// No description provided for @dailyGoalRemaining.
   ///
@@ -1984,6 +1984,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'AI is temporarily unavailable. Please try again later.'**
   String get aiErrUnavailable;
+
+  /// No description provided for @olderSessionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'OLDER SESSIONS'**
+  String get olderSessionsTitle;
+
+  /// No description provided for @olderSessionsBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Older sessions ({count})'**
+  String olderSessionsBtn(int count);
+
+  /// No description provided for @noRecentSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'No sessions in the last 7 days'**
+  String get noRecentSessions;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

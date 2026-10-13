@@ -12,19 +12,42 @@ class SessionHistoryScreen extends StatelessWidget {
   /// True when shown as a bottom-navigation tab (no back button).
   final bool embedded;
 
-  const SessionHistoryScreen({super.key, this.embedded = false});
+  /// True for the "older sessions" page reached from the tab's button.
+  final bool olderOnly;
+
+  const SessionHistoryScreen({
+    super.key,
+    this.embedded = false,
+    this.olderOnly = false,
+  });
+
+  /// The tab lists only this many recent days; the rest sit behind a button.
+  static const int recentDays = 7;
 
   @override
   Widget build(BuildContext context) {
     final statsService = Provider.of<StatisticsService>(context);
     final sessions = statsService.sessionHistory;
     final p = Palette.of(context);
+    final l10n = AppLocalizations.of(context)!;
+
+    final now = DateTime.now();
+    final cutoff = DateTime(
+      now.year,
+      now.month,
+      now.day,
+    ).subtract(const Duration(days: recentDays - 1));
+    bool isRecent(Map<String, dynamic> s) =>
+        !(s['date'] as DateTime).isBefore(cutoff);
+    final recent = sessions.where(isRecent).toList();
+    final older = sessions.where((s) => !isRecent(s)).toList();
+    final shown = olderOnly ? older : recent;
 
     return Scaffold(
       backgroundColor: embedded ? Colors.transparent : p.background,
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context)!.historyTitle,
+          olderOnly ? l10n.olderSessionsTitle : l10n.historyTitle,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -74,8 +97,8 @@ class SessionHistoryScreen extends StatelessWidget {
                         ? MainScreen.switchTab(context, 0)
                         : Navigator.pop(context),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.accent,
-                      foregroundColor: Colors.black,
+                      backgroundColor: AppColors.accentDeep,
+                      foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 32,
                         vertical: 12,
@@ -91,8 +114,16 @@ class SessionHistoryScreen extends StatelessWidget {
             )
           : Column(
               children: [
-                _buildWeeklySummary(context, statsService),
-                Expanded(child: _buildSessionList(context, sessions)),
+                if (!olderOnly) _buildWeeklySummary(context, statsService),
+                Expanded(
+                  child: _buildSessionList(
+                    context,
+                    shown,
+                    footer: !olderOnly && older.isNotEmpty
+                        ? _buildOlderButton(context, older.length)
+                        : null,
+                  ),
+                ),
               ],
             ),
     );
@@ -254,10 +285,39 @@ class SessionHistoryScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildOlderButton(BuildContext context, int count) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: SizedBox(
+        width: double.infinity,
+        child: OutlinedButton.icon(
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const SessionHistoryScreen(olderOnly: true),
+            ),
+          ),
+          icon: const Icon(Icons.history_rounded),
+          label: Text(AppLocalizations.of(context)!.olderSessionsBtn(count)),
+          style: OutlinedButton.styleFrom(
+            foregroundColor: Colors.white,
+            side: const BorderSide(color: AppColors.glassBorder),
+            backgroundColor: AppColors.glass,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildSessionList(
     BuildContext context,
-    List<Map<String, dynamic>> sessions,
-  ) {
+    List<Map<String, dynamic>> sessions, {
+    Widget? footer,
+  }) {
     final p = Palette.of(context);
     // Group sessions by calendar day
     final groupedSessions = <DateTime, List<Map<String, dynamic>>>{};
@@ -268,11 +328,28 @@ class SessionHistoryScreen extends StatelessWidget {
       groupedSessions.putIfAbsent(dateKey, () => []).add(session);
     }
 
+    if (groupedSessions.isEmpty) {
+      return ListView(
+        padding: const EdgeInsets.fromLTRB(16, 24, 16, 24),
+        children: [
+          Center(
+            child: Text(
+              AppLocalizations.of(context)!.noRecentSessions,
+              style: TextStyle(color: p.textSecondary, fontSize: 15),
+            ),
+          ),
+          const SizedBox(height: 16),
+          ?footer,
+        ],
+      );
+    }
+
     return ListView.builder(
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-      itemCount: groupedSessions.length,
+      itemCount: groupedSessions.length + (footer == null ? 0 : 1),
       itemBuilder: (context, index) {
+        if (index == groupedSessions.length) return footer!;
         final dateKey = groupedSessions.keys.elementAt(index);
         final daySessions = groupedSessions[dateKey]!;
 
@@ -287,7 +364,7 @@ class SessionHistoryScreen extends StatelessWidget {
               child: Text(
                 _getDateLabel(dateKey, context),
                 style: TextStyle(
-                  color: p.accentText,
+                  color: p.textPrimary,
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.0,

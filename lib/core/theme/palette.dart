@@ -11,16 +11,19 @@ class Palette {
 
   Color get background =>
       isDark ? AppColors.background : AppColors.lightBackground;
-  Color get card => isDark ? AppColors.process : Colors.white;
-  Color get cardMuted => isDark
-      ? AppColors.process.withValues(alpha: 0.5)
-      : AppColors.lightProcess;
+
+  /// Translucent glass so the hourglass background shows through.
+  Color get card => isDark ? AppColors.glass : Colors.white;
+
+  /// Opaque surface for dialogs (glass would let content bleed through).
+  Color get dialog => isDark ? AppColors.process : Colors.white;
+  Color get cardMuted =>
+      isDark ? Colors.white.withValues(alpha: 0.08) : AppColors.lightProcess;
   Color get textPrimary => isDark ? Colors.white : AppColors.lightTextPrimary;
   Color get textSecondary =>
       isDark ? AppColors.textSecondary : AppColors.lightTextSecondary;
-  Color get border => isDark
-      ? AppColors.accent.withValues(alpha: 0.12)
-      : Colors.black.withValues(alpha: 0.06);
+  Color get border =>
+      isDark ? AppColors.glassBorder : Colors.black.withValues(alpha: 0.06);
 
   /// Accent for text and small icons: the neon accent is too light to read
   /// on the light background, so a deeper green is used there.
@@ -36,8 +39,20 @@ class Palette {
     ),
   ];
 
+  /// Frosted glass card: soft white gradient, bright hairline edge and a
+  /// gentle shadow.
   BoxDecoration cardDecoration({double radius = 20}) => BoxDecoration(
-    color: card,
+    gradient: isDark
+        ? LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white.withValues(alpha: 0.14),
+              Colors.white.withValues(alpha: 0.05),
+            ],
+          )
+        : null,
+    color: isDark ? null : card,
     borderRadius: BorderRadius.circular(radius),
     border: Border.all(color: border),
     boxShadow: softShadow,

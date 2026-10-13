@@ -206,7 +206,7 @@ class _TimerScreenState extends State<TimerScreen>
                       l10n.level(timerService.level),
                       style: const TextStyle(
                         fontSize: 12,
-                        color: AppColors.accent,
+                        color: Colors.white,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 1.5,
                       ),
@@ -382,7 +382,7 @@ class _TimerScreenState extends State<TimerScreen>
           child: Text(
             text,
             style: TextStyle(
-              color: color,
+              color: Colors.white,
               fontSize: 13,
               fontWeight: FontWeight.bold,
               letterSpacing: 1.2,
@@ -438,8 +438,8 @@ class _TimerScreenState extends State<TimerScreen>
               ),
               elevation: 0,
               shadowColor: Colors.transparent,
-              backgroundColor: AppColors.accent,
-              foregroundColor: AppColors.background,
+              backgroundColor: AppColors.accentDeep,
+              foregroundColor: Colors.white,
             ),
             child: Text(
               l10n.start,
@@ -508,7 +508,7 @@ class _TimerScreenState extends State<TimerScreen>
           width: double.infinity,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: AppColors.process.withValues(alpha: 0.15),
+            color: AppColors.glass,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
               color: AppColors.accent.withValues(alpha: 0.2),
@@ -716,7 +716,7 @@ class _TimerScreenState extends State<TimerScreen>
                         Text(
                           AppLocalizations.of(context)!.flipPhoneHint,
                           style: const TextStyle(
-                            color: AppColors.accent,
+                            color: Colors.white,
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             letterSpacing: 0.3,

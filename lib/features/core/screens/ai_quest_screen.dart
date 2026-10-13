@@ -178,8 +178,10 @@ class AiQuestScreen extends StatelessWidget {
                   style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: canUpload ? AppColors.accent : Colors.amber,
-                  foregroundColor: Colors.black,
+                  backgroundColor: canUpload
+                      ? AppColors.accentDeep
+                      : Colors.amber.shade800,
+                  foregroundColor: Colors.white,
                   elevation: 0,
                   // No fixed height: Poppins' tall line box clipped the label.
                   padding: const EdgeInsets.symmetric(vertical: 14),
@@ -212,7 +214,9 @@ class AiQuestScreen extends StatelessWidget {
                       style: GoogleFonts.poppins(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: canUpload ? p.accentText : Colors.amber.shade700,
+                        color: canUpload
+                            ? p.textPrimary
+                            : Colors.amber.shade700,
                       ),
                     ),
                   ),
@@ -366,7 +370,7 @@ class AiQuestScreen extends StatelessWidget {
               style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
             ),
             style: OutlinedButton.styleFrom(
-              foregroundColor: p.accentText,
+              foregroundColor: Colors.white,
               side: BorderSide(color: p.accentText.withValues(alpha: 0.5)),
               padding: const EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(

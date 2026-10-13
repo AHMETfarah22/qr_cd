@@ -483,5 +483,25 @@
       }
     }
   },
-  "aiErrUnavailable": "AI is temporarily unavailable. Please try again later."
+  "aiErrUnavailable": "AI is temporarily unavailable. Please try again later.",
+  "@dailyMinutesFocused": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "olderSessionsTitle": "OLDER SESSIONS",
+  "olderSessionsBtn": "Older sessions ({count})",
+  "@olderSessionsBtn": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noRecentSessions": "No sessions in the last 7 days"
 }

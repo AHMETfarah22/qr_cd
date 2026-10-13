@@ -276,7 +276,7 @@ class StatisticsChartScreen extends StatelessWidget {
             child: Text(
               title,
               style: TextStyle(
-                color: p.accentText,
+                color: p.textPrimary,
                 fontSize: 13,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 1.2,
@@ -325,7 +325,7 @@ class StatisticsChartScreen extends StatelessWidget {
               getTooltipItem: (group, _, rod, _) => BarTooltipItem(
                 AppLocalizations.of(context)!.minutesValue(rod.toY.round()),
                 TextStyle(
-                  color: p.isDark ? Colors.black : Colors.white,
+                  color: p.isDark ? Colors.white : Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 12,
                 ),
@@ -376,7 +376,7 @@ class StatisticsChartScreen extends StatelessWidget {
                       DateFormat.E(locale).format(date),
                       style: TextStyle(
                         color: value.toInt() == 6
-                            ? p.accentText
+                            ? p.textPrimary
                             : p.textSecondary,
                         fontSize: 11,
                         fontWeight: value.toInt() == 6

@@ -122,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Text(
               l10n.yes,
               style: const TextStyle(
-                color: AppColors.accent,
+                color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -152,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Container(
                     padding: const EdgeInsets.all(22),
                     decoration: BoxDecoration(
-                      color: AppColors.process.withValues(alpha: 0.92),
+                      color: AppColors.glass,
                       borderRadius: BorderRadius.circular(28),
                       border: Border.all(
                         color: AppColors.accent.withValues(alpha: 0.18),
@@ -313,7 +313,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: Text(
                                 l10n.register,
                                 style: const TextStyle(
-                                  color: AppColors.accent,
+                                  color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                   decoration: TextDecoration.underline,
                                 ),

@@ -210,7 +210,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       child: Text(
                         l10n.login,
                         style: const TextStyle(
-                          color: AppColors.accent,
+                          color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

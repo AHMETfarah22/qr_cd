@@ -51,7 +51,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
       builder: (ctx) {
         final p = Palette.of(ctx);
         return AlertDialog(
-          backgroundColor: p.card,
+          backgroundColor: p.dialog,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24),
           ),
@@ -94,8 +94,8 @@ class _PaywallScreenState extends State<PaywallScreen> {
                     Navigator.pop(context); // paywall
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.accent,
-                    foregroundColor: Colors.black,
+                    backgroundColor: AppColors.accentDeep,
+                    foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -236,8 +236,8 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                   ? null
                                   : _handlePurchase,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.accent,
-                                foregroundColor: Colors.black,
+                                backgroundColor: AppColors.accentDeep,
+                                foregroundColor: Colors.white,
                                 disabledBackgroundColor: AppColors.accent
                                     .withValues(alpha: 0.3),
                                 shape: RoundedRectangleBorder(
@@ -459,7 +459,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                           child: Text(
                             tag,
                             style: GoogleFonts.poppins(
-                              color: Colors.black,
+                              color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontSize: 9,
                             ),
@@ -485,7 +485,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                 Text(
                   '${plan.priceTl} TL',
                   style: GoogleFonts.poppins(
-                    color: isSelected ? p.accentText : p.textPrimary,
+                    color: isSelected ? p.textPrimary : p.textPrimary,
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                   ),

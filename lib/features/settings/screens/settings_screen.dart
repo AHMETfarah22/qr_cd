@@ -155,8 +155,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.accent,
-              foregroundColor: Colors.black,
+              backgroundColor: AppColors.accentDeep,
+              foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -263,7 +263,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
             child: Text(
               AppLocalizations.of(context)!.changePassword,
-              style: const TextStyle(color: AppColors.accent),
+              style: const TextStyle(color: Colors.white),
             ),
           ),
         ],
@@ -502,7 +502,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 },
                 child: const Text(
                   'Tamam',
-                  style: TextStyle(color: AppColors.accent),
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ],
@@ -612,23 +612,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
               const SizedBox(height: 32),
-              _buildSectionTitle(
-                AppLocalizations.of(context)!.sectionAppearance,
-              ),
-              const SizedBox(height: 16),
-              _buildSettingCard(
-                title: AppLocalizations.of(context)!.darkMode,
-                subtitle: settingsService.isDarkMode
-                    ? AppLocalizations.of(context)!.on
-                    : AppLocalizations.of(context)!.off,
-                icon: Icons.dark_mode_outlined,
-                trailing: Switch(
-                  value: settingsService.isDarkMode,
-                  onChanged: (value) => settingsService.setDarkMode(value),
-                  activeThumbColor: AppColors.accent,
-                ),
-              ),
-              const SizedBox(height: 32),
               _buildSectionTitle('USTA ÖZELLİKLERİ'),
               const SizedBox(height: 16),
               _buildSettingCard(
@@ -652,8 +635,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.accent,
-                          foregroundColor: Colors.black,
+                          backgroundColor: AppColors.accentDeep,
+                          foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -886,7 +869,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               Text(
                                 AppLocalizations.of(context)!.hizNormal,
                                 style: const TextStyle(
-                                  color: AppColors.accent,
+                                  color: Colors.white,
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -1079,7 +1062,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Text(
         title,
         style: const TextStyle(
-          color: AppColors.accent,
+          color: Colors.white,
           fontSize: 12,
           fontWeight: FontWeight.bold,
           letterSpacing: 1.5,
@@ -1097,7 +1080,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       decoration: BoxDecoration(
-        color: AppColors.process.withValues(alpha: 0.3),
+        color: AppColors.glass,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: AppColors.accent.withValues(alpha: 0.1),

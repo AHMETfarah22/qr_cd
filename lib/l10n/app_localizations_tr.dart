@@ -523,7 +523,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get dailyGoalProgress => 'Günlük Hedef İlerlemesi';
 
   @override
-  String dailyMinutesFocused(Object goal, Object minutes) {
+  String dailyMinutesFocused(int minutes, int goal) {
     return '$minutes / $goal dakika';
   }
 
@@ -1022,4 +1022,15 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get aiErrUnavailable => 'AI şu an kullanılamıyor. Lütfen daha sonra tekrar dene.';
+
+  @override
+  String get olderSessionsTitle => 'ESKİ OTURUMLAR';
+
+  @override
+  String olderSessionsBtn(int count) {
+    return 'Eski oturumlar ($count)';
+  }
+
+  @override
+  String get noRecentSessions => 'Son 7 günde oturum yok';
 }

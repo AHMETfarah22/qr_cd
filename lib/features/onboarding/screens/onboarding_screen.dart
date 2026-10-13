@@ -171,8 +171,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         icon: Icon(_isDndGranted ? Icons.check : Icons.settings),
         label: Text(_isDndGranted ? l10n.permissionGranted : l10n.btnGrant),
         style: ElevatedButton.styleFrom(
-          backgroundColor: _isDndGranted ? Colors.grey[800] : AppColors.accent,
-          foregroundColor: _isDndGranted ? Colors.white70 : Colors.black,
+          backgroundColor: _isDndGranted
+              ? Colors.grey[800]
+              : AppColors.accentDeep,
+          foregroundColor: _isDndGranted ? Colors.white70 : Colors.white,
         ),
       ),
     );
@@ -190,8 +192,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         style: ElevatedButton.styleFrom(
           backgroundColor: _isPhoneGranted
               ? Colors.grey[800]
-              : AppColors.accent,
-          foregroundColor: _isPhoneGranted ? Colors.white70 : Colors.black,
+              : AppColors.accentDeep,
+          foregroundColor: _isPhoneGranted ? Colors.white70 : Colors.white,
         ),
       ),
     );

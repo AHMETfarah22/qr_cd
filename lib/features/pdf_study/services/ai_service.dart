@@ -39,6 +39,10 @@ class AiService {
   static const int _maxTextChars = 20000;
   static const int _maxPdfBytes = 20 * 1024 * 1024;
 
+  /// Keys that were rejected or have no credit left, skipped for the rest
+  /// of this app session so each request doesn't wait on a known failure.
+  static final Set<String> _unusableKeys = {};
+
   static _Provider? _providerFor(String key) {
     final k = key.trim();
     if (k.length < 20) return null;
@@ -96,8 +100,10 @@ class AiService {
     String? filePath,
     bool json = false,
   }) async {
-    final credentials = await _credentials();
-    if (credentials.isEmpty) throw const AiException(AiErrorType.missingKey);
+    final all = await _credentials();
+    if (all.isEmpty) throw const AiException(AiErrorType.missingKey);
+    final usable = all.where((c) => !_unusableKeys.contains(c.key)).toList();
+    final credentials = usable.isEmpty ? all : usable;
 
     AiException? lastError;
     for (final credential in credentials) {
@@ -126,6 +132,9 @@ class AiService {
             e.type == AiErrorType.noCredits ||
             e.type == AiErrorType.rateLimited;
         if (!tryNext) rethrow;
+        if (e.type != AiErrorType.rateLimited) {
+          _unusableKeys.add(credential.key);
+        }
         debugPrint(
           'AI provider ${credential.provider.name} failed (${e.type.name}), trying next',
         );

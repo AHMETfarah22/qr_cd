@@ -293,7 +293,7 @@ class AiAnalysisScreen extends StatelessWidget {
                   child: Text(
                     l10n.farkliSureSec,
                     style: GoogleFonts.poppins(
-                      color: p.accentText,
+                      color: p.textPrimary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -318,7 +318,7 @@ class AiAnalysisScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.process : Colors.white,
+        color: AppColors.glass,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isDark ? AppColors.cardGlow : AppColors.lightProcess,

@@ -276,8 +276,8 @@ class _PdfUploadScreenState extends State<PdfUploadScreen>
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.accent,
-                        foregroundColor: Colors.black,
+                        backgroundColor: AppColors.accentDeep,
+                        foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
@@ -579,7 +579,7 @@ class _PdfUploadScreenState extends State<PdfUploadScreen>
               style: GoogleFonts.poppins(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.black87,
+                color: isDark ? Colors.white : Colors.white,
               ),
             ),
             TextButton(
@@ -647,7 +647,7 @@ class _PdfUploadScreenState extends State<PdfUploadScreen>
                           style: GoogleFonts.poppins(
                             fontWeight: FontWeight.w600,
                             fontSize: 14,
-                            color: isDark ? Colors.white : Colors.black87,
+                            color: isDark ? Colors.white : Colors.white,
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -657,7 +657,7 @@ class _PdfUploadScreenState extends State<PdfUploadScreen>
                             fontSize: 11,
                             color: isDark
                                 ? AppColors.textSecondary
-                                : Colors.black54,
+                                : Colors.white70,
                           ),
                         ),
                       ],

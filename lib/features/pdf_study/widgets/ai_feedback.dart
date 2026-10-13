@@ -47,7 +47,7 @@ Future<bool> showGeminiKeyDialog(BuildContext context) async {
       final p = Palette.of(ctx);
       final l10n = AppLocalizations.of(ctx)!;
       return AlertDialog(
-        backgroundColor: p.card,
+        backgroundColor: p.dialog,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Row(
           children: [
@@ -82,7 +82,7 @@ Future<bool> showGeminiKeyDialog(BuildContext context) async {
               SelectableText(
                 l10n.apiKeyWhere,
                 style: GoogleFonts.poppins(
-                  color: p.accentText,
+                  color: p.textPrimary,
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
                 ),

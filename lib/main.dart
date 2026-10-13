@@ -25,7 +25,7 @@ void main() async {
   await initializeDateFormatting('en_US', null);
   final notificationService = NotificationService();
   await notificationService.init();
-  
+
   runApp(
     MultiProvider(
       providers: [
@@ -40,7 +40,8 @@ void main() async {
             return settingsService;
           },
           update: (context, authService, previousSettingsService) {
-            final settingsService = previousSettingsService ?? SettingsService();
+            final settingsService =
+                previousSettingsService ?? SettingsService();
             settingsService.setCurrentUser(authService.userEmail);
             return settingsService;
           },
@@ -68,7 +69,8 @@ void main() async {
             return historyService;
           },
           update: (context, authService, previousHistoryService) {
-            final historyService = previousHistoryService ?? PdfHistoryService();
+            final historyService =
+                previousHistoryService ?? PdfHistoryService();
             historyService.setCurrentUser(authService.userEmail);
             return historyService;
           },
@@ -82,19 +84,37 @@ void main() async {
           update: (context, settings, previous) =>
               previous ?? AudioService(settings),
         ),
-        ChangeNotifierProxyProvider5<SensorService, AudioService, SettingsService, StatisticsService, NotificationService, TimerService>(
+        ChangeNotifierProxyProvider5<
+          SensorService,
+          AudioService,
+          SettingsService,
+          StatisticsService,
+          NotificationService,
+          TimerService
+        >(
           create: (context) => TimerService(
             context.read<SensorService>(),
             context.read<AudioService>(),
             context.read<SettingsService>(),
             context.read<NotificationService>(),
           ),
-          update: (context, sensor, audio, settings, stats, notification, previous) {
-            final service = previous ?? TimerService(sensor, audio, settings, notification);
-            // Sync timer service state (level) with persisted statistics
-            service.updateDependencies(stats);
-            return service;
-          },
+          update:
+              (
+                context,
+                sensor,
+                audio,
+                settings,
+                stats,
+                notification,
+                previous,
+              ) {
+                final service =
+                    previous ??
+                    TimerService(sensor, audio, settings, notification);
+                // Sync timer service state (level) with persisted statistics
+                service.updateDependencies(stats);
+                return service;
+              },
         ),
       ],
       child: const TScanApp(),
@@ -112,17 +132,15 @@ class TScanApp extends StatelessWidget {
         return MaterialApp(
           title: 'TScan',
           debugShowCheckedModeBanner: false,
-          theme: settingsService.isDarkMode ? AppTheme.darkTheme : AppTheme.lightTheme,
+          // Always dark: white text over the animated hourglass background.
+          theme: AppTheme.darkTheme,
           localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          supportedLocales: const [
-            Locale('en'),
-            Locale('tr'),
-          ],
+          supportedLocales: const [Locale('en'), Locale('tr')],
           home: Consumer<AuthService>(
             builder: (context, authService, _) {
               // Auto-login logic
