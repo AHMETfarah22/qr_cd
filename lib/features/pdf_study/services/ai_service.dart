@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
@@ -59,78 +60,14 @@ class AiService {
   static Future<String> _sendTextRequest(
     String systemPrompt,
     String userContent,
-  ) async {
-    final apiKey = await getApiKey();
-    if (apiKey == null || apiKey.isEmpty) {
-      throw Exception('API anahtarı bulunamadı. Lütfen ayarlardan ekleyin.');
-    }
-
-    final url = Uri.parse('$_geminiBaseUrl?key=$apiKey');
-
-    int maxRetries = 3;
-    for (int i = 0; i < maxRetries; i++) {
-      try {
-        final response = await http
-            .post(
-              url,
-              headers: {'Content-Type': 'application/json'},
-              body: jsonEncode({
-                'contents': [
-                  {
-                    'parts': [
-                      {'text': userContent},
-                    ],
-                  },
-                ],
-                'systemInstruction': {
-                  'parts': [
-                    {'text': systemPrompt},
-                  ],
-                },
-                'generationConfig': {
-                  'temperature': 0.3,
-                  'maxOutputTokens': 8192,
-                },
-              }),
-            )
-            .timeout(const Duration(seconds: 60));
-
-        if (response.statusCode == 200) {
-          final data = jsonDecode(response.body);
-          final content =
-              data['candidates'][0]['content']['parts'][0]['text'] as String;
-          return content.trim();
-        } else if (response.statusCode == 503 && i < maxRetries - 1) {
-          debugPrint('Gemini API 503 Error. Retrying ${i + 1}/$maxRetries...');
-          await Future.delayed(Duration(seconds: 2 * (i + 1)));
-          continue;
-        } else if (response.statusCode == 429 && i < maxRetries - 1) {
-          debugPrint('Gemini API 429 Error (Rate Limit). Retrying ${i + 1}/$maxRetries...');
-          await Future.delayed(Duration(seconds: 3 * (i + 1)));
-          continue;
-        } else {
-          debugPrint('Gemini API Error ${response.statusCode}: ${response.body}');
-          if (response.statusCode == 503) {
-            throw Exception('Sistem şu an çok yoğun. Lütfen birkaç dakika sonra tekrar deneyin.');
-          }
-          throw Exception(
-            'Gemini API yanıt vermedi (${response.statusCode}): ${response.body}',
-          );
-        }
-      } catch (e) {
-        if (i < maxRetries - 1 && (e.toString().contains('503') || e.toString().contains('Timeout'))) {
-           debugPrint('Gemini Request Failed: $e. Retrying ${i + 1}/$maxRetries...');
-           await Future.delayed(Duration(seconds: 2 * (i + 1)));
-           continue;
-        }
-        debugPrint('Gemini Request Error: $e');
-        if (e.toString().contains('503')) {
-          throw Exception('Sistem şu an çok yoğun. Lütfen birkaç dakika sonra tekrar deneyin.');
-        }
-        rethrow;
-      }
-    }
-    throw Exception('API çok fazla deneme sonrası yanıt vermedi. Lütfen daha sonra tekrar deneyin.');
+  ) {
+    return _generate(
+      parts: [
+        {'text': userContent},
+      ],
+      systemPrompt: systemPrompt,
+      timeout: const Duration(seconds: 60),
+    );
   }
 
   /// Gemini API'ye PDF dosyasını native inline document olarak gönderir.
@@ -141,93 +78,105 @@ class AiService {
     String systemPrompt,
     String userPrompt,
   ) async {
-    final apiKey = await getApiKey();
-    if (apiKey == null || apiKey.isEmpty) {
-      throw Exception('API anahtarı bulunamadı. Lütfen ayarlardan ekleyin.');
-    }
-
     final file = File(filePath);
     if (!await file.exists()) {
-      throw Exception('PDF dosyası bulunamadı: $filePath');
+      throw const AiException(AiErrorType.fileMissing);
+    }
+    final pdfBase64 = base64Encode(await file.readAsBytes());
+
+    return _generate(
+      parts: [
+        {
+          'inline_data': {'mime_type': 'application/pdf', 'data': pdfBase64},
+        },
+        {'text': userPrompt},
+      ],
+      systemPrompt: systemPrompt,
+      timeout: const Duration(seconds: 120),
+    );
+  }
+
+  /// Sends one generateContent request, retrying busy / rate-limited /
+  /// timed-out calls, and maps failures to [AiException] types the UI can
+  /// explain to the student.
+  static Future<String> _generate({
+    required List<Map<String, dynamic>> parts,
+    required String systemPrompt,
+    required Duration timeout,
+  }) async {
+    final apiKey = await getApiKey();
+    if (apiKey == null || apiKey.isEmpty) {
+      throw const AiException(AiErrorType.missingKey);
     }
 
-    final pdfBytes = await file.readAsBytes();
-    final pdfBase64 = base64Encode(pdfBytes);
+    final body = jsonEncode({
+      'contents': [
+        {'parts': parts},
+      ],
+      'systemInstruction': {
+        'parts': [
+          {'text': systemPrompt},
+        ],
+      },
+      'generationConfig': {'temperature': 0.3, 'maxOutputTokens': 8192},
+    });
 
-    final url = Uri.parse('$_geminiBaseUrl?key=$apiKey');
-
-    int maxRetries = 3;
-    for (int i = 0; i < maxRetries; i++) {
+    const maxAttempts = 3;
+    for (var attempt = 1; attempt <= maxAttempts; attempt++) {
+      final http.Response response;
       try {
-        final response = await http
+        response = await http
             .post(
-              url,
-              headers: {'Content-Type': 'application/json'},
-              body: jsonEncode({
-                'contents': [
-                  {
-                    'parts': [
-                      {
-                        'inline_data': {
-                          'mime_type': 'application/pdf',
-                          'data': pdfBase64,
-                        },
-                      },
-                      {'text': userPrompt},
-                    ],
-                  },
-                ],
-                'systemInstruction': {
-                  'parts': [
-                    {'text': systemPrompt},
-                  ],
-                },
-                'generationConfig': {
-                  'temperature': 0.3,
-                  'maxOutputTokens': 8192,
-                },
-              }),
+              Uri.parse(_geminiBaseUrl),
+              // Key in a header rather than the URL keeps it out of logs.
+              headers: {
+                'Content-Type': 'application/json',
+                'x-goog-api-key': apiKey,
+              },
+              body: body,
             )
-            .timeout(const Duration(seconds: 120));
-
-        if (response.statusCode == 200) {
-          final data = jsonDecode(response.body);
-          final content =
-              data['candidates'][0]['content']['parts'][0]['text'] as String;
-          return content.trim();
-        } else if (response.statusCode == 503 && i < maxRetries - 1) {
-          debugPrint('Gemini PDF API 503 Error. Retrying ${i + 1}/$maxRetries...');
-          await Future.delayed(Duration(seconds: 3 * (i + 1)));
-          continue;
-        } else if (response.statusCode == 429 && i < maxRetries - 1) {
-          debugPrint('Gemini PDF API 429 Error. Retrying ${i + 1}/$maxRetries...');
-          await Future.delayed(Duration(seconds: 4 * (i + 1)));
-          continue;
-        } else {
-          debugPrint(
-            'Gemini PDF API Error ${response.statusCode}: ${response.body}',
-          );
-          if (response.statusCode == 503) {
-            throw Exception('Sistem şu an çok yoğun (503). Lütfen birkaç dakika sonra tekrar deneyin.');
-          }
-          throw Exception(
-            'Gemini API yanıt vermedi (${response.statusCode}): ${response.body}',
-          );
-        }
-      } catch (e) {
-        if (i < maxRetries - 1 && (e.toString().contains('503') || e.toString().contains('Timeout'))) {
-           debugPrint('Gemini PDF Request Failed: $e. Retrying ${i + 1}/$maxRetries...');
-           await Future.delayed(Duration(seconds: 3 * (i + 1)));
-           continue;
-        }
-        debugPrint('Gemini PDF Request Error: $e');
-        if (e.toString().contains('503')) {
-          throw Exception('Sistem şu an çok yoğun (503). Lütfen birkaç dakika sonra tekrar deneyin.');
-        }
-        rethrow;
+            .timeout(timeout);
+      } on TimeoutException {
+        if (attempt < maxAttempts) continue;
+        throw const AiException(AiErrorType.network, 'timeout');
+      } on SocketException catch (e) {
+        throw AiException(AiErrorType.network, e.message);
+      } on http.ClientException catch (e) {
+        throw AiException(AiErrorType.network, e.message);
       }
+
+      final status = response.statusCode;
+      if (status == 200) {
+        try {
+          final data = jsonDecode(response.body);
+          return (data['candidates'][0]['content']['parts'][0]['text']
+                  as String)
+              .trim();
+        } catch (_) {
+          throw const AiException(
+            AiErrorType.badResponse,
+            'unexpected response shape',
+          );
+        }
+      }
+
+      debugPrint('Gemini API error $status (attempt $attempt/$maxAttempts)');
+      final retryable = status == 429 || status == 500 || status == 503;
+      if (retryable && attempt < maxAttempts) {
+        await Future.delayed(Duration(seconds: 2 * attempt));
+        continue;
+      }
+
+      if (status == 401 ||
+          status == 403 ||
+          (status == 400 && response.body.contains('API_KEY_INVALID'))) {
+        throw AiException(AiErrorType.invalidKey, 'HTTP $status');
+      }
+      if (status == 429) throw const AiException(AiErrorType.rateLimited);
+      if (status >= 500) throw AiException(AiErrorType.busy, 'HTTP $status');
+      throw AiException(AiErrorType.unknown, 'HTTP $status');
     }
-    throw Exception('API çok fazla deneme sonrası yanıt vermedi. Lütfen daha sonra tekrar deneyin.');
+    throw const AiException(AiErrorType.busy);
   }
 
   /// PDF dosyasını analiz edip tahmini okuma süresini döndürür.
@@ -333,21 +282,23 @@ SADECE aşağıdaki JSON formatında cevap ver, başka hiçbir şey yazma:
 
         // Bazen model sonundaki ']}' kısmını kesebiliyor, basit bir onarım deneyebiliriz
         if (!jsonStr.trim().endsWith('}') && !jsonStr.trim().endsWith(']')) {
-           jsonStr += '}]}';
+          jsonStr += '}]}';
         } else if (jsonStr.trim().endsWith(']')) {
-           jsonStr += '}';
+          jsonStr += '}';
         }
 
         final data = jsonDecode(jsonStr) as Map<String, dynamic>;
         return List<Map<String, dynamic>>.from(data['questions'] as List);
       } catch (e) {
-        debugPrint('Quiz JSON parse error on try ${i + 1}: $e\nResponse: $response');
+        debugPrint(
+          'Quiz JSON parse error on try ${i + 1}: $e\nResponse: $response',
+        );
         if (i == maxJsonRetries - 1) {
-          throw Exception('Quiz soruları oluşturulamadı. Lütfen tekrar deneyin.');
+          throw const AiException(AiErrorType.badResponse, 'quiz JSON');
         }
       }
     }
-    throw Exception('Quiz soruları oluşturulamadı. Lütfen tekrar deneyin.');
+    throw const AiException(AiErrorType.badResponse, 'quiz JSON');
   }
 
   /// Yanlış cevapları analiz edip öneriler üretir.
@@ -365,7 +316,8 @@ Yanlış cevaplanan soruları analiz et ve öğrenciye:
 
 Türkçe cevap ver, samimi ve motive edici bir ton kullan. Kısa ve öz tut (max 200 kelime).''';
 
-    final userContent = '''
+    final userContent =
+        '''
 ORİJİNAL METİN (kısa):
 ${originalText.length > 3000 ? originalText.substring(0, 3000) : originalText}
 
@@ -375,4 +327,27 @@ ${jsonEncode(wrongQuestions)}
 
     return _sendTextRequest(systemPrompt, userContent);
   }
+}
+
+enum AiErrorType {
+  missingKey,
+  invalidKey,
+  busy,
+  rateLimited,
+  network,
+  fileMissing,
+  badResponse,
+  unknown,
+}
+
+/// A failed AI request, typed so screens can show a clear, localized message.
+class AiException implements Exception {
+  final AiErrorType type;
+  final String? detail;
+
+  const AiException(this.type, [this.detail]);
+
+  @override
+  String toString() =>
+      'AiException(${type.name}${detail == null ? '' : ': $detail'})';
 }

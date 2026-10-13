@@ -1,5 +1,6 @@
-import 'dart:ui';
+import '../../../core/widgets/app_background.dart';
 import 'package:flutter/material.dart';
+import '../../../core/constants/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:confetti/confetti.dart';
 import 'package:provider/provider.dart';
@@ -30,8 +31,9 @@ class _QuizResultScreenState extends State<QuizResultScreen> {
   @override
   void initState() {
     super.initState();
-    _confettiController =
-        ConfettiController(duration: const Duration(seconds: 3));
+    _confettiController = ConfettiController(
+      duration: const Duration(seconds: 3),
+    );
 
     if (widget.result.scorePercent >= 80) {
       _confettiController.play();
@@ -44,16 +46,19 @@ class _QuizResultScreenState extends State<QuizResultScreen> {
 
     // İstatistik servisine quiz sonucunu kaydet
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<StatisticsService>(context, listen: false)
-          .completeQuiz(widget.result.scorePercent.round());
+      Provider.of<StatisticsService>(
+        context,
+        listen: false,
+      ).completeQuiz(widget.result.scorePercent.round());
     });
   }
 
   Future<void> _loadAiAnalysis() async {
     setState(() => _isAnalyzing = true);
     try {
-      final wrongData =
-          widget.result.wrongAnswers.map((q) => q.toJson()).toList();
+      final wrongData = widget.result.wrongAnswers
+          .map((q) => q.toJson())
+          .toList();
       final analysis = await AiService.analyzeWrongAnswers(
         widget.documentText,
         wrongData,
@@ -84,209 +89,186 @@ class _QuizResultScreenState extends State<QuizResultScreen> {
     final result = widget.result;
     final score = result.scorePercent;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          l10n.quizSonuclari,
-          style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
-        ),
-        centerTitle: true,
+    return AppBackground(
+      child: Scaffold(
         backgroundColor: Colors.transparent,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-      ),
-      body: Stack(
-        children: [
-          // Arka Plan Glow Efektleri
-          Positioned(
-            top: -100,
-            left: -50,
-            child: Container(
-              width: 300,
-              height: 300,
-              decoration: BoxDecoration(
-                color: (score >= 50 ? Colors.green : Colors.red).withValues(alpha: 0.15),
-                shape: BoxShape.circle,
-              ),
-            ),
+        appBar: AppBar(
+          title: Text(
+            l10n.quizSonuclari,
+            style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
           ),
-          Positioned(
-            bottom: -50,
-            right: -50,
-            child: Container(
-              width: 250,
-              height: 250,
-              decoration: BoxDecoration(
-                color: Colors.blueAccent.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
-          BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
-            child: Container(color: Colors.transparent),
-          ),
-          SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-            child: Column(
-              children: [
-                // Score Circle
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 32),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: score >= 80
-                          ? [
-                              Colors.green.shade400,
-                              Colors.teal.shade400,
-                            ]
-                          : score >= 50
-                              ? [
-                                  Colors.orange.shade400,
-                                  Colors.amber.shade400,
-                                ]
-                              : [
-                                  Colors.red.shade400,
-                                  Colors.pink.shade400,
-                                ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+          centerTitle: true,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          automaticallyImplyLeading: false,
+        ),
+        body: Stack(
+          children: [
+            SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  children: [
+                    // Score Circle
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 32),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: score >= 80
+                              ? [Colors.green.shade400, Colors.teal.shade400]
+                              : score >= 50
+                              ? [Colors.orange.shade400, Colors.amber.shade400]
+                              : [Colors.red.shade400, Colors.pink.shade400],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(24),
+                        boxShadow: [
+                          BoxShadow(
+                            color: (score >= 80 ? Colors.green : Colors.orange)
+                                .withValues(alpha: 0.3),
+                            blurRadius: 20,
+                            offset: const Offset(0, 10),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          Text(
+                            _getEmoji(score),
+                            style: const TextStyle(fontSize: 48),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            '${score.toStringAsFixed(0)}%',
+                            style: GoogleFonts.poppins(
+                              fontSize: 52,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Text(
+                            l10n.dogruSoruSayisi(
+                              result.correctCount,
+                              result.totalCount,
+                            ),
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              color: Colors.white.withValues(alpha: 0.9),
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            _getMessage(score, l10n),
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              color: Colors.white.withValues(alpha: 0.8),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    borderRadius: BorderRadius.circular(24),
-                    boxShadow: [
-                      BoxShadow(
-                        color: (score >= 80 ? Colors.green : Colors.orange)
-                            .withValues(alpha: 0.3),
-                        blurRadius: 20,
-                        offset: const Offset(0, 10),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        _getEmoji(score),
-                        style: const TextStyle(fontSize: 48),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        '${score.toStringAsFixed(0)}%',
-                        style: GoogleFonts.poppins(
-                          fontSize: 52,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Text(
-                        l10n.dogruSoruSayisi(result.correctCount, result.totalCount),
-                        style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          color: Colors.white.withValues(alpha: 0.9),
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        _getMessage(score, l10n),
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          color: Colors.white.withValues(alpha: 0.8),
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
 
-                const SizedBox(height: 24),
+                    const SizedBox(height: 24),
 
-                // AI Analysis for wrong answers
-                if (_isAnalyzing)
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.blue.withValues(alpha: isDark ? 0.1 : 0.05),
-                      borderRadius: BorderRadius.circular(16),
-                      border:
-                          Border.all(color: Colors.blue.withValues(alpha: 0.2)),
-                    ),
-                    child: Row(
-                      children: [
-                        const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.blue,
+                    // AI Analysis for wrong answers
+                    if (_isAnalyzing)
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.withValues(
+                            alpha: isDark ? 0.1 : 0.05,
+                          ),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: Colors.blue.withValues(alpha: 0.2),
                           ),
                         ),
-                        const SizedBox(width: 12),
-                        Text(
-                          l10n.aiYanlisAnalizi,
-                          style: GoogleFonts.poppins(fontSize: 13),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                if (_aiAnalysis != null) ...[
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.blue.withValues(alpha: isDark ? 0.1 : 0.05),
-                      borderRadius: BorderRadius.circular(16),
-                      border:
-                          Border.all(color: Colors.blue.withValues(alpha: 0.2)),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
+                        child: Row(
                           children: [
-                            const Icon(Icons.psychology_rounded,
-                              color: Colors.blue, size: 26),
-                            const SizedBox(width: 8),
-                            Text(
-                              l10n.aiKocAnalizi,
-                              style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.bold,
+                            const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
                                 color: Colors.blue,
-                                fontSize: 16,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              l10n.aiYanlisAnalizi,
+                              style: GoogleFonts.poppins(fontSize: 13),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                    if (_aiAnalysis != null) ...[
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.withValues(
+                            alpha: isDark ? 0.1 : 0.05,
+                          ),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: Colors.blue.withValues(alpha: 0.2),
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.psychology_rounded,
+                                  color: Colors.blue,
+                                  size: 26,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  l10n.aiKocAnalizi,
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              _aiAnalysis!,
+                              style: GoogleFonts.poppins(
+                                fontSize: 13,
+                                height: 1.6,
+                                color: theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.8,
+                                ),
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 12),
-                        Text(
-                          _aiAnalysis!,
-                          style: GoogleFonts.poppins(
-                            fontSize: 13,
-                            height: 1.6,
-                            color: theme.colorScheme.onSurface
-                                .withValues(alpha: 0.8),
-                          ),
-                        ),
-                      ],
+                      ),
+                    ],
+
+                    const SizedBox(height: 20),
+
+                    // Question Review
+                    Text(
+                      l10n.soruDetaylari,
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 12),
 
-                const SizedBox(height: 20),
-
-                // Question Review
-                Text(
-                  l10n.soruDetaylari,
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 12),
-
-                ...result.questions.asMap().entries.map(
+                    ...result.questions.asMap().entries.map(
                       (entry) => _buildQuestionReview(
                         entry.key + 1,
                         entry.value,
@@ -296,56 +278,57 @@ class _QuizResultScreenState extends State<QuizResultScreen> {
                       ),
                     ),
 
-                const SizedBox(height: 24),
+                    const SizedBox(height: 24),
 
-                // Back Button
-                SizedBox(
-                  width: double.infinity,
-                  height: 52,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.popUntil(context, (route) => route.isFirst);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepPurple,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
+                    // Back Button
+                    SizedBox(
+                      width: double.infinity,
+                      height: 52,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.popUntil(context, (route) => route.isFirst);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.accentDeep,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                        child: Text(
+                          l10n.anaSayfayaDon,
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15,
+                          ),
+                        ),
                       ),
                     ),
-                    child: Text(
-                      l10n.anaSayfayaDon,
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
+
+                    const SizedBox(height: 16),
+                  ],
                 ),
-
-                const SizedBox(height: 16),
-              ],
+              ),
             ),
-          ),
+
+            // Confetti
+            Align(
+              alignment: Alignment.topCenter,
+              child: ConfettiWidget(
+                confettiController: _confettiController,
+                blastDirectionality: BlastDirectionality.explosive,
+                shouldLoop: false,
+                colors: const [
+                  Colors.green,
+                  Colors.blue,
+                  AppColors.accentDeep,
+                  Colors.orange,
+                  Colors.pink,
+                ],
+              ),
+            ),
+          ],
         ),
-
-          // Confetti
-          Align(
-            alignment: Alignment.topCenter,
-            child: ConfettiWidget(
-              confettiController: _confettiController,
-              blastDirectionality: BlastDirectionality.explosive,
-              shouldLoop: false,
-              colors: const [
-                Colors.green,
-                Colors.blue,
-                Colors.purple,
-                Colors.orange,
-                Colors.pink,
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -379,9 +362,7 @@ class _QuizResultScreenState extends State<QuizResultScreen> {
           Row(
             children: [
               Icon(
-                isCorrect
-                    ? Icons.check_circle_rounded
-                    : Icons.cancel_rounded,
+                isCorrect ? Icons.check_circle_rounded : Icons.cancel_rounded,
                 color: isCorrect ? Colors.green : Colors.red,
                 size: 22,
               ),
@@ -436,7 +417,9 @@ class _QuizResultScreenState extends State<QuizResultScreen> {
               ),
             ),
           ],
-          if (!isCorrect && question.pageReference != null && question.pageReference!.isNotEmpty) ...[
+          if (!isCorrect &&
+              question.pageReference != null &&
+              question.pageReference!.isNotEmpty) ...[
             const SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -448,7 +431,11 @@ class _QuizResultScreenState extends State<QuizResultScreen> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.menu_book_rounded, color: Colors.red.shade400, size: 14),
+                  Icon(
+                    Icons.menu_book_rounded,
+                    color: Colors.red.shade400,
+                    size: 14,
+                  ),
                   const SizedBox(width: 6),
                   Text(
                     'İlgili Bölüm: ${question.pageReference}',

@@ -379,5 +379,15 @@
   "flipPhoneHint": "Telefonu yüzüstü çevirin",
   "autoQuizTitle": "🎉 Tebrikler!",
   "autoQuizDone": "PDF odaklanma seansın başarıyla tamamlandı.",
-  "autoQuizStarting": "Öğrendiklerini test etmek için AI Quiz başlıyor..."
+  "autoQuizStarting": "Öğrendiklerini test etmek için AI Quiz başlıyor...",
+  "aiErrMissingKey": "AI özelliklerini kullanmak için Gemini API anahtarını ekle.",
+  "aiErrBusy": "AI servisi şu an yoğun. Birkaç dakika sonra tekrar dene.",
+  "aiErrRateLimit": "AI kullanım limitine ulaşıldı. Biraz sonra tekrar dene.",
+  "aiErrNetwork": "İnternet bağlantısı yok. Bağlantını kontrol edip tekrar dene.",
+  "aiErrFileMissing": "PDF dosyası bu cihazda bulunamadı.",
+  "aiErrBadResponse": "AI soruları hazırlayamadı. Lütfen tekrar dene.",
+  "aiErrGeneric": "AI servisinde bir sorun oldu. Lütfen tekrar dene.",
+  "enterApiKeyBtn": "API anahtarı gir",
+  "apiKeyWhere": "Ücretsiz anahtar: aistudio.google.com/apikey",
+  "pagesWords": "{pages} sayfa • {words} kelime"
 }

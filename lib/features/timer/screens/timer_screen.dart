@@ -24,7 +24,8 @@ class TimerScreen extends StatefulWidget {
   State<TimerScreen> createState() => _TimerScreenState();
 }
 
-class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin {
+class _TimerScreenState extends State<TimerScreen>
+    with TickerProviderStateMixin {
   late ConfettiController _confettiController;
   late AnimationController _shakeController;
   late AnimationController _pulseController;
@@ -36,7 +37,9 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
   @override
   void initState() {
     super.initState();
-    _confettiController = ConfettiController(duration: const Duration(seconds: 3));
+    _confettiController = ConfettiController(
+      duration: const Duration(seconds: 3),
+    );
     _shakeController = AnimationController(
       duration: const Duration(milliseconds: 500),
       vsync: this,
@@ -127,10 +130,7 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
       animation: _shakeController,
       builder: (context, _) {
         final double offset = sin(_shakeController.value * pi * 10.0) * 8.0;
-        return Transform.translate(
-          offset: Offset(offset, 0),
-          child: child,
-        );
+        return Transform.translate(offset: Offset(offset, 0), child: child);
       },
     );
   }
@@ -180,7 +180,12 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
             SingleChildScrollView(
               // `physics` ensures it bounces naturally on both iOS & Android
               physics: const BouncingScrollPhysics(),
-              padding: EdgeInsets.fromLTRB(24.0, mq.padding.top + 8, 24.0, bottomPad),
+              padding: EdgeInsets.fromLTRB(
+                24.0,
+                mq.padding.top + 8,
+                24.0,
+                bottomPad,
+              ),
               child: Column(
                 // No mainAxisAlignment: center — doesn't work inside ScrollView
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -227,7 +232,9 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
                                     shape: BoxShape.circle,
                                     boxShadow: [
                                       BoxShadow(
-                                        color: AppColors.accent.withValues(alpha: 0.15),
+                                        color: AppColors.accent.withValues(
+                                          alpha: 0.15,
+                                        ),
                                         blurRadius: 40,
                                         spreadRadius: 10,
                                       ),
@@ -243,8 +250,11 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
                           lineWidth: isSmallScreen ? 7.0 : 9.0,
                           percent: timerService.progress.clamp(0.0, 1.0),
                           circularStrokeCap: CircularStrokeCap.round,
-                          backgroundColor: AppColors.process.withValues(alpha: 0.3),
-                          progressColor: timerService.state == TimerState.failure
+                          backgroundColor: AppColors.process.withValues(
+                            alpha: 0.3,
+                          ),
+                          progressColor:
+                              timerService.state == TimerState.failure
                               ? AppColors.error
                               : AppColors.accent,
                         ),
@@ -260,7 +270,9 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
                                     : (isSmallScreen ? 48 : 58),
                                 fontWeight: FontWeight.w200,
                                 color: Colors.white,
-                                fontFeatures: const [FontFeature.tabularFigures()],
+                                fontFeatures: const [
+                                  FontFeature.tabularFigures(),
+                                ],
                               ),
                             ),
                             const SizedBox(height: 8),
@@ -273,7 +285,12 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
                   SizedBox(height: isSmallScreen ? 24 : 36),
                   // ── State-specific UI ──────────────────────────────────
                   if (timerService.state == TimerState.idle)
-                    _buildIdleUI(timerService, l10n, audioService, premiumService),
+                    _buildIdleUI(
+                      timerService,
+                      l10n,
+                      audioService,
+                      premiumService,
+                    ),
                   if (timerService.state == TimerState.success)
                     _buildSuccessUI(timerService, l10n),
                   if (timerService.state != TimerState.idle &&
@@ -302,7 +319,11 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
               blastDirectionality: BlastDirectionality.explosive,
               shouldLoop: false,
               colors: const [
-                AppColors.accent, Colors.white, Colors.green, Colors.yellow, Colors.pink
+                AppColors.accent,
+                Colors.white,
+                Colors.green,
+                Colors.yellow,
+                Colors.pink,
               ],
             ),
           ),
@@ -315,12 +336,30 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
     String text;
     Color color;
     switch (timerService.state) {
-      case TimerState.idle: text = l10n.ready; color = AppColors.accent; break;
-      case TimerState.running: text = l10n.focus; color = AppColors.accent; break;
-      case TimerState.paused: text = l10n.paused; color = Colors.orange; break;
-      case TimerState.failure: text = l10n.failed; color = AppColors.error; break;
-      case TimerState.success: text = l10n.success; color = Colors.green; break;
-      case TimerState.breakTime: text = l10n.breakLabel; color = Colors.blue; break;
+      case TimerState.idle:
+        text = l10n.ready;
+        color = AppColors.accent;
+        break;
+      case TimerState.running:
+        text = l10n.focus;
+        color = AppColors.accent;
+        break;
+      case TimerState.paused:
+        text = l10n.paused;
+        color = Colors.orange;
+        break;
+      case TimerState.failure:
+        text = l10n.failed;
+        color = AppColors.error;
+        break;
+      case TimerState.success:
+        text = l10n.success;
+        color = Colors.green;
+        break;
+      case TimerState.breakTime:
+        text = l10n.breakLabel;
+        color = Colors.blue;
+        break;
     }
     return ClipRRect(
       borderRadius: BorderRadius.circular(20),
@@ -337,29 +376,49 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
                 color: color.withValues(alpha: 0.1),
                 blurRadius: 10,
                 spreadRadius: 1,
-              )
-            ]
+              ),
+            ],
           ),
-          child: Text(text, style: TextStyle(color: color, fontSize: 13, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+          child: Text(
+            text,
+            style: TextStyle(
+              color: color,
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.2,
+            ),
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildIdleUI(TimerService timerService, AppLocalizations l10n, AudioService audioService, PremiumService premiumService) {
+  Widget _buildIdleUI(
+    TimerService timerService,
+    AppLocalizations l10n,
+    AudioService audioService,
+    PremiumService premiumService,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         if (timerService.level > 1)
           Slider(
-            value: (timerService.totalTimeSeconds ~/ 60).toDouble().clamp(5.0, 120.0),
-            min: 5, max: 120, divisions: 23,
+            value: (timerService.totalTimeSeconds ~/ 60).toDouble().clamp(
+              5.0,
+              120.0,
+            ),
+            min: 5,
+            max: 120,
+            divisions: 23,
             label: '${timerService.totalTimeSeconds ~/ 60} dk',
             onChanged: (v) => timerService.setDuration(v.toInt()),
           ),
         const SizedBox(height: 12),
         Wrap(
-          spacing: 8, runSpacing: 8, alignment: WrapAlignment.center,
+          spacing: 8,
+          runSpacing: 8,
+          alignment: WrapAlignment.center,
           children: SessionCategory.values
               .map((cat) => _buildCategoryChip(cat, timerService, l10n))
               .toList(),
@@ -396,23 +455,40 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
     );
   }
 
-  Widget _buildCategoryChip(SessionCategory cat, TimerService timerService, AppLocalizations l10n) {
+  Widget _buildCategoryChip(
+    SessionCategory cat,
+    TimerService timerService,
+    AppLocalizations l10n,
+  ) {
     final isSelected = timerService.currentCategory == cat;
     return GestureDetector(
       onTap: () => timerService.setCategory(cat),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? cat.color.withValues(alpha: 0.2) : AppColors.process.withValues(alpha: 0.15),
+          color: isSelected
+              ? cat.color.withValues(alpha: 0.2)
+              : AppColors.process.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: isSelected ? cat.color : Colors.transparent),
+          border: Border.all(
+            color: isSelected ? cat.color : Colors.transparent,
+          ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(cat.icon, size: 14, color: isSelected ? cat.color : AppColors.textSecondary),
+            Icon(
+              cat.icon,
+              size: 14,
+              color: isSelected ? cat.color : AppColors.textSecondary,
+            ),
             const SizedBox(width: 8),
-            Text(cat.getDisplayName(context), style: TextStyle(color: isSelected ? cat.color : AppColors.textSecondary)),
+            Text(
+              cat.getDisplayName(context),
+              style: TextStyle(
+                color: isSelected ? cat.color : AppColors.textSecondary,
+              ),
+            ),
           ],
         ),
       ),
@@ -422,7 +498,11 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
   Widget _buildSuccessUI(TimerService timerService, AppLocalizations l10n) {
     return Column(
       children: [
-        const Icon(Icons.check_circle_outline_rounded, color: AppColors.accent, size: 60),
+        const Icon(
+          Icons.check_circle_outline_rounded,
+          color: AppColors.accent,
+          size: 60,
+        ),
         const SizedBox(height: 16),
         Container(
           width: double.infinity,
@@ -430,7 +510,10 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
           decoration: BoxDecoration(
             color: AppColors.process.withValues(alpha: 0.15),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: AppColors.accent.withValues(alpha: 0.2), width: 1.5),
+            border: Border.all(
+              color: AppColors.accent.withValues(alpha: 0.2),
+              width: 1.5,
+            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -438,7 +521,11 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
             children: [
               Text(
                 l10n.addSessionNoteTitle,
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                ),
               ),
               const SizedBox(height: 10),
               Row(
@@ -450,20 +537,34 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
                       style: const TextStyle(color: Colors.white, fontSize: 13),
                       decoration: InputDecoration(
                         hintText: l10n.sessionNoteHint,
-                        hintStyle: TextStyle(color: AppColors.textSecondary.withValues(alpha: 0.5), fontSize: 12),
+                        hintStyle: TextStyle(
+                          color: AppColors.textSecondary.withValues(alpha: 0.5),
+                          fontSize: 12,
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: AppColors.textSecondary.withValues(alpha: 0.2)),
+                          borderSide: BorderSide(
+                            color: AppColors.textSecondary.withValues(
+                              alpha: 0.2,
+                            ),
+                          ),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: AppColors.textSecondary.withValues(alpha: 0.2)),
+                          borderSide: BorderSide(
+                            color: AppColors.textSecondary.withValues(
+                              alpha: 0.2,
+                            ),
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: const BorderSide(color: AppColors.accent),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 10,
+                        ),
                         counterText: "",
                       ),
                     ),
@@ -471,7 +572,10 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
                   const SizedBox(width: 10),
                   ElevatedButton(
                     onPressed: () {
-                      final stats = Provider.of<StatisticsService>(context, listen: false);
+                      final stats = Provider.of<StatisticsService>(
+                        context,
+                        listen: false,
+                      );
                       stats.updateLastSessionNote(_noteController.text);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
@@ -483,13 +587,22 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
                       FocusScope.of(context).unfocus();
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
                       minimumSize: Size.zero,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: Text(l10n.saveBtn, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                    child: Text(
+                      l10n.saveBtn,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -497,7 +610,8 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
           ),
         ),
         // PDF Quiz Button
-        if (widget.pdfDocument != null) ...[          const SizedBox(height: 16),
+        if (widget.pdfDocument != null) ...[
+          const SizedBox(height: 16),
           SizedBox(
             width: double.infinity,
             height: 48,
@@ -516,32 +630,56 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
                 );
               },
               icon: const Icon(Icons.quiz_rounded, size: 20),
-              label: const Text('🤖 AI Quiz Başlat', style: TextStyle(fontWeight: FontWeight.bold)),
+              label: const Text(
+                '🤖 AI Quiz Başlat',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.deepPurple,
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
               ),
             ),
           ),
         ],
         const SizedBox(height: 24),
-        Text(l10n.breakTimeTitle, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        Text(
+          l10n.breakTimeTitle,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         const SizedBox(height: 16),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedButton(onPressed: () => timerService.startBreak(15), child: Text(l10n.minBreak(15))),
+            ElevatedButton(
+              onPressed: () => timerService.startBreak(15),
+              child: Text(l10n.minBreak(15)),
+            ),
             const SizedBox(width: 16),
-            ElevatedButton(onPressed: () => timerService.startBreak(30), child: Text(l10n.minBreak(30))),
+            ElevatedButton(
+              onPressed: () => timerService.startBreak(30),
+              child: Text(l10n.minBreak(30)),
+            ),
           ],
         ),
-        TextButton(onPressed: () => timerService.resetTimer(), child: Text(l10n.dontTakeBreak)),
+        TextButton(
+          onPressed: () => timerService.resetTimer(),
+          child: Text(l10n.dontTakeBreak),
+        ),
       ],
     );
   }
 
-  Widget _buildActiveUI(TimerService timerService, AppLocalizations l10n, AudioService audioService) {
+  Widget _buildActiveUI(
+    TimerService timerService,
+    AppLocalizations l10n,
+    AudioService audioService,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -554,7 +692,10 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
                 return Opacity(
                   opacity: _pulseOpacityAnimation.value,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 12,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.accent.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(14),
@@ -566,7 +707,11 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.screen_lock_rotation_rounded, color: AppColors.accent, size: 20),
+                        const Icon(
+                          Icons.screen_lock_rotation_rounded,
+                          color: AppColors.accent,
+                          size: 20,
+                        ),
                         const SizedBox(width: 8),
                         Text(
                           AppLocalizations.of(context)!.flipPhoneHint,
@@ -594,7 +739,9 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
               if (timerService.state == TimerState.breakTime) {
                 timerService.resetTimer();
               } else {
-                final elapsed = timerService.totalTimeSeconds - timerService.currentTimeSeconds;
+                final elapsed =
+                    timerService.totalTimeSeconds -
+                    timerService.currentTimeSeconds;
                 timerService.cancelTimer((elapsed / 60).ceil().clamp(1, 120));
               }
             },
@@ -602,11 +749,15 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
               foregroundColor: AppColors.error,
               side: const BorderSide(color: AppColors.error, width: 1.5),
               padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 14),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
+              ),
             ),
             icon: const Icon(Icons.close_rounded, size: 20),
             label: Text(
-              timerService.state == TimerState.breakTime ? l10n.endBreak : l10n.cancel,
+              timerService.state == TimerState.breakTime
+                  ? l10n.endBreak
+                  : l10n.cancel,
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
             ),
           ),
@@ -617,12 +768,20 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
 
   String _getStatusMessage(TimerService timerService, AppLocalizations l10n) {
     switch (timerService.state) {
-      case TimerState.idle: return timerService.level == 1 ? l10n.statusIdleLvl1 : l10n.statusIdle;
-      case TimerState.running: return l10n.statusRunning;
-      case TimerState.paused: return l10n.statusPaused;
-      case TimerState.failure: return l10n.statusFailure;
-      case TimerState.success: return timerService.completedSessions == 1 ? l10n.statusSuccessFirst : l10n.statusSuccess;
-      case TimerState.breakTime: return l10n.statusBreak;
+      case TimerState.idle:
+        return timerService.level == 1 ? l10n.statusIdleLvl1 : l10n.statusIdle;
+      case TimerState.running:
+        return l10n.statusRunning;
+      case TimerState.paused:
+        return l10n.statusPaused;
+      case TimerState.failure:
+        return l10n.statusFailure;
+      case TimerState.success:
+        return timerService.completedSessions == 1
+            ? l10n.statusSuccessFirst
+            : l10n.statusSuccess;
+      case TimerState.breakTime:
+        return l10n.statusBreak;
     }
   }
 }
@@ -674,12 +833,23 @@ class _AutoQuizDialogState extends State<_AutoQuizDialog> {
       backgroundColor: const Color(0xFF1E1E2C),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       title: Center(
-        child: Text(AppLocalizations.of(context)!.autoQuizTitle, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
+        child: Text(
+          AppLocalizations.of(context)!.autoQuizTitle,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.psychology_rounded, size: 64, color: AppColors.accent),
+          const Icon(
+            Icons.psychology_rounded,
+            size: 64,
+            color: AppColors.accent,
+          ),
           const SizedBox(height: 16),
           Text(
             AppLocalizations.of(context)!.autoQuizDone,
@@ -690,7 +860,10 @@ class _AutoQuizDialogState extends State<_AutoQuizDialog> {
           Text(
             AppLocalizations.of(context)!.autoQuizStarting,
             textAlign: TextAlign.center,
-            style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
+            style: const TextStyle(
+              color: AppColors.textSecondary,
+              fontSize: 13,
+            ),
           ),
           const SizedBox(height: 24),
           Stack(
@@ -703,7 +876,11 @@ class _AutoQuizDialogState extends State<_AutoQuizDialog> {
               ),
               Text(
                 '$_countdown',
-                style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),

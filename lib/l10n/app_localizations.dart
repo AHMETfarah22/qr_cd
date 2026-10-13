@@ -1918,6 +1918,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The AI quiz is starting so you can test what you learned...'**
   String get autoQuizStarting;
+
+  /// No description provided for @aiErrMissingKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your Gemini API key to use AI features.'**
+  String get aiErrMissingKey;
+
+  /// No description provided for @aiErrBusy.
+  ///
+  /// In en, this message translates to:
+  /// **'The AI service is busy right now. Please try again in a few minutes.'**
+  String get aiErrBusy;
+
+  /// No description provided for @aiErrRateLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'The AI usage limit was reached. Please try again later.'**
+  String get aiErrRateLimit;
+
+  /// No description provided for @aiErrNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection. Check your connection and try again.'**
+  String get aiErrNetwork;
+
+  /// No description provided for @aiErrFileMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'The PDF file could not be found on this device.'**
+  String get aiErrFileMissing;
+
+  /// No description provided for @aiErrBadResponse.
+  ///
+  /// In en, this message translates to:
+  /// **'The AI couldn\'t prepare the questions. Please try again.'**
+  String get aiErrBadResponse;
+
+  /// No description provided for @aiErrGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong with the AI service. Please try again.'**
+  String get aiErrGeneric;
+
+  /// No description provided for @enterApiKeyBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter API key'**
+  String get enterApiKeyBtn;
+
+  /// No description provided for @apiKeyWhere.
+  ///
+  /// In en, this message translates to:
+  /// **'Get a free key at aistudio.google.com/apikey'**
+  String get apiKeyWhere;
+
+  /// No description provided for @pagesWords.
+  ///
+  /// In en, this message translates to:
+  /// **'{pages} pages • {words} words'**
+  String pagesWords(int pages, int words);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

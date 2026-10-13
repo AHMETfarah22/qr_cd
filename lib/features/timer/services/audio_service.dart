@@ -33,12 +33,12 @@ class AudioService extends ChangeNotifier {
       try {
         final soundAsset = _getSoundAsset(_settingsService.alarmSound);
         debugPrint("AudioService: Playing $soundAsset...");
-        
+
         await _player.stop();
         await _player.setVolume(_isMuted ? 0.0 : 1.0);
         await _player.setReleaseMode(ReleaseMode.loop);
         await _player.play(AssetSource(soundAsset));
-        
+
         debugPrint("AudioService: Play command executed.");
       } catch (e) {
         debugPrint("AudioService ERROR: $e");
@@ -87,21 +87,23 @@ class AudioService extends ChangeNotifier {
     } catch (e) {
       debugPrint("AudioService Start Vibration Error: $e");
     }
-    
+
     // Start ambient sound if selected
     await playAmbientSound();
-    
+
     debugPrint("AudioService: Play Start Sound and Ambient");
   }
 
   Future<void> playAmbientSound([AmbientSound? sound]) async {
     final targetSound = sound ?? _settingsService.ambientSound;
     if (targetSound == AmbientSound.none) return;
-    
+
     try {
       final soundAsset = _getAmbientAsset(targetSound);
       await _ambientPlayer.stop();
-      await _ambientPlayer.setVolume(_isMuted ? 0.0 : 0.5); // Lower volume for background
+      await _ambientPlayer.setVolume(
+        _isMuted ? 0.0 : 0.5,
+      ); // Lower volume for background
       await _ambientPlayer.setReleaseMode(ReleaseMode.loop);
       await _ambientPlayer.play(AssetSource(soundAsset));
     } catch (e) {

@@ -999,4 +999,36 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get autoQuizStarting => 'The AI quiz is starting so you can test what you learned...';
+
+  @override
+  String get aiErrMissingKey => 'Add your Gemini API key to use AI features.';
+
+  @override
+  String get aiErrBusy => 'The AI service is busy right now. Please try again in a few minutes.';
+
+  @override
+  String get aiErrRateLimit => 'The AI usage limit was reached. Please try again later.';
+
+  @override
+  String get aiErrNetwork => 'No internet connection. Check your connection and try again.';
+
+  @override
+  String get aiErrFileMissing => 'The PDF file could not be found on this device.';
+
+  @override
+  String get aiErrBadResponse => 'The AI couldn\'t prepare the questions. Please try again.';
+
+  @override
+  String get aiErrGeneric => 'Something went wrong with the AI service. Please try again.';
+
+  @override
+  String get enterApiKeyBtn => 'Enter API key';
+
+  @override
+  String get apiKeyWhere => 'Get a free key at aistudio.google.com/apikey';
+
+  @override
+  String pagesWords(int pages, int words) {
+    return '$pages pages • $words words';
+  }
 }

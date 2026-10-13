@@ -1,4 +1,5 @@
 import 'dart:io' show Platform;
+import '../../../core/widgets/app_background.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -90,33 +91,36 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: PageView(
-                controller: _pageController,
-                onPageChanged: (int page) {
-                  setState(() {
-                    _currentPage = page;
-                  });
-                  _checkPermissions(); // Re-check when sliding back/forth
-                },
-                children: [
-                  _buildWelcomePage(l10n),
-                  _buildPdfAiPage(l10n),
-                  _buildSensorPage(l10n),
-                  if (_showAndroidPermissionPages) ...[
-                    _buildDndPage(l10n),
-                    _buildPhonePage(l10n),
+    return AppBackground(
+      brightness: Brightness.dark,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: PageView(
+                  controller: _pageController,
+                  onPageChanged: (int page) {
+                    setState(() {
+                      _currentPage = page;
+                    });
+                    _checkPermissions(); // Re-check when sliding back/forth
+                  },
+                  children: [
+                    _buildWelcomePage(l10n),
+                    _buildPdfAiPage(l10n),
+                    _buildSensorPage(l10n),
+                    if (_showAndroidPermissionPages) ...[
+                      _buildDndPage(l10n),
+                      _buildPhonePage(l10n),
+                    ],
                   ],
-                ],
+                ),
               ),
-            ),
-            _buildBottomControls(l10n),
-          ],
+              _buildBottomControls(l10n),
+            ],
+          ),
         ),
       ),
     );

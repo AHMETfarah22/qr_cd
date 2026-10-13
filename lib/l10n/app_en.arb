@@ -462,5 +462,25 @@
   "flipPhoneHint": "Turn your phone face down",
   "autoQuizTitle": "🎉 Well done!",
   "autoQuizDone": "Your PDF focus session is complete.",
-  "autoQuizStarting": "The AI quiz is starting so you can test what you learned..."
+  "autoQuizStarting": "The AI quiz is starting so you can test what you learned...",
+  "aiErrMissingKey": "Add your Gemini API key to use AI features.",
+  "aiErrBusy": "The AI service is busy right now. Please try again in a few minutes.",
+  "aiErrRateLimit": "The AI usage limit was reached. Please try again later.",
+  "aiErrNetwork": "No internet connection. Check your connection and try again.",
+  "aiErrFileMissing": "The PDF file could not be found on this device.",
+  "aiErrBadResponse": "The AI couldn't prepare the questions. Please try again.",
+  "aiErrGeneric": "Something went wrong with the AI service. Please try again.",
+  "enterApiKeyBtn": "Enter API key",
+  "apiKeyWhere": "Get a free key at aistudio.google.com/apikey",
+  "pagesWords": "{pages} pages • {words} words",
+  "@pagesWords": {
+    "placeholders": {
+      "pages": {
+        "type": "int"
+      },
+      "words": {
+        "type": "int"
+      }
+    }
+  }
 }

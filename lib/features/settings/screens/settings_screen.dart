@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/widgets/app_background.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/services/settings_service.dart';
@@ -72,7 +73,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
             children: [
               Text(
                 AppLocalizations.of(context)!.apiKeyDialogBody,
-                style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                style: const TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 13,
+                ),
               ),
               const SizedBox(height: 16),
               TextFormField(
@@ -529,477 +533,496 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final settingsService = Provider.of<SettingsService>(context);
     final premiumService = Provider.of<PremiumService>(context);
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: Text(
-          AppLocalizations.of(context)!.settingsTitle,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 2.0,
+    return AppBackground(
+      brightness: Brightness.dark,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          title: Text(
+            AppLocalizations.of(context)!.settingsTitle,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 2.0,
+            ),
+          ),
+          centerTitle: true,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_rounded, color: AppColors.accent),
+            onPressed: () => Navigator.pop(context),
           ),
         ),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded, color: AppColors.accent),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildSectionTitle(
-              AppLocalizations.of(context)!.sectionVoiceNotification,
-            ),
-            const SizedBox(height: 16),
-            _buildSettingCard(
-              title: AppLocalizations.of(context)!.alarmSound,
-              subtitle: _getAlarmSoundName(settingsService.alarmSound, context),
-              icon: Icons.notifications_active_outlined,
-              trailing: DropdownButton<AlarmSound>(
-                value: settingsService.alarmSound,
-                dropdownColor: AppColors.process,
-                underline: Container(),
-                icon: const Icon(
-                  Icons.keyboard_arrow_down,
-                  color: AppColors.accent,
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildSectionTitle(
+                AppLocalizations.of(context)!.sectionVoiceNotification,
+              ),
+              const SizedBox(height: 16),
+              _buildSettingCard(
+                title: AppLocalizations.of(context)!.alarmSound,
+                subtitle: _getAlarmSoundName(
+                  settingsService.alarmSound,
+                  context,
                 ),
-                onChanged: (AlarmSound? newValue) {
-                  if (newValue != null) {
-                    settingsService.setAlarmSound(newValue);
-                  }
-                },
-                items: AlarmSound.values.map((AlarmSound sound) {
-                  return DropdownMenuItem<AlarmSound>(
-                    value: sound,
-                    child: Text(
-                      _getAlarmSoundName(sound, context),
-                      style: const TextStyle(color: Colors.white, fontSize: 14),
-                    ),
-                  );
-                }).toList(),
+                icon: Icons.notifications_active_outlined,
+                trailing: DropdownButton<AlarmSound>(
+                  value: settingsService.alarmSound,
+                  dropdownColor: AppColors.process,
+                  underline: Container(),
+                  icon: const Icon(
+                    Icons.keyboard_arrow_down,
+                    color: AppColors.accent,
+                  ),
+                  onChanged: (AlarmSound? newValue) {
+                    if (newValue != null) {
+                      settingsService.setAlarmSound(newValue);
+                    }
+                  },
+                  items: AlarmSound.values.map((AlarmSound sound) {
+                    return DropdownMenuItem<AlarmSound>(
+                      value: sound,
+                      child: Text(
+                        _getAlarmSoundName(sound, context),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
               ),
-            ),
-            const SizedBox(height: 12),
-            _buildSettingCard(
-              title: AppLocalizations.of(context)!.vibration,
-              subtitle: settingsService.vibrationEnabled
-                  ? AppLocalizations.of(context)!.on
-                  : AppLocalizations.of(context)!.off,
-              icon: Icons.vibration,
-              trailing: Switch(
-                value: settingsService.vibrationEnabled,
-                onChanged: (value) =>
-                    settingsService.setVibrationEnabled(value),
-                activeThumbColor: AppColors.accent,
+              const SizedBox(height: 12),
+              _buildSettingCard(
+                title: AppLocalizations.of(context)!.vibration,
+                subtitle: settingsService.vibrationEnabled
+                    ? AppLocalizations.of(context)!.on
+                    : AppLocalizations.of(context)!.off,
+                icon: Icons.vibration,
+                trailing: Switch(
+                  value: settingsService.vibrationEnabled,
+                  onChanged: (value) =>
+                      settingsService.setVibrationEnabled(value),
+                  activeThumbColor: AppColors.accent,
+                ),
               ),
-            ),
-            const SizedBox(height: 32),
-            _buildSectionTitle(AppLocalizations.of(context)!.sectionAppearance),
-            const SizedBox(height: 16),
-            _buildSettingCard(
-              title: AppLocalizations.of(context)!.darkMode,
-              subtitle: settingsService.isDarkMode
-                  ? AppLocalizations.of(context)!.on
-                  : AppLocalizations.of(context)!.off,
-              icon: Icons.dark_mode_outlined,
-              trailing: Switch(
-                value: settingsService.isDarkMode,
-                onChanged: (value) => settingsService.setDarkMode(value),
-                activeThumbColor: AppColors.accent,
+              const SizedBox(height: 32),
+              _buildSectionTitle(
+                AppLocalizations.of(context)!.sectionAppearance,
               ),
-            ),
-            const SizedBox(height: 32),
-            _buildSectionTitle('USTA ÖZELLİKLERİ'),
-            const SizedBox(height: 16),
-            _buildSettingCard(
-              title: 'TScan Premium',
-              subtitle: premiumService.isPremium
-                  ? 'Premium Üyelik Aktif ⭐'
-                  : 'Usta özelliklerin kilidini aç',
-              icon: Icons.stars_rounded,
-              trailing: premiumService.isPremium
-                  ? const Icon(
-                      Icons.check_circle_rounded,
-                      color: AppColors.accent,
-                    )
-                  : ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const PaywallScreen(),
+              const SizedBox(height: 16),
+              _buildSettingCard(
+                title: AppLocalizations.of(context)!.darkMode,
+                subtitle: settingsService.isDarkMode
+                    ? AppLocalizations.of(context)!.on
+                    : AppLocalizations.of(context)!.off,
+                icon: Icons.dark_mode_outlined,
+                trailing: Switch(
+                  value: settingsService.isDarkMode,
+                  onChanged: (value) => settingsService.setDarkMode(value),
+                  activeThumbColor: AppColors.accent,
+                ),
+              ),
+              const SizedBox(height: 32),
+              _buildSectionTitle('USTA ÖZELLİKLERİ'),
+              const SizedBox(height: 16),
+              _buildSettingCard(
+                title: 'TScan Premium',
+                subtitle: premiumService.isPremium
+                    ? 'Premium Üyelik Aktif ⭐'
+                    : 'Usta özelliklerin kilidini aç',
+                icon: Icons.stars_rounded,
+                trailing: premiumService.isPremium
+                    ? const Icon(
+                        Icons.check_circle_rounded,
+                        color: AppColors.accent,
+                      )
+                    : ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const PaywallScreen(),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.accent,
+                          foregroundColor: Colors.black,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.accent,
-                        foregroundColor: Colors.black,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
                         ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 8,
-                        ),
-                      ),
-                      child: const Text(
-                        'Yükselt',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
+                        child: const Text(
+                          'Yükselt',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
-                    ),
-            ),
-            const SizedBox(height: 12),
-            _buildSettingCard(
-              title: 'OpenRouter API Anahtarı',
-              subtitle: _hasApiKey ? 'Kaydedildi' : 'Ayarlanmadı',
-              icon: Icons.key_rounded,
-              trailing: IconButton(
-                icon: Icon(
-                  Icons.edit_rounded,
-                  color: _hasApiKey ? AppColors.accent : Colors.white60,
+              ),
+              const SizedBox(height: 12),
+              _buildSettingCard(
+                title: 'OpenRouter API Anahtarı',
+                subtitle: _hasApiKey ? 'Kaydedildi' : 'Ayarlanmadı',
+                icon: Icons.key_rounded,
+                trailing: IconButton(
+                  icon: Icon(
+                    Icons.edit_rounded,
+                    color: _hasApiKey ? AppColors.accent : Colors.white60,
+                  ),
+                  onPressed: _showApiKeyDialog,
                 ),
-                onPressed: _showApiKeyDialog,
               ),
-            ),
-            const SizedBox(height: 12),
-            _buildSettingCard(
-              title: 'Sert Odaklanma Modu',
-              subtitle: settingsService.isHardMode
-                  ? 'Aktif (Seri sıfırlama cezalı)'
-                  : 'Pasif',
-              icon: Icons.gpp_maybe_rounded,
-              trailing: Switch(
-                value: settingsService.isHardMode,
-                onChanged: (value) => settingsService.setHardMode(value),
-                activeThumbColor: AppColors.accent,
-                activeTrackColor: AppColors.accent.withValues(alpha: 0.35),
-                inactiveThumbColor: Colors.grey.shade400,
-                inactiveTrackColor: Colors.grey.shade800,
-              ),
-            ),
-            const SizedBox(height: 12),
-            _buildSettingCard(
-              title: 'Ortam Sesleri',
-              subtitle: _getAmbientSoundName(settingsService.ambientSound),
-              icon: Icons.surround_sound_rounded,
-              trailing: DropdownButton<AmbientSound>(
-                value: settingsService.ambientSound,
-                dropdownColor: AppColors.process,
-                underline: Container(),
-                icon: const Icon(
-                  Icons.keyboard_arrow_down,
-                  color: AppColors.accent,
+              const SizedBox(height: 12),
+              _buildSettingCard(
+                title: 'Sert Odaklanma Modu',
+                subtitle: settingsService.isHardMode
+                    ? 'Aktif (Seri sıfırlama cezalı)'
+                    : 'Pasif',
+                icon: Icons.gpp_maybe_rounded,
+                trailing: Switch(
+                  value: settingsService.isHardMode,
+                  onChanged: (value) => settingsService.setHardMode(value),
+                  activeThumbColor: AppColors.accent,
+                  activeTrackColor: AppColors.accent.withValues(alpha: 0.35),
+                  inactiveThumbColor: Colors.grey.shade400,
+                  inactiveTrackColor: Colors.grey.shade800,
                 ),
-                onChanged: (AmbientSound? newValue) {
-                  if (newValue != null) {
-                    settingsService.setAmbientSound(newValue);
-                  }
-                },
-                items: AmbientSound.values.map((AmbientSound sound) {
-                  return DropdownMenuItem<AmbientSound>(
-                    value: sound,
-                    child: Text(
-                      _getAmbientSoundName(sound),
-                      style: const TextStyle(color: Colors.white, fontSize: 14),
-                    ),
-                  );
-                }).toList(),
               ),
-            ),
-            const SizedBox(height: 32),
-            _buildSectionTitle(
-              AppLocalizations.of(context)!.sectionFocusSettings,
-            ),
-            const SizedBox(height: 16),
-            _buildSettingCard(
-              title: AppLocalizations.of(context)!.defaultDuration,
-              subtitle: AppLocalizations.of(
-                context,
-              )!.mins(settingsService.preferredFocusDurationMinutes),
-              icon: Icons.timer_outlined,
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: const Icon(
-                      Icons.remove_circle_outline,
-                      color: AppColors.accent,
-                    ),
-                    onPressed: () {
-                      if (settingsService.preferredFocusDurationMinutes > 5) {
-                        settingsService.setPreferredFocusDuration(
-                          settingsService.preferredFocusDurationMinutes - 5,
-                        );
-                      }
-                    },
+              const SizedBox(height: 12),
+              _buildSettingCard(
+                title: 'Ortam Sesleri',
+                subtitle: _getAmbientSoundName(settingsService.ambientSound),
+                icon: Icons.surround_sound_rounded,
+                trailing: DropdownButton<AmbientSound>(
+                  value: settingsService.ambientSound,
+                  dropdownColor: AppColors.process,
+                  underline: Container(),
+                  icon: const Icon(
+                    Icons.keyboard_arrow_down,
+                    color: AppColors.accent,
                   ),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.add_circle_outline,
-                      color: AppColors.accent,
-                    ),
-                    onPressed: () {
-                      if (settingsService.preferredFocusDurationMinutes < 120) {
-                        settingsService.setPreferredFocusDuration(
-                          settingsService.preferredFocusDurationMinutes + 5,
-                        );
-                      }
-                    },
-                  ),
-                ],
+                  onChanged: (AmbientSound? newValue) {
+                    if (newValue != null) {
+                      settingsService.setAmbientSound(newValue);
+                    }
+                  },
+                  items: AmbientSound.values.map((AmbientSound sound) {
+                    return DropdownMenuItem<AmbientSound>(
+                      value: sound,
+                      child: Text(
+                        _getAmbientSoundName(sound),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
               ),
-            ),
-            const SizedBox(height: 12),
-            _buildSettingCard(
-              title: AppLocalizations.of(context)!.dailyGoalSetting,
-              subtitle: AppLocalizations.of(
-                context,
-              )!.mins(settingsService.dailyFocusGoalMinutes),
-              icon: Icons.track_changes_rounded,
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: const Icon(
-                      Icons.remove_circle_outline,
-                      color: AppColors.accent,
-                    ),
-                    onPressed: () {
-                      if (settingsService.dailyFocusGoalMinutes > 10) {
-                        settingsService.setDailyFocusGoal(
-                          settingsService.dailyFocusGoalMinutes - 10,
-                        );
-                      }
-                    },
-                  ),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.add_circle_outline,
-                      color: AppColors.accent,
-                    ),
-                    onPressed: () {
-                      if (settingsService.dailyFocusGoalMinutes < 480) {
-                        settingsService.setDailyFocusGoal(
-                          settingsService.dailyFocusGoalMinutes + 10,
-                        );
-                      }
-                    },
-                  ),
-                ],
+              const SizedBox(height: 32),
+              _buildSectionTitle(
+                AppLocalizations.of(context)!.sectionFocusSettings,
               ),
-            ),
-            const SizedBox(height: 12),
-            _buildSettingCard(
-              title: AppLocalizations.of(context)!.okumaHizi,
-              subtitle: _getReadingSpeedName(
-                settingsService.readingSpeed,
-                AppLocalizations.of(context)!,
-              ),
-              icon: Icons.speed_rounded,
-              trailing:
-                  premiumService.canUseFeature(PremiumFeature.personalizedSpeed)
-                  ? DropdownButton<ReadingSpeed>(
-                      value: settingsService.readingSpeed,
-                      dropdownColor: AppColors.process,
-                      underline: Container(),
+              const SizedBox(height: 16),
+              _buildSettingCard(
+                title: AppLocalizations.of(context)!.defaultDuration,
+                subtitle: AppLocalizations.of(
+                  context,
+                )!.mins(settingsService.preferredFocusDurationMinutes),
+                icon: Icons.timer_outlined,
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
                       icon: const Icon(
-                        Icons.keyboard_arrow_down,
+                        Icons.remove_circle_outline,
                         color: AppColors.accent,
                       ),
-                      onChanged: (ReadingSpeed? newValue) {
-                        if (newValue != null) {
-                          settingsService.setReadingSpeed(newValue);
+                      onPressed: () {
+                        if (settingsService.preferredFocusDurationMinutes > 5) {
+                          settingsService.setPreferredFocusDuration(
+                            settingsService.preferredFocusDurationMinutes - 5,
+                          );
                         }
                       },
-                      items: ReadingSpeed.values.map((ReadingSpeed speed) {
-                        return DropdownMenuItem<ReadingSpeed>(
-                          value: speed,
-                          child: Text(
-                            _getReadingSpeedName(
-                              speed,
-                              AppLocalizations.of(context)!,
-                            ),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    )
-                  : InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const PaywallScreen(),
-                          ),
-                        );
+                    ),
+                    IconButton(
+                      icon: const Icon(
+                        Icons.add_circle_outline,
+                        color: AppColors.accent,
+                      ),
+                      onPressed: () {
+                        if (settingsService.preferredFocusDurationMinutes <
+                            120) {
+                          settingsService.setPreferredFocusDuration(
+                            settingsService.preferredFocusDurationMinutes + 5,
+                          );
+                        }
                       },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 6,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
+              _buildSettingCard(
+                title: AppLocalizations.of(context)!.dailyGoalSetting,
+                subtitle: AppLocalizations.of(
+                  context,
+                )!.mins(settingsService.dailyFocusGoalMinutes),
+                icon: Icons.track_changes_rounded,
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.remove_circle_outline,
+                        color: AppColors.accent,
+                      ),
+                      onPressed: () {
+                        if (settingsService.dailyFocusGoalMinutes > 10) {
+                          settingsService.setDailyFocusGoal(
+                            settingsService.dailyFocusGoalMinutes - 10,
+                          );
+                        }
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(
+                        Icons.add_circle_outline,
+                        color: AppColors.accent,
+                      ),
+                      onPressed: () {
+                        if (settingsService.dailyFocusGoalMinutes < 480) {
+                          settingsService.setDailyFocusGoal(
+                            settingsService.dailyFocusGoalMinutes + 10,
+                          );
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
+              _buildSettingCard(
+                title: AppLocalizations.of(context)!.okumaHizi,
+                subtitle: _getReadingSpeedName(
+                  settingsService.readingSpeed,
+                  AppLocalizations.of(context)!,
+                ),
+                icon: Icons.speed_rounded,
+                trailing:
+                    premiumService.canUseFeature(
+                      PremiumFeature.personalizedSpeed,
+                    )
+                    ? DropdownButton<ReadingSpeed>(
+                        value: settingsService.readingSpeed,
+                        dropdownColor: AppColors.process,
+                        underline: Container(),
+                        icon: const Icon(
+                          Icons.keyboard_arrow_down,
+                          color: AppColors.accent,
                         ),
-                        decoration: BoxDecoration(
-                          color: AppColors.accent.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(
-                              Icons.lock_rounded,
-                              color: AppColors.accent,
-                              size: 14,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              AppLocalizations.of(context)!.hizNormal,
+                        onChanged: (ReadingSpeed? newValue) {
+                          if (newValue != null) {
+                            settingsService.setReadingSpeed(newValue);
+                          }
+                        },
+                        items: ReadingSpeed.values.map((ReadingSpeed speed) {
+                          return DropdownMenuItem<ReadingSpeed>(
+                            value: speed,
+                            child: Text(
+                              _getReadingSpeedName(
+                                speed,
+                                AppLocalizations.of(context)!,
+                              ),
                               style: const TextStyle(
-                                color: AppColors.accent,
+                                color: Colors.white,
                                 fontSize: 14,
-                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                          ],
+                          );
+                        }).toList(),
+                      )
+                    : InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const PaywallScreen(),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.accent.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.lock_rounded,
+                                color: AppColors.accent,
+                                size: 14,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                AppLocalizations.of(context)!.hizNormal,
+                                style: const TextStyle(
+                                  color: AppColors.accent,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-            ),
-            const SizedBox(height: 32),
-            _buildSectionTitle(
-              AppLocalizations.of(context)!.sectionAccountSettings,
-            ),
-            const SizedBox(height: 16),
-            _buildSettingCard(
-              title: AppLocalizations.of(context)!.changePassword,
-              subtitle: AppLocalizations.of(context)!.updatePasswordSubtitle,
-              icon: Icons.lock_outline,
-              trailing: IconButton(
-                icon: const Icon(
-                  Icons.arrow_forward_ios,
-                  color: AppColors.accent,
-                  size: 18,
-                ),
-                onPressed: () => _showChangePasswordDialog(context),
               ),
-            ),
-            const SizedBox(height: 12),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: Text(
-                AppLocalizations.of(context)!.passwordSecureNote,
-                style: const TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
+              const SizedBox(height: 32),
+              _buildSectionTitle(
+                AppLocalizations.of(context)!.sectionAccountSettings,
+              ),
+              const SizedBox(height: 16),
+              _buildSettingCard(
+                title: AppLocalizations.of(context)!.changePassword,
+                subtitle: AppLocalizations.of(context)!.updatePasswordSubtitle,
+                icon: Icons.lock_outline,
+                trailing: IconButton(
+                  icon: const Icon(
+                    Icons.arrow_forward_ios,
+                    color: AppColors.accent,
+                    size: 18,
+                  ),
+                  onPressed: () => _showChangePasswordDialog(context),
                 ),
               ),
-            ),
-            const SizedBox(height: 32),
-            _buildSectionTitle(
-              AppLocalizations.of(context)!.sectionDataManagement,
-            ),
-            const SizedBox(height: 16),
-            _buildSettingCard(
-              title: AppLocalizations.of(context)!.backupData,
-              subtitle: AppLocalizations.of(context)!.exportDataSubtitle,
-              icon: Icons.cloud_upload_outlined,
-              trailing: IconButton(
-                icon: const Icon(
-                  Icons.arrow_forward_ios,
-                  color: AppColors.accent,
-                  size: 18,
-                ),
-                onPressed: () => _showBackupDialog(context),
-              ),
-            ),
-            const SizedBox(height: 12),
-            _buildSettingCard(
-              title: AppLocalizations.of(context)!.restoreData,
-              subtitle: AppLocalizations.of(context)!.importDataSubtitle,
-              icon: Icons.cloud_download_outlined,
-              trailing: IconButton(
-                icon: const Icon(
-                  Icons.arrow_forward_ios,
-                  color: AppColors.accent,
-                  size: 18,
-                ),
-                onPressed: () => _showRestoreDialog(context),
-              ),
-            ),
-            const SizedBox(height: 12),
-            _buildSettingCard(
-              title: AppLocalizations.of(context)!.resetStatistics,
-              subtitle: AppLocalizations.of(context)!.resetStatsSubtitle,
-              icon: Icons.delete_sweep_outlined,
-              trailing: IconButton(
-                icon: const Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.red,
-                  size: 18,
-                ),
-                onPressed: () => _showResetStatisticsDialog(context),
-              ),
-            ),
-            const SizedBox(height: 32),
-            _buildSectionTitle(
-              AppLocalizations.of(context)!.sectionApplication,
-            ),
-            const SizedBox(height: 16),
-            _buildSettingCard(
-              title: AppLocalizations.of(context)!.shareWithFriends,
-              subtitle: AppLocalizations.of(context)!.shareSubtitle,
-              icon: Icons.share_outlined,
-              trailing: IconButton(
-                icon: const Icon(
-                  Icons.arrow_forward_ios,
-                  color: AppColors.accent,
-                  size: 18,
-                ),
-                onPressed: _shareApp,
-              ),
-            ),
-            const SizedBox(height: 12),
-            _buildSettingCard(
-              title: AppLocalizations.of(context)!.tutorialTitle,
-              subtitle: AppLocalizations.of(context)!.tutorialSubtitle,
-              icon: Icons.help_outline_rounded,
-              trailing: IconButton(
-                icon: const Icon(
-                  Icons.arrow_forward_ios,
-                  color: AppColors.accent,
-                  size: 18,
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const OnboardingScreen()),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 24),
-            Center(
-              child: Text(
-                AppLocalizations.of(context)!.version('1.0.0+1'),
-                style: TextStyle(
-                  color: AppColors.textSecondary.withValues(alpha: 0.5),
-                  fontSize: 12,
+              const SizedBox(height: 12),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: Text(
+                  AppLocalizations.of(context)!.passwordSecureNote,
+                  style: const TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 12,
+                    fontStyle: FontStyle.italic,
+                  ),
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 32),
+              _buildSectionTitle(
+                AppLocalizations.of(context)!.sectionDataManagement,
+              ),
+              const SizedBox(height: 16),
+              _buildSettingCard(
+                title: AppLocalizations.of(context)!.backupData,
+                subtitle: AppLocalizations.of(context)!.exportDataSubtitle,
+                icon: Icons.cloud_upload_outlined,
+                trailing: IconButton(
+                  icon: const Icon(
+                    Icons.arrow_forward_ios,
+                    color: AppColors.accent,
+                    size: 18,
+                  ),
+                  onPressed: () => _showBackupDialog(context),
+                ),
+              ),
+              const SizedBox(height: 12),
+              _buildSettingCard(
+                title: AppLocalizations.of(context)!.restoreData,
+                subtitle: AppLocalizations.of(context)!.importDataSubtitle,
+                icon: Icons.cloud_download_outlined,
+                trailing: IconButton(
+                  icon: const Icon(
+                    Icons.arrow_forward_ios,
+                    color: AppColors.accent,
+                    size: 18,
+                  ),
+                  onPressed: () => _showRestoreDialog(context),
+                ),
+              ),
+              const SizedBox(height: 12),
+              _buildSettingCard(
+                title: AppLocalizations.of(context)!.resetStatistics,
+                subtitle: AppLocalizations.of(context)!.resetStatsSubtitle,
+                icon: Icons.delete_sweep_outlined,
+                trailing: IconButton(
+                  icon: const Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.red,
+                    size: 18,
+                  ),
+                  onPressed: () => _showResetStatisticsDialog(context),
+                ),
+              ),
+              const SizedBox(height: 32),
+              _buildSectionTitle(
+                AppLocalizations.of(context)!.sectionApplication,
+              ),
+              const SizedBox(height: 16),
+              _buildSettingCard(
+                title: AppLocalizations.of(context)!.shareWithFriends,
+                subtitle: AppLocalizations.of(context)!.shareSubtitle,
+                icon: Icons.share_outlined,
+                trailing: IconButton(
+                  icon: const Icon(
+                    Icons.arrow_forward_ios,
+                    color: AppColors.accent,
+                    size: 18,
+                  ),
+                  onPressed: _shareApp,
+                ),
+              ),
+              const SizedBox(height: 12),
+              _buildSettingCard(
+                title: AppLocalizations.of(context)!.tutorialTitle,
+                subtitle: AppLocalizations.of(context)!.tutorialSubtitle,
+                icon: Icons.help_outline_rounded,
+                trailing: IconButton(
+                  icon: const Icon(
+                    Icons.arrow_forward_ios,
+                    color: AppColors.accent,
+                    size: 18,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const OnboardingScreen(),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 24),
+              Center(
+                child: Text(
+                  AppLocalizations.of(context)!.version('1.0.0+1'),
+                  style: TextStyle(
+                    color: AppColors.textSecondary.withValues(alpha: 0.5),
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

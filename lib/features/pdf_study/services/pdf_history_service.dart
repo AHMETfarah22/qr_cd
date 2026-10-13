@@ -37,7 +37,8 @@ class PdfHistoryService extends ChangeNotifier {
       final prefs = await SharedPreferences.getInstance();
       final historyJsonStr = prefs.getString(_getUserKey('pdf_history_list'));
       if (historyJsonStr != null) {
-        final List<dynamic> decodedList = jsonDecode(historyJsonStr) as List<dynamic>;
+        final List<dynamic> decodedList =
+            jsonDecode(historyJsonStr) as List<dynamic>;
         _history = decodedList
             .map((item) => PdfDocument.fromJson(item as Map<String, dynamic>))
             .toList();
@@ -53,7 +54,10 @@ class PdfHistoryService extends ChangeNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
       final listJson = _history.map((doc) => doc.toJson()).toList();
-      await prefs.setString(_getUserKey('pdf_history_list'), jsonEncode(listJson));
+      await prefs.setString(
+        _getUserKey('pdf_history_list'),
+        jsonEncode(listJson),
+      );
     } catch (e) {
       debugPrint('Error saving PDF history: $e');
     }
@@ -63,7 +67,9 @@ class PdfHistoryService extends ChangeNotifier {
     if (_currentUserEmail == null) return;
 
     // Remove if already exists with same id or fileName to avoid duplicates
-    _history.removeWhere((item) => item.id == doc.id || item.fileName == doc.fileName);
+    _history.removeWhere(
+      (item) => item.id == doc.id || item.fileName == doc.fileName,
+    );
 
     // Insert at top of list
     _history.insert(0, doc);

@@ -61,7 +61,9 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          // Horizontal padding keeps labels off the edges; modest vertical
+          // padding leaves room for text inside fixed-height buttons.
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           elevation: 0,
           shadowColor: Colors.transparent,
         ),
@@ -129,7 +131,9 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          // Horizontal padding keeps labels off the edges; modest vertical
+          // padding leaves room for text inside fixed-height buttons.
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           elevation: 0,
           shadowColor: Colors.transparent,
         ),

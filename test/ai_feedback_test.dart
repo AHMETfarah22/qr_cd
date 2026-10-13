@@ -1,0 +1,31 @@
+import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:tscan/features/pdf_study/services/ai_service.dart';
+import 'package:tscan/features/pdf_study/widgets/ai_feedback.dart';
+import 'package:tscan/l10n/app_localizations.dart';
+
+void main() {
+  final tr = lookupAppLocalizations(const Locale('tr'));
+  final en = lookupAppLocalizations(const Locale('en'));
+
+  test('missing key gets a clear message instead of a raw exception', () {
+    const e = AiException(AiErrorType.missingKey);
+    expect(aiErrorMessage(e, tr), tr.aiErrMissingKey);
+    expect(aiErrorMessage(e, en), en.aiErrMissingKey);
+    expect(aiErrorMessage(e, en), isNot(contains('Exception')));
+    expect(aiErrorNeedsKey(e), isTrue);
+  });
+
+  test('busy and network errors do not ask for a key', () {
+    expect(aiErrorMessage(const AiException(AiErrorType.busy), tr), tr.aiErrBusy);
+    expect(aiErrorNeedsKey(const AiException(AiErrorType.network)), isFalse);
+    expect(aiErrorMessage(Exception('boom'), en), en.aiErrGeneric);
+  });
+
+  test('accepts Gemini key formats and rejects OpenRouter keys', () {
+    expect(AiService.looksLikeGeminiKey('AIza${'x' * 35}'), isTrue);
+    expect(AiService.looksLikeGeminiKey('AQ.${'x' * 40}'), isTrue);
+    expect(AiService.looksLikeGeminiKey('sk-or-v1-${'x' * 40}'), isFalse);
+    expect(AiService.looksLikeGeminiKey('AIza'), isFalse);
+  });
+}

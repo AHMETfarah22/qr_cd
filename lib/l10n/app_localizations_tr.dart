@@ -987,4 +987,36 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get autoQuizStarting => 'Öğrendiklerini test etmek için AI Quiz başlıyor...';
+
+  @override
+  String get aiErrMissingKey => 'AI özelliklerini kullanmak için Gemini API anahtarını ekle.';
+
+  @override
+  String get aiErrBusy => 'AI servisi şu an yoğun. Birkaç dakika sonra tekrar dene.';
+
+  @override
+  String get aiErrRateLimit => 'AI kullanım limitine ulaşıldı. Biraz sonra tekrar dene.';
+
+  @override
+  String get aiErrNetwork => 'İnternet bağlantısı yok. Bağlantını kontrol edip tekrar dene.';
+
+  @override
+  String get aiErrFileMissing => 'PDF dosyası bu cihazda bulunamadı.';
+
+  @override
+  String get aiErrBadResponse => 'AI soruları hazırlayamadı. Lütfen tekrar dene.';
+
+  @override
+  String get aiErrGeneric => 'AI servisinde bir sorun oldu. Lütfen tekrar dene.';
+
+  @override
+  String get enterApiKeyBtn => 'API anahtarı gir';
+
+  @override
+  String get apiKeyWhere => 'Ücretsiz anahtar: aistudio.google.com/apikey';
+
+  @override
+  String pagesWords(int pages, int words) {
+    return '$pages sayfa • $words kelime';
+  }
 }

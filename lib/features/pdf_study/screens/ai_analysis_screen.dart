@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import '../../../core/widgets/app_background.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/palette.dart';
 import '../../../core/models/pdf_document.dart' as models;
 import '../../../core/services/settings_service.dart';
 import '../../../core/services/premium_service.dart';
@@ -65,238 +67,239 @@ class AiAnalysisScreen extends StatelessWidget {
     }
 
     final l10n = AppLocalizations.of(context)!;
+    final p = Palette.of(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          l10n.aiAnalizSonuclari,
-          style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+    return AppBackground(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            l10n.aiAnalizSonuclari,
+            style: GoogleFonts.poppins(
+              fontWeight: FontWeight.w600,
+              color: p.textPrimary,
+            ),
+          ),
+          centerTitle: true,
+          backgroundColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
+          iconTheme: IconThemeData(color: p.accentText),
+          elevation: 0,
         ),
-        centerTitle: true,
-        backgroundColor: AppColors.lightBackground,
-        elevation: 0,
-      ),
-      backgroundColor: AppColors.lightBackground,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-          child: Column(
-            children: [
-              // Document Info Card
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: AppColors.accent,
-                  border: Border.all(color: AppColors.accent, width: 1),
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.lightTextPrimary.withValues(alpha: 0.16),
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    const Icon(
-                      Icons.picture_as_pdf_rounded,
-                      size: 48,
-                      color: Colors.white,
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      document.fileName,
-                      style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      '${document.pageCount} sayfa • ${document.wordCount} kelime',
-                      style: GoogleFonts.poppins(
-                        fontSize: 13,
-                        color: Colors.white.withValues(alpha: 0.8),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              // Estimated Time - Big Number
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 32),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: AppColors.lightProcess, width: 2),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.lightProcess,
-                      blurRadius: 30,
-                      spreadRadius: 5,
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.timer_rounded,
-                      size: 36,
-                      color: AppColors.accent,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      l10n.tahminiOkumaSuresi,
-                      style: GoogleFonts.poppins(
-                        fontSize: 14,
-                        color: AppColors.lightTextSecondary,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      l10n.tahminiSureDk(minutes),
-                      style: GoogleFonts.poppins(
-                        fontSize: 56,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.lightTextPrimary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // Info Grid
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildInfoCard(
-                      context,
-                      icon: Icons.school_rounded,
-                      label: l10n.dersAdi,
-                      value: document.subject ?? 'Genel',
-                      color: AppColors.accent,
-                      isDark: isDark,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _buildInfoCard(
-                      context,
-                      icon: _getDifficultyIcon(document.difficulty),
-                      label: l10n.zorlukDerecesi,
-                      value: document.difficulty ?? 'Bilinmiyor',
-                      color: diffColor,
-                      isDark: isDark,
-                    ),
-                  ),
-                ],
-              ),
-
-              // Tips
-              if (document.tips != null && document.tips!.isNotEmpty) ...[
-                const SizedBox(height: 16),
+        backgroundColor: Colors.transparent,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+            child: Column(
+              children: [
+                // Document Info Card
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Colors.amber.withValues(alpha: isDark ? 0.1 : 0.08),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: Colors.amber.withValues(alpha: 0.3),
+                    // Deep green keeps the white text readable.
+                    gradient: const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [AppColors.accentDeep, Color(0xFF0E4D2A)],
                     ),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Icon(
-                        Icons.lightbulb_rounded,
-                        color: Colors.amber,
-                        size: 22,
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          document.tips!,
-                          style: GoogleFonts.poppins(
-                            fontSize: 13,
-                            color: AppColors.lightTextPrimary,
-                            height: 1.4,
-                          ),
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.lightTextPrimary.withValues(
+                          alpha: 0.16,
                         ),
+                        blurRadius: 20,
+                        offset: const Offset(0, 10),
                       ),
                     ],
                   ),
-                ),
-              ],
-
-              const SizedBox(height: 32),
-
-              // Start Focus Button
-              SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Navigate to timer with the AI-suggested duration
-                    MainScreen.startPdfSession(
-                      context,
-                      document: document,
-                      suggestedMinutes: minutes,
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.accent,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    elevation: 0,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  child: Column(
                     children: [
-                      const Icon(Icons.play_arrow_rounded, size: 26),
-                      const SizedBox(width: 8),
+                      const Icon(
+                        Icons.menu_book_rounded,
+                        size: 48,
+                        color: Colors.white,
+                      ),
+                      const SizedBox(height: 12),
                       Text(
-                        l10n.minuteFocus(minutes),
+                        document.fileName,
                         style: GoogleFonts.poppins(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        l10n.pagesWords(document.pageCount, document.wordCount),
+                        style: GoogleFonts.poppins(
+                          fontSize: 13,
+                          color: Colors.white.withValues(alpha: 0.8),
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
 
-              const SizedBox(height: 12),
+                const SizedBox(height: 24),
 
-              // Custom Time Button
-              TextButton(
-                onPressed: () {
-                  _showCustomTimeDialog(context, minutes);
-                },
-                child: Text(
-                  l10n.farkliSureSec,
-                  style: GoogleFonts.poppins(
-                    color: AppColors.lightTextPrimary,
-                    fontWeight: FontWeight.w500,
+                // Estimated Time - Big Number
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 32),
+                  decoration: p.cardDecoration(radius: 24),
+                  child: Column(
+                    children: [
+                      Icon(Icons.timer_rounded, size: 36, color: p.accentText),
+                      const SizedBox(height: 8),
+                      Text(
+                        l10n.tahminiOkumaSuresi,
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          color: p.textSecondary,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        l10n.tahminiSureDk(minutes),
+                        style: GoogleFonts.poppins(
+                          fontSize: 56,
+                          fontWeight: FontWeight.w800,
+                          color: p.textPrimary,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ],
+
+                const SizedBox(height: 16),
+
+                // Info Grid
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildInfoCard(
+                        context,
+                        icon: Icons.school_rounded,
+                        label: l10n.dersAdi,
+                        value: document.subject ?? 'Genel',
+                        color: AppColors.accent,
+                        isDark: isDark,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _buildInfoCard(
+                        context,
+                        icon: _getDifficultyIcon(document.difficulty),
+                        label: l10n.zorlukDerecesi,
+                        value: document.difficulty ?? 'Bilinmiyor',
+                        color: diffColor,
+                        isDark: isDark,
+                      ),
+                    ),
+                  ],
+                ),
+
+                // Tips
+                if (document.tips != null && document.tips!.isNotEmpty) ...[
+                  const SizedBox(height: 16),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.amber.withValues(
+                        alpha: isDark ? 0.1 : 0.08,
+                      ),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: Colors.amber.withValues(alpha: 0.3),
+                      ),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Icon(
+                          Icons.lightbulb_rounded,
+                          color: Colors.amber,
+                          size: 22,
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            document.tips!,
+                            style: GoogleFonts.poppins(
+                              fontSize: 13,
+                              color: p.textPrimary,
+                              height: 1.4,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+
+                const SizedBox(height: 32),
+
+                // Start Focus Button
+                SizedBox(
+                  width: double.infinity,
+                  height: 56,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Navigate to timer with the AI-suggested duration
+                      MainScreen.startPdfSession(
+                        context,
+                        document: document,
+                        suggestedMinutes: minutes,
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.accentDeep,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.play_arrow_rounded, size: 26),
+                        const SizedBox(width: 8),
+                        Text(
+                          l10n.minuteFocus(minutes),
+                          style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 12),
+
+                // Custom Time Button
+                TextButton(
+                  onPressed: () {
+                    _showCustomTimeDialog(context, minutes);
+                  },
+                  child: Text(
+                    l10n.farkliSureSec,
+                    style: GoogleFonts.poppins(
+                      color: p.accentText,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -329,7 +332,9 @@ class AiAnalysisScreen extends StatelessWidget {
             label,
             style: GoogleFonts.poppins(
               fontSize: 12,
-              color: AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.textSecondary
+                  : AppColors.lightTextSecondary,
             ),
           ),
           const SizedBox(height: 2),
@@ -371,7 +376,7 @@ class AiAnalysisScreen extends StatelessWidget {
                   style: GoogleFonts.poppins(
                     fontSize: 32,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.lightTextPrimary,
+                    color: Palette.of(ctx).textPrimary,
                   ),
                 ),
                 Slider(
@@ -380,7 +385,7 @@ class AiAnalysisScreen extends StatelessWidget {
                   max: 120,
                   divisions: 23,
                   activeColor: AppColors.accent,
-                  label: '$selectedMinutes dk',
+                  label: l10n.minutesValue(selectedMinutes),
                   onChanged: (v) {
                     setDialogState(() => selectedMinutes = v.round());
                   },
@@ -402,7 +407,7 @@ class AiAnalysisScreen extends StatelessWidget {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.accent,
+                  backgroundColor: AppColors.accentDeep,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),

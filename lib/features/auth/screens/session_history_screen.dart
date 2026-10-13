@@ -66,10 +66,7 @@ class SessionHistoryScreen extends StatelessWidget {
                   const SizedBox(height: 8),
                   Text(
                     AppLocalizations.of(context)!.startFocusNow,
-                    style: TextStyle(
-                      color: p.textSecondary,
-                      fontSize: 14,
-                    ),
+                    style: TextStyle(color: p.textSecondary, fontSize: 14),
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton(
@@ -79,7 +76,10 @@ class SessionHistoryScreen extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.accent,
                       foregroundColor: Colors.black,
-                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 12,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
@@ -89,14 +89,12 @@ class SessionHistoryScreen extends StatelessWidget {
                 ],
               ),
             )
-            : Column(
-                children: [
-                  _buildWeeklySummary(context, statsService),
-                  Expanded(
-                    child: _buildSessionList(context, sessions),
-                  ),
-                ],
-              ),
+          : Column(
+              children: [
+                _buildWeeklySummary(context, statsService),
+                Expanded(child: _buildSessionList(context, sessions)),
+              ],
+            ),
     );
   }
 
@@ -117,7 +115,8 @@ class SessionHistoryScreen extends StatelessWidget {
     final minutes = duration % 60;
     String durationText;
     if (hours > 0) {
-      durationText = '$hours${AppLocalizations.of(context)!.hoursShort} $minutes${AppLocalizations.of(context)!.minutesShort}';
+      durationText =
+          '$hours${AppLocalizations.of(context)!.hoursShort} $minutes${AppLocalizations.of(context)!.minutesShort}';
     } else {
       durationText = AppLocalizations.of(context)!.mins(minutes);
     }
@@ -126,13 +125,18 @@ class SessionHistoryScreen extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
-      decoration: p.cardDecoration(radius: 16).copyWith(
+      decoration: p
+          .cardDecoration(radius: 16)
+          .copyWith(
             gradient: LinearGradient(
               colors: [statusColor.withValues(alpha: 0.12), p.card],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            border: Border.all(color: statusColor.withValues(alpha: 0.3), width: 1.2),
+            border: Border.all(
+              color: statusColor.withValues(alpha: 0.3),
+              width: 1.2,
+            ),
           ),
       child: Row(
         children: [
@@ -161,7 +165,9 @@ class SessionHistoryScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      completed ? AppLocalizations.of(context)!.successLabel : AppLocalizations.of(context)!.failedLabel,
+                      completed
+                          ? AppLocalizations.of(context)!.successLabel
+                          : AppLocalizations.of(context)!.failedLabel,
                       style: TextStyle(
                         color: completed ? Colors.green : Colors.red,
                         fontSize: 12,
@@ -171,10 +177,7 @@ class SessionHistoryScreen extends StatelessWidget {
                     ),
                     Text(
                       timeAgo,
-                      style: TextStyle(
-                        color: p.textSecondary,
-                        fontSize: 11,
-                      ),
+                      style: TextStyle(color: p.textSecondary, fontSize: 11),
                     ),
                   ],
                 ),
@@ -190,11 +193,7 @@ class SessionHistoryScreen extends StatelessWidget {
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    Icon(
-                      category.icon,
-                      size: 14,
-                      color: category.color,
-                    ),
+                    Icon(category.icon, size: 14, color: category.color),
                     const SizedBox(width: 4),
                     Text(
                       category.getDisplayName(context),
@@ -207,10 +206,7 @@ class SessionHistoryScreen extends StatelessWidget {
                     const Spacer(),
                     Text(
                       dateFormat.format(date),
-                      style: TextStyle(
-                        color: p.textSecondary,
-                        fontSize: 11,
-                      ),
+                      style: TextStyle(color: p.textSecondary, fontSize: 11),
                     ),
                   ],
                 ),
@@ -218,7 +214,10 @@ class SessionHistoryScreen extends StatelessWidget {
                   const SizedBox(height: 8),
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: p.cardMuted,
                       borderRadius: BorderRadius.circular(8),
@@ -255,7 +254,10 @@ class SessionHistoryScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSessionList(BuildContext context, List<Map<String, dynamic>> sessions) {
+  Widget _buildSessionList(
+    BuildContext context,
+    List<Map<String, dynamic>> sessions,
+  ) {
     final p = Palette.of(context);
     // Group sessions by calendar day
     final groupedSessions = <DateTime, List<Map<String, dynamic>>>{};
@@ -278,7 +280,10 @@ class SessionHistoryScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 4.0),
+              padding: const EdgeInsets.symmetric(
+                vertical: 12.0,
+                horizontal: 4.0,
+              ),
               child: Text(
                 _getDateLabel(dateKey, context),
                 style: TextStyle(
@@ -332,10 +337,14 @@ class SessionHistoryScreen extends StatelessWidget {
       margin: const EdgeInsets.fromLTRB(16, 16, 16, 8),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: hasCertificate ? Colors.blue.withValues(alpha: 0.1) : Colors.red.withValues(alpha: 0.05),
+        color: hasCertificate
+            ? Colors.blue.withValues(alpha: 0.1)
+            : Colors.red.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: hasCertificate ? Colors.blue.withValues(alpha: 0.3) : Colors.red.withValues(alpha: 0.2),
+          color: hasCertificate
+              ? Colors.blue.withValues(alpha: 0.3)
+              : Colors.red.withValues(alpha: 0.2),
           width: 1.5,
         ),
       ),
@@ -344,7 +353,9 @@ class SessionHistoryScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: hasCertificate ? Colors.blue.withValues(alpha: 0.2) : Colors.red.withValues(alpha: 0.1),
+              color: hasCertificate
+                  ? Colors.blue.withValues(alpha: 0.2)
+                  : Colors.red.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -359,7 +370,9 @@ class SessionHistoryScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  hasCertificate ? AppLocalizations.of(context)!.weeklyGoalSuccess : AppLocalizations.of(context)!.weeklyGoalFailed,
+                  hasCertificate
+                      ? AppLocalizations.of(context)!.weeklyGoalSuccess
+                      : AppLocalizations.of(context)!.weeklyGoalFailed,
                   style: TextStyle(
                     color: hasCertificate ? Colors.blue : Colors.red,
                     fontSize: 14,
@@ -369,7 +382,9 @@ class SessionHistoryScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  AppLocalizations.of(context)!.weeklyMinutesNote(hours, minutes),
+                  AppLocalizations.of(
+                    context,
+                  )!.weeklyMinutesNote(hours, minutes),
                   style: TextStyle(
                     color: Palette.of(context).textSecondary,
                     fontSize: 12,
@@ -379,7 +394,9 @@ class SessionHistoryScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 4.0),
                     child: Text(
-                      AppLocalizations.of(context)!.moreMinutesRequired(300 - weeklyMinutes),
+                      AppLocalizations.of(
+                        context,
+                      )!.moreMinutesRequired(300 - weeklyMinutes),
                       style: const TextStyle(
                         color: Colors.redAccent,
                         fontSize: 11,

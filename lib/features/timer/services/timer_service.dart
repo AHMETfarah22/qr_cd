@@ -19,11 +19,17 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
   final SettingsService _settingsService;
   final NotificationService _notificationService;
   StatisticsService? _statisticsService;
-  final DoNotDisturbPlugin _doNotDisturb = DoNotDisturbPlugin(); // Doğru sınıf ismi
+  final DoNotDisturbPlugin _doNotDisturb =
+      DoNotDisturbPlugin(); // Doğru sınıf ismi
   StreamSubscription? _phoneStateSubscription;
   Map<String, String> _localizedStrings = {};
 
-  TimerService(this._sensorService, this._audioService, this._settingsService, this._notificationService) {
+  TimerService(
+    this._sensorService,
+    this._audioService,
+    this._settingsService,
+    this._notificationService,
+  ) {
     WidgetsBinding.instance.addObserver(this);
     // Initialize with settings if not in level 1
     _updateInitialDuration();
@@ -33,12 +39,14 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
     _phoneStateSubscription?.cancel();
     _phoneStateSubscription = PhoneState.stream.listen(
       (event) {
-        if (_state == TimerState.running && event.status == PhoneStateStatus.CALL_INCOMING) {
+        if (_state == TimerState.running &&
+            event.status == PhoneStateStatus.CALL_INCOMING) {
           debugPrint("TimerService: Phone is ringing! Failing timer...");
           _failTimer();
         }
       },
-      onError: (Object e) => debugPrint("TimerService: phone state unavailable: $e"),
+      onError: (Object e) =>
+          debugPrint("TimerService: phone state unavailable: $e"),
     );
   }
 
@@ -74,7 +82,8 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (_state == TimerState.running) {
-      if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
+      if (state == AppLifecycleState.paused ||
+          state == AppLifecycleState.inactive) {
         debugPrint("TimerService: User left the app! Failing timer...");
         _failTimer();
       }
@@ -95,11 +104,11 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
 
   int _level = 1;
   int get level => _level;
-  
+
   int _completedSessions = 0;
   int get completedSessions => _completedSessions;
 
-  int _totalTimeSeconds = 30; 
+  int _totalTimeSeconds = 30;
   int get totalTimeSeconds => _totalTimeSeconds;
   int _currentTimeSeconds = 30;
   int get currentTimeSeconds => _currentTimeSeconds;
@@ -124,10 +133,10 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
     if (_state == TimerState.idle && _level > 1) {
       _totalTimeSeconds = minutes * 60;
       _currentTimeSeconds = _totalTimeSeconds;
-      
+
       // Make the duration selection persistent in settings
       _settingsService.setPreferredFocusDuration(minutes);
-      
+
       notifyListeners();
     }
   }
@@ -143,7 +152,7 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
   // Sync state and dependencies
   void updateDependencies(StatisticsService statsService) {
     _statisticsService = statsService;
-    
+
     if (_completedSessions != statsService.completedSessions) {
       _completedSessions = statsService.completedSessions;
       // Recalculate level
@@ -165,15 +174,15 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
     _enableDND();
     _startTicker();
     WakelockPlus.enable();
-    
+
     // Play ambient sound if selected
     if (_settingsService.ambientSound != AmbientSound.none) {
       _audioService.playAmbientSound(_settingsService.ambientSound);
     }
-    
+
     // Notify statistics service
     _statisticsService?.startSession();
-    
+
     notifyListeners();
   }
 
@@ -189,7 +198,9 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_currentTimeSeconds > 0) {
         _currentTimeSeconds--;
-        debugPrint("Ticker: $_currentTimeSeconds seconds left (State: $_state)");
+        debugPrint(
+          "Ticker: $_currentTimeSeconds seconds left (State: $_state)",
+        );
         notifyListeners();
       } else {
         debugPrint("Ticker: FINISHED");
@@ -230,7 +241,7 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
     if (_settingsService.isHardMode && _statisticsService != null) {
       _statisticsService!.resetStreak();
     }
-    
+
     notifyListeners();
   }
 
@@ -242,28 +253,34 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
     _disableDND();
     _state = TimerState.success;
     _completedSessions++;
-    
+
     if (_level == 1) {
       _level = 2;
     } else {
-      _level++; 
+      _level++;
     }
-    
+
     // Notify statistics service BEFORE updating initial duration for next session
     if (_statisticsService != null) {
       final completedMinutes = (_totalTimeSeconds / 60).ceil();
       final noteStr = pdfName != null ? 'PDF: $pdfName' : '';
-      _statisticsService!.completeSession(completedMinutes, category: _currentCategory, note: noteStr);
+      _statisticsService!.completeSession(
+        completedMinutes,
+        category: _currentCategory,
+        note: noteStr,
+      );
       pdfName = null; // Clear it for future non-PDF sessions
     }
-    
+
     // Note: We don't call _updateInitialDuration() here anymore to keep 00:00 on Success screen.
     // It will be called when user hits 'Reset' or starts a new session.
 
     _notificationService.showNotification(
       id: 1,
       title: _localizedStrings['successTitle'] ?? 'Tebrikler!',
-      body: _localizedStrings['successBody'] ?? 'Odaklanma oturumu başarıyla tamamlandı. Harikasın!',
+      body:
+          _localizedStrings['successBody'] ??
+          'Odaklanma oturumu başarıyla tamamlandı. Harikasın!',
       payload: 'success',
       ongoing: true, // User requested persistent notification
       playSound: true,
@@ -282,47 +299,52 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
     _audioService.stopAlarm();
     WakelockPlus.disable();
     _state = TimerState.idle;
-    
+
     // Use settings duration for current level
     _updateInitialDuration();
-    
+
     notifyListeners();
   }
 
   // Cancel timer and record statistics
   void cancelTimer(int durationMinutes) {
-    if (_state != TimerState.running && _state != TimerState.paused && _state != TimerState.breakTime && _state != TimerState.failure) return;
-    
+    if (_state != TimerState.running &&
+        _state != TimerState.paused &&
+        _state != TimerState.breakTime &&
+        _state != TimerState.failure) {
+      return;
+    }
+
     // Record cancelled session to statistics before resetting
     // Check if it's a break time being cancelled
     if (_state == TimerState.breakTime) {
-       _statisticsService?.cancelSession(
-         durationMinutes > 0 ? durationMinutes : 1,
-         category: SessionCategory.breakTime,
-       );
+      _statisticsService?.cancelSession(
+        durationMinutes > 0 ? durationMinutes : 1,
+        category: SessionCategory.breakTime,
+      );
     } else {
-       _statisticsService?.cancelSession(
-         durationMinutes > 0 ? durationMinutes : 1,
-         category: _currentCategory,
-       );
+      _statisticsService?.cancelSession(
+        durationMinutes > 0 ? durationMinutes : 1,
+        category: _currentCategory,
+      );
     }
-    
+
     resetTimer();
   }
 
   void startBreak(int minutes) {
     _timer?.cancel();
-    
+
     // Store previous category to restore after break (optional, or keep generic)
     // _previousCategory = _currentCategory;
-    
+
     _state = TimerState.breakTime;
     _totalTimeSeconds = minutes * 60;
     _currentTimeSeconds = _totalTimeSeconds;
-    
+
     // Record start of break session
     _statisticsService?.startSession();
-    
+
     debugPrint("TimerService: Starting BREAK for $minutes minutes");
     notifyListeners();
 
@@ -332,22 +354,27 @@ class TimerService extends ChangeNotifier with WidgetsBindingObserver {
         notifyListeners();
       } else {
         _timer?.cancel();
-        
+
         // Record completed break session
-        _statisticsService?.completeSession(minutes, category: SessionCategory.breakTime);
-        
+        _statisticsService?.completeSession(
+          minutes,
+          category: SessionCategory.breakTime,
+        );
+
         _state = TimerState.idle;
         _notificationService.showNotification(
           id: 2,
           title: _localizedStrings['breakEndTitle'] ?? 'Mola Bitti!',
-          body: _localizedStrings['breakEndBody'] ?? 'Yeni bir odaklanma seansına hazırsın.',
+          body:
+              _localizedStrings['breakEndBody'] ??
+              'Yeni bir odaklanma seansına hazırsın.',
           playSound: true,
           ongoing: false,
         );
-        
+
         // Play alarm sound for break end
-        _audioService.playAlarm(); 
-        
+        _audioService.playAlarm();
+
         _updateInitialDuration();
         notifyListeners();
       }
